@@ -2,7 +2,7 @@
   "name": "el3alamy-store",
   "version": "1.0.0",
   "private": true,
-  "description": "El3alamy Store — premium e-commerce storefront for PlayStation consoles and accessories.",
+  "description": "El3alamy Store \u2014 premium e-commerce storefront for PlayStation consoles and accessories.",
   "main": "server/index.js",
   "engines": {
     "node": ">=22.5.0"
@@ -11,7 +11,8 @@
     "start": "node --disable-warning=ExperimentalWarning server/index.js",
     "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
     "seed": "node --disable-warning=ExperimentalWarning server/db/seed.js --reset",
-    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js",
+    "export:static": "node --disable-warning=ExperimentalWarning scripts/export-static.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

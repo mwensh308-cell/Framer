@@ -23,6 +23,14 @@ Sign in at `/account` with the seeded admin (`ADMIN_EMAIL` / `ADMIN_PASSWORD`, d
 
 Try the coupon codes `WELCOME10` or `EL3ALAMY5` at checkout. In development, “Credit / debit card” simulates a successful payment; set `STRIPE_SECRET_KEY` to use real Stripe Checkout.
 
+## Static HTML version
+
+```bash
+SITE_URL=https://your-domain npm run export:static   # → static-site/ (all pages as .html)
+```
+
+Exports every page as a plain HTML file that works on any static host (Netlify, GitHub Pages, cPanel) or opened straight from disk. Cart, bundles, coupons, search and filters run in the browser; checkout ends with an order summary the customer emails or DMs to the store (no server-side orders, card payments, accounts, tracking or admin — those need the Node.js server). Re-run the export after changing the catalog.
+
 ## Project layout
 
 ```

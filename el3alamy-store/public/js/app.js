@@ -16,6 +16,9 @@
     set(key, v) { try { sessionStorage.setItem(key, v); } catch { /* ignore */ } },
   };
 
+  // Static export (docs/DEPLOYMENT.md) resolves site paths to relative .html files; the live server uses them as-is.
+  const go = (path) => { location.href = window.EL3_STATIC ? window.EL3_STATIC.resolve(path) : path; };
+
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   // ── API ────────────────────────────────────────────────────────────────
@@ -343,7 +346,7 @@
       } catch { searchResults.innerHTML = ''; }
     }, 180);
   });
-  searchInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter' && searchInput.value.trim()) location.href = `/shop?q=${encodeURIComponent(searchInput.value.trim())}`; });
+  searchInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter' && searchInput.value.trim()) go(`/shop?q=${encodeURIComponent(searchInput.value.trim())}`); });
 
   // ── Newsletter ─────────────────────────────────────────────────────────
   $$('[data-newsletter]').forEach((form) => form.addEventListener('submit', async (e) => {
@@ -361,12 +364,16 @@
   if (filterForm) {
     const grid = $('[data-product-grid]');
     const params = new URLSearchParams(location.search);
+    const isStatic = Boolean(window.EL3_STATIC);
+    // The static export has no server-side search, so ?q= is applied in the browser.
+    const q = isStatic ? (params.get('q') || '').trim().toLowerCase() : '';
     const state = { category: params.get('category') || '', platform: params.get('platform') || '' };
     const apply = () => {
       let shown = 0;
       $$('.product-card', grid).forEach((card) => {
         const ok = (!state.category || card.dataset.category === state.category)
-          && (!state.platform || card.dataset.platforms.split(' ').includes(state.platform));
+          && (!state.platform || card.dataset.platforms.split(' ').includes(state.platform))
+          && (!q || card.dataset.name.includes(q) || card.dataset.category.includes(q));
         card.classList.toggle('is-hidden', !ok);
         if (ok) { shown++; card.classList.add('in'); }
       });
@@ -376,7 +383,7 @@
       ['category', 'platform'].forEach((k) => (state[k] ? url.searchParams.set(k, state[k]) : url.searchParams.delete(k)));
       history.replaceState(null, '', url);
     };
-    const serverFiltered = location.pathname === '/shop' && (params.get('category') || params.get('platform'));
+    const serverFiltered = !isStatic && location.pathname === '/shop' && (params.get('category') || params.get('platform'));
     filterForm.addEventListener('click', (e) => {
       const c = e.target.closest('[data-filter-category]');
       const p = e.target.closest('[data-filter-platform]');
@@ -393,7 +400,29 @@
       if (p) { state.platform = p.dataset.filterPlatform; $$('[data-filter-platform]').forEach((b) => b.classList.toggle('active', b === p)); }
       apply();
     });
+    if (isStatic) {
+      // Sort the pre-rendered cards in place (no server round trip).
+      const original = $$('.product-card', grid);
+      const sortCards = (key) => {
+        const cards = [...original];
+        const price = (c) => Number(c.dataset.price);
+        if (key === 'price-asc') cards.sort((a, b) => price(a) - price(b));
+        if (key === 'price-desc') cards.sort((a, b) => price(b) - price(a));
+        if (key === 'name') cards.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+        grid.append(...cards);
+      };
+      const sortSel = $('[data-sort]', filterForm);
+      if (params.get('sort')) { sortSel.value = params.get('sort'); sortCards(sortSel.value); }
+      sortSel?.addEventListener('change', (e) => sortCards(e.target.value));
+      if (q || state.category || state.platform) {
+        $$('[data-filter-category]').forEach((b) => b.classList.toggle('active', b.dataset.filterCategory === state.category));
+        $$('[data-filter-platform]').forEach((b) => b.classList.toggle('active', b.dataset.filterPlatform === state.platform));
+        apply();
+        if (q) { const h = $('.page-hero h1'); if (h) h.textContent = `Results for “${params.get('q')}”`; }
+      }
+    }
     $('[data-sort]', filterForm)?.addEventListener('change', (e) => {
+      if (isStatic) return;
       const url = new URL(location.href);
       url.searchParams.set('sort', e.target.value);
       location.href = url.toString();
