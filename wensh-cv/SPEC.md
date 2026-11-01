@@ -109,7 +109,7 @@ idle    shader glitch every 3.2–7.4s · H1 glitch every 6–11s
 ## 6. SEO & metadata plan
 
 - `<title>`: *Mostafa Nasser (Wensh) — Mechatronics Engineer & Media Buyer* (57 characters). The meta description is about 155 characters and names the university, WenshPro and the location.
-- Canonical is set to `https://wwwensh.online/cv/` **(placeholder; confirm the domain)**.
+- Canonical is set to `https://wwwensh.online/` **(placeholder; confirm the domain)**.
 - **Open Graph `profile`** and Twitter `summary_large_image` use `assets/og-image.jpg` (1200×630).
 - **JSON-LD:** a `ProfilePage` with a `Person` entity (`alternateName: Wensh`, `alumniOf`, `hasCredential` for Cisco, `founder` for WenshPro, `knowsAbout`, `knowsLanguage`, `sameAs` for Instagram and the site). Instagram links carry `rel="me"` for identity verification.
 - `hreflang` `en` / `ar-EG` alternates arrive once the Arabic version ships. Add a `sitemap.xml` and a `robots.txt` that allows everything.
