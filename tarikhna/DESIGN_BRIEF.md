@@ -68,7 +68,7 @@ Scale: `clamp()` from 1rem body (17px) to 7rem hero. Line-height 1.8 for Arabic 
 **Performance guardrails:**
 - Only `transform` and `opacity` are animated, so there is no layout thrash.
 - The canvas pauses when off-screen (IntersectionObserver) or when the tab is hidden, and DPR is capped at 2.
-- Zero animation libraries: `motion.js` is about 7KB and dependency-free. There is no Three.js on purpose (it would add ~600KB for an effect Canvas 2D handles).
+- Zero animation libraries: `motion.js` is about 12KB unminified (~4KB gzipped) and dependency-free. There is no Three.js on purpose (it would add ~600KB for an effect Canvas 2D handles).
 - **`prefers-reduced-motion`**: the canvas renders one static frame, and reveals, tilt, parallax and counters are disabled. All content stays fully visible (verified).
 
 ## 5. Media handling plan (photos and videos)

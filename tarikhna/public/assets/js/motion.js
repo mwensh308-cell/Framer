@@ -1,5 +1,5 @@
 /* تاريخنا — Motion layer
-   Dependency-free, ~7KB. Everything respects prefers-reduced-motion, pauses
+   Dependency-free, ~12KB unminified. Everything respects prefers-reduced-motion, pauses
    when off-screen or the tab is hidden, and degrades to static content. */
 (function () {
   "use strict";
