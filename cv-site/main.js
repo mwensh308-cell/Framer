@@ -8,6 +8,16 @@ const loaderBar = loader && loader.querySelector('.bar i');
 function setLoad(p) { if (loaderBar) loaderBar.style.width = (p * 100) + '%'; }
 setLoad(0.2);
 
+/* Motion pause (WCAG 2.2.2) — persisted per viewer */
+const motion = { paused: false };
+try { motion.paused = localStorage.getItem('wensh-motion-paused') === '1'; } catch (e) {}
+function applyMotion() {
+  document.documentElement.classList.toggle('motion-paused', motion.paused);
+  const btn = document.getElementById('motion-toggle');
+  if (btn) { btn.setAttribute('aria-pressed', String(motion.paused)); btn.textContent = motion.paused ? 'Play motion' : 'Pause motion'; }
+  dispatchEvent(new Event('motionchange'));
+}
+
 /* ------------------------------------------------------------------ */
 /* HERO 3D                                                             */
 /* ------------------------------------------------------------------ */
@@ -161,7 +171,7 @@ async function initHero() {
   const hud = document.getElementById('hud-scan');
   let visible = true, running = false, last = performance.now(), t = 0, scans = 0, lastScanSign = 0;
   const clock = () => {
-    if (!visible || document.hidden) { running = false; return; }
+    if (!visible || document.hidden || motion.paused) { running = false; return; }
     running = true;
     const now = performance.now();
     const dt = Math.min((now - last) / 1000, 0.05); last = now;
@@ -197,7 +207,8 @@ async function initHero() {
   } else {
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(canvas);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
-    start();
+    addEventListener('motionchange', () => { if (!motion.paused) start(); });
+    if (motion.paused) renderer.render(scene, camera); else start();
   }
 }
 
@@ -209,15 +220,24 @@ function intro() {
   setTimeout(() => loader && loader.classList.add('done'), reduce ? 0 : 250);
   const g = window.gsap;
   if (!g || reduce) return;
-  const tl = g.timeline({ defaults: { ease: 'expo.out' }, delay: 0.3 });
+  const mask = document.querySelector('.wm-mask');
+  const tl = g.timeline({ defaults: { ease: 'expo.out' } });
+  // Timeline per the motion directive (ms → s)
   tl.from('#gl', { opacity: 0, duration: 1.6 }, 0)
-    .from('h1 .line > span', { yPercent: 110, duration: 1.2, stagger: 0.12 }, 0.15)
-    .from('.kicker', { y: 16, opacity: 0, duration: 0.8 }, 0.45)
-    .from('.ar', { y: 16, opacity: 0, duration: 0.8 }, 0.6)
-    .from('.hero-meta p', { y: 16, opacity: 0, duration: 0.8 }, 0.7)
-    .from('.roles .chip', { y: 14, opacity: 0, duration: 0.6, stagger: 0.06 }, 0.8)
+    .from('.wordmark .ch', { yPercent: 60, duration: 0.9, stagger: 0.05, clearProps: 'transform' }, 0.15)
+    .fromTo('.wm-laser', { x: 0, opacity: 1 }, { x: () => (mask ? mask.offsetWidth : 0), duration: 0.6, ease: 'power2.inOut' }, 0.6)
+    .to('.wm-laser', { opacity: 0, duration: 0.15 }, 1.2)
+    .fromTo('.ar', { clipPath: 'inset(0 0 0 100%)', y: 8 }, { clipPath: 'inset(0 0 0 0%)', y: 0, duration: 0.6, clearProps: 'clipPath,transform' }, 0.75)
+    .from('.kicker', { y: 8, opacity: 0, duration: 0.45 }, 0.9)
     .from('.nav', { y: -20, opacity: 0, duration: 0.8 }, 0.9)
-    .from('.hud, .scroll-cue', { opacity: 0, duration: 1 }, 1.1);
+    .from('.hero-meta p', { y: 8, opacity: 0, duration: 0.45 }, 1.0)
+    .from('.roles .chip', { y: 8, opacity: 0, duration: 0.45, stagger: 0.08 }, 1.08)
+    .from('.hud, .scroll-cue', { opacity: 0, duration: 0.45 }, 1.2);
+  // Never block input: any interaction finishes the intro at once.
+  const finish = () => { tl.progress(1); removeEventListener('pointerdown', finish); removeEventListener('keydown', finish); removeEventListener('wheel', finish); };
+  addEventListener('pointerdown', finish, { once: true });
+  addEventListener('keydown', finish, { once: true });
+  addEventListener('wheel', finish, { once: true, passive: true });
 }
 
 /* ------------------------------------------------------------------ */
@@ -248,6 +268,57 @@ function ui() {
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main section[id]').forEach((s) => secIO.observe(s));
+
+  // Scroll progress bar
+  const bar = document.getElementById('progress');
+  let pRaf = 0;
+  const onProg = () => {
+    cancelAnimationFrame(pRaf);
+    pRaf = requestAnimationFrame(() => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
+    });
+  };
+  onProg(); addEventListener('scroll', onProg, { passive: true }); addEventListener('resize', onProg, { passive: true });
+
+  // Pause-motion toggle
+  const toggle = document.getElementById('motion-toggle');
+  if (toggle) toggle.addEventListener('click', () => {
+    motion.paused = !motion.paused;
+    try { localStorage.setItem('wensh-motion-paused', motion.paused ? '1' : '0'); } catch (e) {}
+    applyMotion();
+  });
+  applyMotion();
+
+  // Section transitions: laser sweep + heading-number decode + focus move
+  const sweep = document.querySelector('.sweep');
+  const glyphs = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%/';
+  const decode = (el) => {
+    if (!el || reduce || motion.paused) return;
+    const final = el.dataset.text || (el.dataset.text = el.textContent);
+    const t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - t0) / 300, 1);
+      const keep = Math.floor(final.length * p);
+      el.textContent = final.split('').map((c, i) => (i < keep || c === ' ' || c === '/') ? c : glyphs[(Math.random() * glyphs.length) | 0]).join('');
+      if (p < 1) requestAnimationFrame(step); else el.textContent = final;
+    };
+    requestAnimationFrame(step);
+  };
+  document.querySelectorAll('.nav a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      if (sweep && !reduce && !motion.paused) { sweep.classList.remove('go'); void sweep.offsetWidth; sweep.classList.add('go'); }
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      history.pushState(null, '', '#' + id);
+      decode(target.querySelector('.sec-head .num'));
+      const h = target.querySelector('h2[tabindex="-1"]');
+      if (h) h.focus({ preventScroll: true });
+    });
+  });
 
   // Counters
   const cIO = new IntersectionObserver((entries) => {

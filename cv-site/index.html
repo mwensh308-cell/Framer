@@ -34,7 +34,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0B0D'/%3E%3Cpath d='M14 20l8 26 10-18 10 18 8-26' fill='none' stroke='%23FF6A2B' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@500&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -74,6 +74,8 @@
   --gutter:clamp(16px, 4vw, 56px);
   --max:1280px;
   --ease:cubic-bezier(.16,1,.3,1);
+  --dur-xs:120ms; --dur-s:240ms; --dur-m:450ms; --dur-l:900ms;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-in-out:cubic-bezier(.65,0,.35,1); --ease-in:cubic-bezier(.7,0,.84,0);
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -82,7 +84,9 @@ body{margin:0;background:var(--ink);color:var(--bone);font:400 17px/1.6 var(--f-
 img{max-width:100%;display:block}
 a{color:inherit}
 ::selection{background:var(--signal);color:var(--signal-ink)}
-:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px;animation:ring var(--dur-xs) var(--ease-out)}
+@keyframes ring{from{outline-offset:0}}
+[tabindex="-1"]:focus{outline:none}
 .skip{position:absolute;left:-9999px;top:8px;background:var(--signal);color:var(--signal-ink);padding:10px 14px;z-index:100;font-weight:600;border-radius:6px}
 .skip:focus{left:8px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -95,11 +99,23 @@ a{color:inherit}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 1rem var(--f-display);letter-spacing:.02em}
 .logo svg{width:28px;height:28px}
 .nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0}
-.nav ul a{text-decoration:none;font:500 .82rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);transition:color .2s}
+.nav ul a{position:relative;text-decoration:none;font:500 .82rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);transition:color .2s}
+.nav ul a::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:1px;background:var(--signal);transform:scaleX(0);transform-origin:left;transition:transform var(--dur-s) var(--ease-out)}
+.nav ul a:hover::after,.nav ul a:focus-visible::after,.nav ul a[aria-current="true"]::after{transform:scaleX(1)}
+.nav-end{display:flex;align-items:center;gap:10px}
+.motion-toggle{font:500 .7rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);background:none;border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer;transition:color var(--dur-s),border-color var(--dur-s)}
+.motion-toggle:hover{color:var(--bone);border-color:var(--bone)}
+.progress{position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none}
+.progress i{display:block;height:100%;background:var(--teal);transform:scaleX(0);transform-origin:left}
+.sweep{position:fixed;top:0;left:0;width:100%;height:2px;z-index:60;pointer-events:none;background:linear-gradient(90deg,transparent,var(--teal) 35%,#fff 50%,var(--teal) 65%,transparent);transform:translateX(-100%)}
+.sweep.go{animation:sweep var(--dur-m) var(--ease-in-out)}
+@keyframes sweep{to{transform:translateX(100%)}}
 .nav ul a:hover,.nav ul a[aria-current="true"]{color:var(--bone)}
 .ig-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font:500 .82rem var(--f-mono);transition:border-color .2s, background .2s}
 .ig-pill:hover{border-color:var(--signal);background:rgba(255,106,43,.08)}
-.ig-pill svg{width:16px;height:16px}
+.ig-pill svg{width:16px;height:16px;transition:transform var(--dur-s) var(--ease-out)}
+.ig-pill:hover svg,.ig-pill:focus-visible svg{transform:rotate(8deg)}
+@media (max-width:520px){.ig-pill{font-size:0;gap:0;padding:9px}.motion-toggle{padding:8px 10px}}
 @media (max-width:860px){.nav ul{display:none}}
 
 /* ---------- HERO ---------- */
@@ -107,14 +123,17 @@ a{color:inherit}
 #gl{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
 .hero::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(transparent,var(--ink));z-index:-1;pointer-events:none}
 .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
-.kicker{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.kicker{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.name-line{font:500 .8125rem/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(95,211,196,.6);animation:pulse 2.2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(95,211,196,0)}100%{box-shadow:0 0 0 0 rgba(95,211,196,0)}}
-h1{font:800 clamp(3.2rem, 12vw, 10.5rem)/.86 var(--f-display);letter-spacing:-.035em;margin:0;text-transform:uppercase}
-h1 .line{display:block;overflow:hidden;padding-bottom:.04em}
-h1 .line>span{display:inline-block}
-h1 .accent{color:var(--signal)}
-.ar{width:fit-content;font-family:var(--f-ar);font-weight:700;font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--sage);margin:14px 0 0}
+.wordmark{font:700 clamp(3.5rem, 15vw, 12rem)/.9 var(--f-display);letter-spacing:-.045em;margin:0;text-transform:none;color:var(--bone);view-transition-name:wordmark}
+.wm-mask{position:relative;display:inline-block;overflow:hidden;padding:0 .05em .08em 0;vertical-align:top}
+.wordmark .ch{display:inline-block}
+.wm-laser{position:absolute;top:6%;bottom:6%;left:0;width:2px;background:var(--teal);box-shadow:0 0 14px var(--teal);opacity:0;pointer-events:none}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.wordmark:hover .ch{animation:ripple var(--dur-s) var(--ease-out) calc(var(--i) * 40ms)}}
+@keyframes ripple{50%{transform:translateY(-4px)}}
+.ar{width:fit-content;margin:12px 0 0;padding-block:.1em;font:500 clamp(1.125rem, 2.2vw, 1.5rem)/1.6 "IBM Plex Sans Arabic","Noto Sans Arabic","Segoe UI",Tahoma,sans-serif;letter-spacing:0;text-transform:none;unicode-bidi:isolate;color:var(--sage)}
 .hero-meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:28px;max-width:720px}
 .hero-meta p{margin:0;font-size:clamp(1rem,1.6vw,1.2rem);color:var(--bone);opacity:.86}
 .roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
@@ -224,15 +243,27 @@ h3{font:700 clamp(1.25rem,2.2vw,1.6rem)/1.15 var(--f-display);margin:0;letter-sp
 .btn.primary:hover{background:var(--bone);border-color:var(--bone)}
 .btn:not(.primary):hover{border-color:var(--bone)}
 .btn svg{width:18px;height:18px}
+.btn{transition:background .25s,color .25s,border-color .25s,scale var(--dur-xs) var(--ease-out)}
+.btn:active{scale:.97}
 footer{padding:36px 0 48px;border-top:1px solid var(--line);color:var(--mute);font:400 .8rem var(--f-mono)}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
 /* ---------- REVEAL ---------- */
 .js .reveal{opacity:0;transform:translateY(28px)}
 .js .reveal.in{opacity:1;transform:none;transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.js .sec-head.reveal h2{clip-path:inset(0 0 100% 0);transform:translateY(40%)}
+.js .sec-head.reveal.in h2{clip-path:inset(0 0 -10% 0);transform:none;transition:clip-path var(--dur-l) var(--ease-out) .08s,transform var(--dur-l) var(--ease-out) .08s}
+.motion-paused .marquee-track,.motion-paused .dot,.motion-paused .scroll-cue i{animation-play-state:paused}
+
+/* ---------- PAGE TRANSITIONS (cross-document) ---------- */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vt-out var(--dur-s) var(--ease-in) both}
+::view-transition-new(root){animation:vt-in var(--dur-m) var(--ease-in-out) both}
+@keyframes vt-out{to{opacity:0;transform:translateY(-24px)}}
+@keyframes vt-in{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
 
 /* Loader */
-.loader{position:fixed;inset:0;z-index:200;background:var(--ink);display:grid;place-items:center;transition:opacity .6s var(--ease),visibility .6s}
+.loader{position:fixed;inset:0;z-index:200;background:var(--ink);display:grid;place-items:center;transition:opacity var(--dur-m) var(--ease),visibility var(--dur-m)}
 .loader.done{opacity:0;visibility:hidden}
 .loader .bar{width:180px;height:1px;background:var(--line);overflow:hidden}
 .loader .bar i{display:block;height:100%;width:0;background:var(--signal);transition:width .4s var(--ease)}
@@ -245,6 +276,10 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .marquee-track{animation:none}
   .js .reveal{opacity:1;transform:none}
+  .js .sec-head.reveal h2{clip-path:none;transform:none}
+  .sweep{display:none}
+  ::view-transition-old(*),::view-transition-new(*){animation:none!important}
+  ::view-transition-group(*){animation-duration:150ms!important}
 }
 </style>
 </head>
@@ -252,6 +287,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 <script>document.body.classList.replace('no-js','js')</script>
 <a class="skip" href="#main">Skip to content</a>
 
+<div class="sweep" aria-hidden="true"></div>
 <div class="loader" aria-hidden="true"><div><div class="bar"><i></i></div><p>CALIBRATING</p></div></div>
 
 <header class="nav" id="nav">
@@ -269,10 +305,14 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
-  <a class="ig-pill" href="https://www.instagram.com/mxnasserrr/" target="_blank" rel="noopener me" aria-label="Instagram @mxnasserrr (opens in a new tab)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-    @mxnasserrr
-  </a>
+  <div class="nav-end">
+    <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Pause motion</button>
+    <a class="ig-pill" href="https://www.instagram.com/mxnasserrr/" target="_blank" rel="noopener me" aria-label="Instagram @mxnasserrr (opens in a new tab)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      @mxnasserrr
+    </a>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
 </header>
 
 <main id="main">
@@ -287,12 +327,9 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     <div class="wrap">
       <div class="hero-grid">
         <div>
-          <div class="kicker"><span class="dot" aria-hidden="true"></span><span class="mono">Giza, Egypt — available for projects</span></div>
-          <h1 aria-label="Mostafa Nasser">
-            <span class="line"><span>Mostafa</span></span>
-            <span class="line"><span class="accent">Nasser</span></span>
-          </h1>
-          <p class="ar" lang="ar" dir="rtl">مصطفى ناصر — ونش</p>
+          <div class="kicker"><span class="dot" aria-hidden="true"></span><span class="name-line">Mostafa Nasser · Giza, Egypt</span></div>
+          <h1 class="wordmark"><span class="wm-mask" aria-hidden="true"><span class="ch" style="--i:0">w</span><span class="ch" style="--i:1">e</span><span class="ch" style="--i:2">n</span><span class="ch" style="--i:3">s</span><span class="ch" style="--i:4">h</span><i class="wm-laser"></i></span><span class="sr">Mostafa Nasser (Wensh)</span></h1>
+          <p class="ar" lang="ar" dir="rtl">مصطفى ناصر&nbsp;— ونش</p>
           <div class="hero-meta">
             <p>Mechatronics engineer in the making. I build machines that see, campaigns that convert, and stores that ship.</p>
           </div>
@@ -311,7 +348,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== ABOUT ========== -->
   <section id="about" aria-labelledby="about-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">01 / About</span><h2 id="about-h">Engineer. Operator. Marketer.</h2></div>
+      <div class="sec-head reveal"><span class="num">01 / About</span><h2 id="about-h" tabindex="-1">Engineer. Operator. Marketer.</h2></div>
       <div class="about">
         <div class="reveal">
           <p class="lede">A Mechatronics student who moves between <em>PLCs and pixels</em> — from conveyor lines and computer vision to ad budgets and e-commerce logistics.</p>
@@ -341,7 +378,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== EXPERIENCE ========== -->
   <section id="experience" aria-labelledby="exp-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">02 / Experience</span><h2 id="exp-h">Where I've worked</h2></div>
+      <div class="sec-head reveal"><span class="num">02 / Experience</span><h2 id="exp-h" tabindex="-1">Where I've worked</h2></div>
       <div class="timeline">
         <article class="job reveal">
           <div class="when">Freelance</div>
@@ -387,7 +424,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== PROJECTS ========== -->
   <section id="projects" aria-labelledby="proj-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">03 / Projects</span><h2 id="proj-h">Selected work</h2></div>
+      <div class="sec-head reveal"><span class="num">03 / Projects</span><h2 id="proj-h" tabindex="-1">Selected work</h2></div>
       <div class="projects">
         <article class="card wide tilt reveal">
           <div class="lift">
@@ -450,7 +487,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== SKILLS ========== -->
   <section id="skills" aria-labelledby="skills-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">04 / Skills</span><h2 id="skills-h">Toolkit</h2></div>
+      <div class="sec-head reveal"><span class="num">04 / Skills</span><h2 id="skills-h" tabindex="-1">Toolkit</h2></div>
       <div class="skills">
         <div class="skill-group reveal"><header><h3>Engineering &amp; Automation</h3><span class="mono">ENG</span></header>
           <ul><li>Computer Vision</li><li>PLC Control</li><li>Pneumatic Actuators</li><li>Conveyor Systems</li><li>Maintenance &amp; Technical Support</li></ul></div>
@@ -473,7 +510,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== EDUCATION / CERTS ========== -->
   <section id="education" aria-labelledby="edu-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">05 / Education</span><h2 id="edu-h">Education &amp; credentials</h2></div>
+      <div class="sec-head reveal"><span class="num">05 / Education</span><h2 id="edu-h" tabindex="-1">Education &amp; credentials</h2></div>
       <div class="edu">
         <article class="reveal"><span class="mono">Degree</span><h3 style="margin-top:10px">B.Sc. Mechatronics Engineering</h3><p>Helwan University, Cairo. Currently enrolled.</p></article>
         <article class="reveal"><span class="mono">Certification</span><h3 style="margin-top:10px">Cybersecurity Certificate</h3><p>Cisco Networking Academy.</p></article>
@@ -485,7 +522,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   <!-- ========== CONTACT ========== -->
   <section id="contact" class="contact" aria-labelledby="contact-h">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="num">06 / Contact</span><h2 id="contact-h">Let's build something</h2></div>
+      <div class="sec-head reveal"><span class="num">06 / Contact</span><h2 id="contact-h" tabindex="-1">Let's build something</h2></div>
       <a class="big-link reveal" href="mailto:mwensh308@gmail.com"><span>mwensh308@gmail.com</span></a>
       <div class="cta-row reveal">
         <a class="btn primary magnetic" href="mailto:mwensh308@gmail.com">Email me
