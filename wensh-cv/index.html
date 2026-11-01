@@ -76,6 +76,7 @@
   <img class="stage-fallback" src="assets/portrait.webp" alt="" aria-hidden="true" width="480" height="589">
   <div class="fx-scan" aria-hidden="true"></div>
   <div class="fx-grain" aria-hidden="true"></div>
+  <div class="wipe" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <header class="nav" id="top">
     <a class="nav__brand" href="#hero" aria-label="Mostafa Nasser, back to top">
@@ -85,7 +86,6 @@
     <nav aria-label="Sections">
       <ul class="nav__links" id="nav-links">
         <li><a href="#whoami">whoami</a></li>
-        <li><a href="#experience">exp</a></li>
         <li><a href="#education">edu</a></li>
         <li><a href="#skills">skills</a></li>
         <li><a href="#projects">projects</a></li>
@@ -121,6 +121,7 @@
     <!-- 01 · SUMMARY -->
     <section id="whoami" class="section" aria-labelledby="whoami-h">
       <header class="section__head">
+        <span class="section__ghost" aria-hidden="true">01</span>
         <span class="section__idx">01</span>
         <h2 id="whoami-h"><span class="cmd">$ whoami</span>Professional summary</h2>
       </header>
@@ -130,49 +131,17 @@
         <ul class="stats" aria-label="At a glance">
           <li><b data-count="5" data-suffix="+">5+</b><span>local brands managed as a media buyer</span></li>
           <li><b data-count="2">2</b><span>businesses founded &amp; operated</span></li>
-          <li><b data-count="3">3</b><span>engineering &amp; ops roles</span></li>
+          <li><b data-count="5">5</b><span>skill modules, from PLCs to paid media</span></li>
           <li><b>AR/EN</b><span>native Arabic · working English</span></li>
         </ul>
       </div>
     </section>
 
-    <!-- 02 · EXPERIENCE -->
-    <section id="experience" class="section" aria-labelledby="exp-h">
-      <header class="section__head">
-        <span class="section__idx">02</span>
-        <h2 id="exp-h"><span class="cmd">$ tail -f experience.log</span>Experience</h2>
-      </header>
-      <ol class="log">
-        <li class="log__item tilt">
-          <div class="log__pid">PID 0x01</div>
-          <h3>Media Buyer <span class="at">@ Freelance</span></h3>
-          <ul>
-            <li>Managed and optimized high-performance advertising campaigns for 5+ local brands.</li>
-            <li>Optimized marketing budgets, analyzed audience behavior and improved return on investment (ROI).</li>
-          </ul>
-        </li>
-        <li class="log__item tilt">
-          <div class="log__pid">PID 0x02</div>
-          <h3>Assistant Manager <span class="at">@ Talabat</span></h3>
-          <ul>
-            <li>Assisted in daily operational management, workflow optimization and cross-functional team coordination.</li>
-            <li>Supported customer service activities to consistently hit operational targets and maintain service quality.</li>
-          </ul>
-        </li>
-        <li class="log__item tilt">
-          <div class="log__pid">PID 0x03</div>
-          <h3>Assistant Engineer <span class="at">@ Elsewedy Electric</span></h3>
-          <ul>
-            <li>Supported engineering teams with technical operations, maintenance processes, project documentation and reporting.</li>
-          </ul>
-        </li>
-      </ol>
-    </section>
-
-    <!-- 03 · EDUCATION -->
+    <!-- 02 · EDUCATION -->
     <section id="education" class="section" aria-labelledby="edu-h">
       <header class="section__head">
-        <span class="section__idx">03</span>
+        <span class="section__ghost" aria-hidden="true">02</span>
+        <span class="section__idx">02</span>
         <h2 id="edu-h"><span class="cmd">$ cat education.txt</span>Education</h2>
       </header>
       <article class="edu tilt">
@@ -182,10 +151,11 @@
       </article>
     </section>
 
-    <!-- 04 · SKILLS -->
+    <!-- 03 · SKILLS -->
     <section id="skills" class="section" aria-labelledby="skills-h">
       <header class="section__head">
-        <span class="section__idx">04</span>
+        <span class="section__ghost" aria-hidden="true">03</span>
+        <span class="section__idx">03</span>
         <h2 id="skills-h"><span class="cmd">$ ls ./modules</span>Technical skills</h2>
       </header>
       <div class="modules">
@@ -212,10 +182,11 @@
       </div>
     </section>
 
-    <!-- 05 · PROJECTS -->
+    <!-- 04 · PROJECTS -->
     <section id="projects" class="section" aria-labelledby="proj-h">
       <header class="section__head">
-        <span class="section__idx">05</span>
+        <span class="section__ghost" aria-hidden="true">04</span>
+        <span class="section__idx">04</span>
         <h2 id="proj-h"><span class="cmd">$ ps aux | grep projects</span>Projects &amp; initiatives</h2>
       </header>
       <div class="projects">
@@ -249,10 +220,11 @@
       </div>
     </section>
 
-    <!-- 06 · CERTIFICATIONS / AWARDS -->
+    <!-- 05 · CERTIFICATIONS / AWARDS -->
     <section id="awards" class="section" aria-labelledby="awards-h">
       <header class="section__head">
-        <span class="section__idx">06</span>
+        <span class="section__ghost" aria-hidden="true">05</span>
+        <span class="section__idx">05</span>
         <h2 id="awards-h"><span class="cmd">$ gpg --list-keys</span>Certifications &amp; recognition</h2>
       </header>
       <div class="certs">
@@ -274,10 +246,11 @@
       </div>
     </section>
 
-    <!-- 07 · CONTACT -->
+    <!-- 06 · CONTACT -->
     <section id="contact" class="section contact" aria-labelledby="contact-h">
       <header class="section__head">
-        <span class="section__idx">07</span>
+        <span class="section__ghost" aria-hidden="true">06</span>
+        <span class="section__idx">06</span>
         <h2 id="contact-h"><span class="cmd">$ ./connect --to wensh</span>Let's talk</h2>
       </header>
       <p class="contact__big glitch" data-text="Are you a 1 or a 0?">Are you a 1 or a 0?</p>

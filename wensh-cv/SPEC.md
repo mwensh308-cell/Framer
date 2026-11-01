@@ -13,12 +13,11 @@
 | — | boot overlay | `ssh wensh@cairo` | 2.2 s scripted log. Skippable with any key or click. Shown once per session. |
 | 00 | `#hero` | — | Name, alias, cycling role typer, CTAs (`./run cv`, `@mxnasserrr`), status bar |
 | 01 | `#whoami` | `$ whoami` | Professional summary and four at-a-glance stats |
-| 02 | `#experience` | `$ tail -f experience.log` | Media Buyer · Talabat · Elsewedy Electric |
-| 03 | `#education` | `$ cat education.txt` | Helwan University, B.Sc. Mechatronics, plus the graduation project |
-| 04 | `#skills` | `$ ls ./modules` | 5 skill "modules" shown as chips |
-| 05 | `#projects` | `$ ps aux \| grep projects` | Grad project (featured) · WenshPro · El Alameya · Freelance · Security research |
-| 06 | `#awards` | `$ gpg --list-keys` | Cisco Cybersecurity · responsible disclosures · languages |
-| 07 | `#contact` | `$ ./connect --to wensh` | "Are you a 1 or a 0?", plus email (copy), Instagram, web and location |
+| 02 | `#education` | `$ cat education.txt` | Helwan University, B.Sc. Mechatronics, plus the graduation project |
+| 03 | `#skills` | `$ ls ./modules` | 5 skill "modules" shown as chips |
+| 04 | `#projects` | `$ ps aux \| grep projects` | Grad project (featured) · WenshPro · El Alameya · Freelance · Security research |
+| 05 | `#awards` | `$ gpg --list-keys` | Cisco Cybersecurity · responsible disclosures · languages |
+| 06 | `#contact` | `$ ./connect --to wensh` | "Are you a 1 or a 0?", plus email (copy), Instagram, web and location |
 
 **Flow:** boot → the portrait assembles from noise → the visitor reads the name and role → **Primary CTA** scrolls to the CV, **Secondary CTA** opens Instagram → the portrait dissolves into the background field while each section "executes" (heading glitch, then cards stagger in) → contact. The sticky nav shows the current section and turns into a menu button under 760 px.
 
@@ -66,11 +65,10 @@
 | CV block | Section | Treatment |
 |---|---|---|
 | Professional summary | 01 `whoami` | A large lead line plus a paragraph. Stats: **5+** brands (stated in the CV), **2** businesses, **3** roles, **AR/EN** |
-| Professional experience | 02 `experience.log` | One "process" card per role (`PID 0x01…`) with `>` bullets |
-| Education | 03 | Degree in display type. The graduation project is cross-linked here. |
-| Technical skills | 04 `modules` | `mod_01…05`, matching the five CV groups 1:1 |
-| Projects & initiatives | 05 | The grad project is the featured full-width card. Status pills: in development / live / ongoing / disclosed. |
-| Awards | 06 | **The CV lists no awards.** This section uses Cisco certification, responsible disclosures and languages instead. |
+| Education | 02 | Degree in display type. The graduation project is cross-linked here. |
+| Technical skills | 03 `modules` | `mod_01…05`, matching the five CV groups 1:1 |
+| Projects & initiatives | 04 | The grad project is the featured full-width card. Status pills: in development / live / ongoing / disclosed. |
+| Awards | 05 | **The CV lists no awards.** This section uses Cisco certification, responsible disclosures and languages instead. |
 
 **Content still needed from Mostafa:** (a) employment **dates** for the three roles and the expected graduation year, (b) any **awards** or competition results, (c) screenshots or video of the grad-project rig, (d) a public link for El Alameya Store, (e) the final domain for canonical tags.
 
@@ -97,7 +95,7 @@ idle    shader glitch every 3.2–7.4s · H1 glitch every 6–11s
 
 ## 5. Accessibility & responsive design
 
-- The canvas, boot, grain and scanlines are all `aria-hidden`. **All CV content is real, semantic HTML**: `h1`→`h2`→`h3`, `ol` for experience, `dl` for meta, and `nav` with `aria-current`.
+- The canvas, boot, grain and scanlines are all `aria-hidden`. **All CV content is real, semantic HTML**: `h1`→`h2`→`h3`, `dl` for meta, and `nav` with `aria-current`.
 - There is a skip link, and the focus ring is a 2 px terminal-green outline. Every control is a real `<a>` or `<button>`, and touch targets are ≥ 44 px.
 - `prefers-reduced-motion`: no boot, no typer, no glitch, no tilt and no reveal transitions. The portrait renders one static frame.
 - Every text pairing meets **WCAG 2.2 AA**; see the contrast table above. Colour is never the only signal, because status pills also carry text.
@@ -144,3 +142,15 @@ idle    shader glitch every 3.2–7.4s · H1 glitch every 6–11s
 cd wensh-cv && python3 -m http.server 8080
 ```
 Then open http://localhost:8080. It is a static site, so it deploys as-is to Vercel, Netlify, Cloudflare Pages or GitHub Pages.
+
+---
+
+### v2 update: Experience removed, motion and 3D added
+- **Content:** the Experience section (Media Buyer, Talabat, Elsewedy Electric) has been removed at the client's request. Sections are renumbered 01–06, and the "3 roles" stat is now "5 skill modules".
+- **Section transitions:** nav clicks play a 3-band scanline wipe (void, red, void; 340 ms in and 420 ms out) while the page jumps to the target. Focus moves to the target heading, so keyboard and screen-reader users land in the right place.
+- **3D entrances:** each section rises from `perspective(1400px) rotateX(10deg) translateZ(-120px)` when it scrolls into view (1.1 s ease-out).
+- **Depth layers:**
+  - The hero copy is a `preserve-3d` stack (H1 at Z 90 px, CTAs at Z 110 px) that tilts with the pointer.
+  - Card titles and chips sit on their own Z layers inside the tilting cards.
+  - Each section head has a giant outlined ghost index that parallaxes and turns with scroll (`--p` from -1 to 1, updated with rAF).
+- **Why:** only `transform` and `opacity` are animated (they run on the compositor, causing no layout shift), and there are no new dependencies. Pointer effects turn off on touch devices, and `prefers-reduced-motion` turns off the wipe, the 3D entrances and the parallax.

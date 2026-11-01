@@ -411,11 +411,79 @@ function domGlitch(el) {
   setTimeout(() => el.classList.remove('is-glitching'), 800);
 }
 
+/* ------------------------------------------- v2: section motion + 3D -- */
+function initSectionMotion() {
+  if (reduceMotion) return;
+  // 3D entrance per section
+  const sections = $$('main .section');
+  sections.forEach((s) => s.classList.add('pre'));
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('in3d'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -12% 0px', threshold: 0.02 });
+  sections.forEach((s) => io.observe(s));
+
+  // scroll-linked depth for the ghost index numbers (-1 .. 1 across viewport)
+  const heads = $$('.section__head');
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const vh = innerHeight;
+    heads.forEach((h) => {
+      const r = h.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const p = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / (vh / 2)));
+      h.style.setProperty('--p', p.toFixed(3));
+    });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+}
+
+function initHeroParallax() {
+  if (reduceMotion || !finePointer) return;
+  const copy = $('.hero__copy');
+  let raf = 0;
+  addEventListener('pointermove', (e) => {
+    if (scrollY > innerHeight) return;
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      copy.style.setProperty('--hy', `${x * 8}deg`);
+      copy.style.setProperty('--hx', `${-y * 6}deg`);
+    });
+  }, { passive: true });
+}
+
+function initWipeNav(stage) {
+  if (reduceMotion) return;
+  const wipe = $('.wipe');
+  let busy = false;
+  $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href').slice(1);
+    const target = id && document.getElementById(id);
+    if (!target || busy) return;
+    e.preventDefault();
+    busy = true;
+    wipe.className = 'wipe is-in';
+    stage.glitch(300);
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      history.replaceState(null, '', '#' + id);
+      target.classList.add('in3d');
+      wipe.className = 'wipe is-out';
+      const focusable = target.querySelector('h1, h2');
+      if (focusable) { focusable.setAttribute('tabindex', '-1'); focusable.focus({ preventScroll: true }); }
+      setTimeout(() => { wipe.className = 'wipe'; busy = false; }, 560);
+    }, 420);
+  }));
+}
+
 /* ------------------------------------------------------------------ Go -- */
 (async () => {
   initNav(); initCopy(); initTilt();
   const proxy = { impl: null, glitch(ms) { this.impl && this.impl.glitch(ms); } };
   initReveal(proxy);
+  initSectionMotion(); initHeroParallax(); initWipeNav(proxy);
   const [stage] = await Promise.all([initStage(), runBoot()]);
   proxy.impl = stage;
   stage.reveal();
