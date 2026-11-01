@@ -1,0 +1,362 @@
+{
+ "competitions": {
+  "league": "الدوري المصري الممتاز",
+  "caf_cl": "دوري أبطال أفريقيا",
+  "caf_cc": "كأس الكونفدرالية الأفريقية",
+  "cwc": "كأس الكؤوس الأفريقية",
+  "egypt_cup": "كأس مصر",
+  "afcon": "كأس الأمم الأفريقية"
+ },
+ "items": [
+  {
+   "club": "ahly",
+   "comp": "league",
+   "year": 1949,
+   "season": "1948–1949",
+   "note": "أول نسخة من الدوري الممتاز"
+  },
+  {
+   "club": "zamalek",
+   "comp": "league",
+   "year": 1960,
+   "season": "1959–1960",
+   "note": "أول لقب دوري للزمالك"
+  },
+  {
+   "club": "tersana",
+   "comp": "league",
+   "year": 1963,
+   "season": "1962–1963",
+   "note": "اللقب الوحيد للترسانة"
+  },
+  {
+   "club": "olympic",
+   "comp": "league",
+   "year": 1966,
+   "season": "1965–1966",
+   "note": "اللقب الوحيد للأوليمبي"
+  },
+  {
+   "club": "ismaily",
+   "comp": "league",
+   "year": 1967,
+   "season": "1966–1967",
+   "note": "أول لقب للإسماعيلي"
+  },
+  {
+   "club": "mahalla",
+   "comp": "league",
+   "year": 1973,
+   "season": "1972–1973",
+   "note": "اللقب الوحيد لغزل المحلة"
+  },
+  {
+   "club": "mokawloon",
+   "comp": "league",
+   "year": 1983,
+   "season": "1982–1983",
+   "note": "اللقب الوحيد للمقاولون العرب"
+  },
+  {
+   "club": "ismaily",
+   "comp": "league",
+   "year": 1991,
+   "season": "1990–1991",
+   "note": ""
+  },
+  {
+   "club": "ismaily",
+   "comp": "league",
+   "year": 2002,
+   "season": "2001–2002",
+   "note": "آخر لقب للإسماعيلي"
+  },
+  {
+   "club": "ahly",
+   "comp": "league",
+   "year": 2020,
+   "season": "2019–2020",
+   "note": "موسم ممتد بسبب جائحة كورونا"
+  },
+  {
+   "club": "zamalek",
+   "comp": "league",
+   "year": 2021,
+   "season": "2020–2021",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "league",
+   "year": 2022,
+   "season": "2021–2022",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "league",
+   "year": 2023,
+   "season": "2022–2023",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "league",
+   "year": 2024,
+   "season": "2023–2024",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "league",
+   "year": 2025,
+   "season": "2024–2025",
+   "note": "اللقب الخامس والأربعون"
+  },
+  {
+   "club": "zamalek",
+   "comp": "league",
+   "year": 2026,
+   "season": "2025–2026",
+   "note": "اللقب الخامس عشر بالنظام الجديد"
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 1982,
+   "season": "1982",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 1987,
+   "season": "1987",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2001,
+   "season": "2001",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2005,
+   "season": "2005",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2006,
+   "season": "2006",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2008,
+   "season": "2008",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2012,
+   "season": "2012",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2013,
+   "season": "2013",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2020,
+   "season": "2020",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2021,
+   "season": "2021",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2023,
+   "season": "2023",
+   "note": ""
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cl",
+   "year": 2024,
+   "season": "2024",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cl",
+   "year": 1984,
+   "season": "1984",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cl",
+   "year": 1986,
+   "season": "1986",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cl",
+   "year": 1993,
+   "season": "1993",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cl",
+   "year": 1996,
+   "season": "1996",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cl",
+   "year": 2002,
+   "season": "2002",
+   "note": ""
+  },
+  {
+   "club": "ismaily",
+   "comp": "caf_cl",
+   "year": 1969,
+   "season": "1969",
+   "note": "أول لقب قاري لنادٍ مصري"
+  },
+  {
+   "club": "pyramids",
+   "comp": "caf_cl",
+   "year": 2025,
+   "season": "2025",
+   "note": "أول لقب قاري للنادي"
+  },
+  {
+   "club": "ahly",
+   "comp": "caf_cc",
+   "year": 2014,
+   "season": "2014",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cc",
+   "year": 2019,
+   "season": "2019",
+   "note": ""
+  },
+  {
+   "club": "zamalek",
+   "comp": "caf_cc",
+   "year": 2024,
+   "season": "2024",
+   "note": ""
+  },
+  {
+   "club": "mokawloon",
+   "comp": "cwc",
+   "year": 1982,
+   "season": "1982",
+   "note": ""
+  },
+  {
+   "club": "mokawloon",
+   "comp": "cwc",
+   "year": 1983,
+   "season": "1983",
+   "note": ""
+  },
+  {
+   "club": "mokawloon",
+   "comp": "cwc",
+   "year": 1996,
+   "season": "1996",
+   "note": ""
+  },
+  {
+   "club": "masry",
+   "comp": "egypt_cup",
+   "year": 1998,
+   "season": "1998",
+   "note": ""
+  },
+  {
+   "club": "pyramids",
+   "comp": "egypt_cup",
+   "year": 2024,
+   "season": "2024",
+   "note": ""
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 1957,
+   "season": "1957",
+   "note": "الاستضافة: السودان"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 1959,
+   "season": "1959",
+   "note": "الاستضافة: مصر"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 1986,
+   "season": "1986",
+   "note": "الاستضافة: مصر"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 1998,
+   "season": "1998",
+   "note": "الاستضافة: بوركينا فاسو"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 2006,
+   "season": "2006",
+   "note": "الاستضافة: مصر"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 2008,
+   "season": "2008",
+   "note": "الاستضافة: غانا"
+  },
+  {
+   "club": "egypt",
+   "comp": "afcon",
+   "year": 2010,
+   "season": "2010",
+   "note": "الاستضافة: أنغولا"
+  }
+ ]
+}
