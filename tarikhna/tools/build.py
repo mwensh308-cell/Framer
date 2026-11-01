@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA, OUT = ROOT / "data", ROOT / "public"
-SITE_URL = "https://tarikhna-nassersasa86-2183s-projects.vercel.app"        # غيّره إلى النطاق الفعلي عند النشر
+SITE_URL = "https://tarikhna.vercel.app"        # غيّره إلى النطاق الفعلي عند النشر
 SITE = "تاريخنا"
 UPDATED = "نوفمبر 2026"                         # يُحدَّث مع كل دورة تحرير
 SEASON_NOTE = "البيانات محدّثة حتى نهاية موسم 2025–2026"
