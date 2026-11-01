@@ -92,7 +92,7 @@ idle    shader glitch every 3.2–7.4s · H1 glitch every 6–11s
 | CLS | **< 0.02** | Fixed canvas, fixed overlays, and image size attributes |
 | INP | **< 150 ms** | All listeners are passive. Tilt updates are batched with rAF. |
 | JS | ~**170 KB gz** | three.min about 165 KB gz from the CDN with modulepreload, plus about 6 KB of site code |
-| Hero asset | **22 KB** | A 180×221 luminance PNG is sampled. The full photo is never loaded on the WebGL path. |
+| Hero asset | **8.5 KB** | A 180×221 grayscale luminance JPG is sampled. The full photo is never loaded on the WebGL path. |
 | FPS | **60** desktop / **≥ 45** mid-range mobile | DPR cap 1.75 / 1.5. If the first 90 frames average > 24 ms, DPR drops to 1 automatically. Mobile samples every second pixel. rAF pauses in background tabs. |
 
 ## 5. Accessibility & responsive design
@@ -120,8 +120,8 @@ idle    shader glitch every 3.2–7.4s · H1 glitch every 6–11s
 | Asset | Format | Size | Status |
 |---|---|---|---|
 | Portrait (source) | JPG 873×1072 progressive | 75 KB | ✅ `assets/portrait.jpg` |
-| Portrait (web fallback) | WebP q80 | 39 KB | ✅ `assets/portrait.webp` |
-| Portrait luminance map | PNG 8-bit gray 180×221, auto-contrast | 22 KB | ✅ `assets/portrait-depth.png` |
+| Portrait (web fallback) | WebP 480w q50 | 10 KB | ✅ `assets/portrait.webp` |
+| Portrait luminance map | JPG gray 180×221, auto-contrast | 8.5 KB | ✅ `assets/portrait-depth.jpg` |
 | OG / social card | JPG 1200×630 | 70 KB | ✅ `assets/og-image.jpg` (v1; redesign in v2 with brand fonts) |
 | Favicon | Inline SVG `>_` | <1 KB | ✅ inline |
 | Fonts | Archivo var + JetBrains Mono (Google Fonts, woff2) | ~70 KB | ✅ CDN; self-host in v2 |

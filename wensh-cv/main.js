@@ -84,7 +84,7 @@ async function initStage() {
 
   /* --- sample the portrait into a point cloud --- */
   const img = await new Promise((res, rej) => {
-    const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = 'assets/portrait-depth.png';
+    const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = 'assets/portrait-depth.jpg';
   }).catch(() => null);
   if (!img) { root.classList.add('no-webgl'); return { glitch() {}, reveal() {} }; }
 
