@@ -16,6 +16,8 @@ SEASON_NOTE = "البيانات محدّثة حتى نهاية موسم 2025–2
 def load(n): return json.loads((DATA / f"{n}.json").read_text(encoding="utf-8"))
 clubs, players, eras = load("clubs"), load("players"), load("eras")
 scorers, titles, news, sources = load("scorers"), load("titles"), load("news"), load("sources")
+media, social = load("media"), load("social")
+IG = social["instagram"]
 CLUB = {c["id"]: c for c in clubs}
 PLAYER = {p["id"]: p for p in players}
 ERA = {e["id"]: e for e in eras}
@@ -38,7 +40,15 @@ LOGO = ('<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="l
         '<circle cx="24" cy="31" r="7" fill="#fff" stroke="#0F3D5E" stroke-width="2"/>'
         '<path d="M24 26.5l3 2.2-1.1 3.5h-3.8L21 28.7Z" fill="#0F3D5E"/></svg>')
 
-def crest(c, cls="crest"):
+def official_logo(cid):
+    for ext in ("svg", "png", "webp"):
+        if (ROOT / "assets/logos" / f"{cid}.{ext}").exists(): return f"assets/logos/{cid}.{ext}"
+    return None
+
+def crest(c, cls="crest", pre=""):
+    lg = official_logo(c["id"])
+    if lg:
+        return f'<img class="{cls}" src="{pre}{lg}" alt="الشعار الرسمي لـ{e(c["name"])}" width="96" height="96" loading="lazy" decoding="async">'
     a, b = c["colors"][0], c["colors"][1]
     word = c["name"].replace("النادي ", "").replace("نادي ", "").split()[0]
     initials = (word[2:] if word.startswith("ال") else word)[:1]
@@ -65,9 +75,12 @@ def stripes_svg():
             '<rect width="160" height="90" fill="#0B2A40"/><path d="M0 90 50 30 100 90Z" fill="#B8862B" opacity=".5"/>'
             '<path d="M70 90 110 45 150 90Z" fill="#B8862B" opacity=".35"/></svg>')
 
+IG_ICON = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
+           '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>')
+
 # ---------- layout ----------
 NAV = [("index.html","الرئيسية"),("history.html","التاريخ"),("clubs.html","الأندية"),("players.html","اللاعبون"),
-       ("scorers.html","الهدافون"),("archive.html","الأرشيف"),("news.html","الأخبار"),("sources.html","المصادر")]
+       ("scorers.html","الهدافون"),("archive.html","الأرشيف"),("gallery.html","المعرض"),("news.html","الأخبار"),("sources.html","المصادر")]
 
 def page(path, title, desc, body, active="", depth=0, jsonld=None, extra_js=""):
     pre = "../" * depth
@@ -96,6 +109,7 @@ def page(path, title, desc, body, active="", depth=0, jsonld=None, extra_js=""):
 {ld}
 </head>
 <body data-root="{pre}">
+<div class="progress" aria-hidden="true"></div>
 <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-header"><div class="wrap bar">
 <a class="brand" href="{pre}index.html" aria-label="{SITE} — الصفحة الرئيسية">{LOGO}<span>{SITE}</span></a>
@@ -110,12 +124,14 @@ def page(path, title, desc, body, active="", depth=0, jsonld=None, extra_js=""):
 <footer class="site-footer"><div class="wrap cols">
 <div><a class="brand" href="{pre}index.html">{LOGO}<span>{SITE}</span></a>
 <p>أرشيف عربي مفتوح يوثّق ذاكرة كرة القدم المصرية منذ بداياتها حتى اليوم، بمنهجية تعتمد المصادر الرسمية وتُعلن درجة التحقق من كل معلومة.</p>
-<p class="updated">آخر تحديث: {UPDATED} — {SEASON_NOTE}.</p></div>
+<p class="updated">آخر تحديث: {UPDATED} — {SEASON_NOTE}.</p>
+<div class="social"><a href="{IG["url"]}" rel="noopener" aria-label="حساب إنستغرام @{IG["handle"]}">{IG_ICON}<span dir="ltr">@{IG["handle"]}</span></a></div></div>
 <div><h3>الأقسام</h3><ul>{"".join(f'<li><a href="{pre}{h}">{t}</a></li>' for h,t in NAV[1:5])}</ul></div>
-<div><h3>المزيد</h3><ul>{"".join(f'<li><a href="{pre}{h}">{t}</a></li>' for h,t in NAV[5:])}<li><a href="{pre}search.html">البحث المتقدم</a></li></ul></div>
+<div><h3>المزيد</h3><ul>{"".join(f'<li><a href="{pre}{h}">{t}</a></li>' for h,t in NAV[5:])}<li><a href="{pre}search.html">البحث المتقدم</a></li><li><a href="{pre}brand.html">دليل الشعارات</a></li></ul></div>
 </div></footer>
 <script src="{pre}assets/js/data.js" defer></script>
 <script src="{pre}assets/js/app.js" defer></script>
+<script src="{pre}assets/js/motion.js" defer></script>
 {extra_js}
 </body></html>'''
     f = OUT / path
@@ -137,13 +153,13 @@ def verified_tag(v):
     return '<span class="tag ok">موثّق</span>' if v else '<span class="tag warn">قيد التدقيق</span>'
 
 def club_card(c, pre=""):
-    return (f'<a class="card club-card" href="{pre}clubs/{c["id"]}.html">{crest(c)}<div><h3>{e(c["name"])}</h3>'
+    return (f'<a class="card club-card" href="{pre}clubs/{c["id"]}.html">{crest(c, pre=pre)}<div><h3>{e(c["name"])}</h3>'
             f'<p class="meta">{e(c["city"])} · تأسس {c["founded"]}</p>'
             f'<p class="meta">ألقاب الدوري: <b>{c["titles"]["league"]}</b> · أبطال أفريقيا: <b>{c["titles"]["caf_cl"]}</b></p></div></a>')
 
 def player_card(p, pre=""):
     cl = "، ".join(club_name(x) for x in p["clubs"]) or "—"
-    return (f'<a class="card" href="{pre}players/{p["id"]}.html"><span class="tag gold">{e(p["position"])}</span>'
+    return (f'<a class="card" data-tilt href="{pre}players/{p["id"]}.html"><span class="tag gold">{e(p["position"])}</span>'
             f'<h3>{e(p["name"])}</h3><p class="meta">{e(cl)} · {e(p["years"])}</p><p>{e(p["bio"])}</p></a>')
 
 def fmt_date(d):
@@ -161,55 +177,162 @@ def news_card(n, pre=""):
             f'<p>{e(n["summary"])}</p><p class="meta">المصدر: <a href="{e(src)}" rel="noopener">{e(n["source"])}</a></p></article>')
 
 # ---------- pages ----------
+MEDIA_COLORS = {"egypt": ("#C8102E", "#111111")}
+def media_colors(m):
+    if m["club"] in CLUB: return CLUB[m["club"]]["colors"][0], CLUB[m["club"]]["colors"][1]
+    return MEDIA_COLORS.get(m["club"], ("#0F3D5E", "#B8862B"))
+
+def media_art(m):
+    """Lightweight SVG stand-in (<1KB) used until a licensed photo/poster is supplied."""
+    w, h = (1600, 900) if m["type"] == "video" else (m["width"], m["height"])
+    a, b = media_colors(m)
+    if a.upper() == "#FFFFFF": a, b = b, "#0F3D5E"
+    gid = "g" + m["id"]
+    film = "".join(f'<rect x="{x}" y="{y}" width="40" height="26" rx="5" fill="#fff" opacity=".18"/>' for x in range(30, w, 90) for y in (24, h - 50)) if m["type"] == "video" else ""
+    fs = int(min(w, h) * 0.30)
+    return (f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-label="{e(m["title"])}: رسم توضيحي مؤقت">'
+            f'<defs><linearGradient id="{gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{a}"/><stop offset="1" stop-color="#071C2C"/></linearGradient></defs>'
+            f'<rect width="{w}" height="{h}" fill="url(#{gid})"/>{film}'
+            f'<path d="M{w*0.45:.0f} {h} L{w*0.72:.0f} {h*0.42:.0f} L{w} {h}Z" fill="{b}" opacity=".22"/>'
+            f'<text x="{w*0.92:.0f}" y="{h*0.55:.0f}" font-family="Reem Kufi,Cairo,sans-serif" font-size="{fs}" font-weight="700" fill="#fff" opacity=".92" direction="rtl" text-anchor="start">{m["year"]}</text>'
+            f'<text x="{w*0.92:.0f}" y="{h*0.55 + fs*0.55:.0f}" font-family="Cairo,sans-serif" font-size="{int(fs*0.22)}" fill="#fff" opacity=".8" direction="rtl" text-anchor="start">{e(m["title"])}</text></svg>')
+
+def media_inner(m, pre=""):
+    if m["type"] == "photo" and m["src"]:
+        return (f'<img src="{pre}{e(m["src"])}" width="{m["width"]}" height="{m["height"]}" alt="{e(m["caption"])}" loading="lazy" decoding="async"'
+                f' sizes="(max-width:620px) 100vw, 33vw">')
+    if m["type"] == "video" and m.get("poster"):
+        return f'<img src="{pre}{e(m["poster"])}" width="1600" height="900" alt="{e(m["title"])}" loading="lazy" decoding="async">'
+    return media_art(m)
+
+def gallery_tile(m, pre=""):
+    label = "فيديو" if m["type"] == "video" else "صورة"
+    return (f'<button type="button" class="tile reveal" data-lightbox data-type="{m["type"]}" data-era="{era_of(m["year"])}" '
+            f'data-title="{e(m["title"])} · {m["year"]}" data-caption="{e(m["caption"])}">'
+            f'<span class="media">{media_inner(m, pre)}<span class="badge">{label}</span></span>'
+            f'<span class="info"><b>{e(m["title"])}</b><span>{m["year"]} · {e(club_name(m["club"]))}</span></span></button>')
+
+def video_player(m, pre=""):
+    return (f'<figure class="player reveal" data-src="{e(m.get("src",""))}" data-youtube="{e(m.get("youtube",""))}" data-captions="{e(m.get("captions",""))}" data-title="{e(m["title"])}">'
+            f'<div class="frame">{media_inner(m, pre)}<button data-play aria-label="تشغيل: {e(m["title"])}"><span class="ring" aria-hidden="true">▶</span></button></div>'
+            f'<figcaption><b>{e(m["title"])}</b> · {m["year"]}<br>{e(m["caption"])}<span class="status" aria-live="polite"></span></figcaption></figure>')
+
+LIGHTBOX = ('<dialog id="lightbox" aria-label="عارض الوسائط"><div class="lb-stage"></div><div class="lb-bar">'
+            '<button class="icon-btn lb-prev" aria-label="السابق">→</button><div class="t"><p class="lb-title"></p><p class="lb-cap"></p></div>'
+            '<button class="icon-btn lb-next" aria-label="التالي">←</button><button class="icon-btn lb-close" aria-label="إغلاق">✕</button></div></dialog>')
+
+def instagram_section(pre=""):
+    big_icon = IG_ICON.replace('width="18" height="18"', 'width="36" height="36"')
+    cells = "".join(f'<a class="ig-cell reveal" href="{IG["url"]}" rel="noopener">{big_icon}<span>{t}</span></a>'
+                    for t in ["ذاكرة الأسبوع", "صور من الأرشيف", "لحظات خالدة", "قصص اللاعبين", "كواليس التوثيق", "تابعنا"])
+    embeds = ""
+    if IG["posts"]:
+        embeds = ('<div class="ig-consent callout"><p>تُعرض المنشورات من خوادم إنستغرام، وقد يضع ذلك ملفات تعريف ارتباط في متصفحك.</p>'
+                  '<button class="btn" id="ig-load" type="button">عرض المنشورات</button></div><div id="ig-posts" hidden>' +
+                  "".join(f'<blockquote class="instagram-media" data-instgrm-permalink="{e(u)}" data-instgrm-version="14"><a href="{e(u)}">عرض المنشور على إنستغرام</a></blockquote>' for u in IG["posts"]) + '</div>')
+    return (f'<section class="block ig" aria-labelledby="ig-title"><div class="wrap">'
+            f'<div class="ig-head reveal"><div class="ig-avatar"><span aria-hidden="true">ت</span></div><div><h2 id="ig-title" style="margin:0">تابع الحكاية على إنستغرام</h2>'
+            f'<p class="meta" style="margin:0"><a href="{IG["url"]}" rel="noopener" dir="ltr">@{IG["handle"]}</a> · صور أرشيفية، ولقطات من الملاعب، و«ذاكرة الأسبوع»</p></div>'
+            f'<a class="btn" style="margin-inline-start:auto" href="{IG["url"]}" rel="noopener">{IG_ICON} متابعة</a></div>'
+            f'<div class="ig-grid stagger">{cells}</div>{embeds}</div></section>')
+
+STORY = [
+  ("1907", "التأسيس", "الفصل الأول: ملعب صغير وحلم كبير", "في القاهرة يولد النادي الأهلي، وبعده بأربع سنوات الزمالك. كرة القدم لم تعد لعبة الوافدين، صارت لعبة المصريين."),
+  ("1934", "إيطاليا", "الفصل الثاني: أول العرب في المونديال", "مصر تصل إلى كأس العالم قبل أي منتخب أفريقي أو عربي، وعبد الرحمن فوزي يسجل هدفين في مرمى المجر."),
+  ("1948", "الدوري", "الفصل الثالث: ميلاد الدوري العام", "ينطلق الدوري الممتاز، وتبدأ حكاية المنافسة التي ستشغل الملايين لأكثر من سبعة عقود."),
+  ("1969", "أفريقيا", "الفصل الرابع: الدراويش في القمة", "في سنوات التهجير بعد الحرب، يرفع الإسماعيلي أول كأس أفريقية لنادٍ مصري."),
+  ("2010", "الثلاثية", "الفصل الخامس: الجيل الذهبي", "ثلاثة ألقاب أفريقية متتالية للمنتخب، رقم لم يحققه أحد قبله."),
+  ("2026", "اليوم", "الفصل السادس: الحكاية مستمرة", "نظام جديد للدوري، وبطل جديد، ومونديال جديد. والتاريخ يُكتب كل أسبوع."),
+]
+
+HERO3D = '''<section class="hero3d" aria-labelledby="hero-title">
+<div class="layer grain" data-depth="0.2" aria-hidden="true"></div>
+<div class="layer pyr" data-depth="0.6" aria-hidden="true"><svg viewBox="0 0 900 360"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D9A441"/><stop offset="1" stop-color="#7A5A22"/></linearGradient></defs>
+<path d="M60 360 260 70 460 360Z" fill="url(#pg)" opacity=".55"/><path d="M260 70 460 360H260Z" fill="#000" opacity=".25"/>
+<path d="M380 360 520 160 660 360Z" fill="url(#pg)" opacity=".4"/><path d="M520 160 660 360H520Z" fill="#000" opacity=".25"/>
+<path d="M0 360C200 330 500 350 900 340V360Z" fill="#071C2C"/></svg></div>
+<canvas id="ball3d" data-years="1907,1934,1948,1957,1969,1986,2008,2010,2020,2026" aria-hidden="true"></canvas>
+<div class="wrap"><div class="copy">
+<span class="eyebrow rise">ذاكرة الكرة المصرية · منذ 1907</span>
+<h1 id="hero-title" class="rise d1">تاريخنا</h1>
+<p class="lead rise d2">كل هدف حكاية، وكل جيل فصل. من ملاعب الجزيرة الأولى إلى منصات التتويج القارية، نروي قصة الكرة المصرية كما حدثت، موثّقة بالمصادر.</p>
+<form class="searchbox rise d3" action="search.html" role="search"><label class="sr-only" for="q">ابحث في تاريخنا</label>
+<input id="q" name="q" type="search" placeholder="ابحث عن نادٍ، لاعب، موسم، أو بطولة…" autocomplete="off"><button class="btn" type="submit">بحث</button></form>
+<div class="cta rise d4"><a class="btn glass" href="#story">ابدأ الرحلة</a><a class="btn glass" href="gallery.html">شاهد المعرض</a></div>
+</div></div><a class="scroll-cue" href="#story" aria-label="انتقل إلى الحكاية"></a></section>'''
+
 def build_home():
-    total_league = sum(1 for t in titles["items"] if t["comp"] == "league")
-    era_links = "".join(f'<a class="card" href="history.html#{x["id"]}"><span class="tag gold">{x["range"]}</span><h3>{e(x["name"])}</h3><p>{e(x["summary"][:90])}…</p></a>' for x in eras)
     sections = [
-      ("📜","history.html","التاريخ والفترات","ثماني حقب كبرى من 1882 حتى اليوم، بخط زمني يحصي الأحداث المفصلية."),
-      ("🛡️","clubs.html","ملفات الأندية","سيرة كل نادٍ، وتاريخه، وألقابه، وسجله في البطولات."),
-      ("👤","players.html","سير اللاعبين واللاعبات","سير مختصرة وخلفية المسيرة لأبرز نجوم الكرة المصرية."),
-      ("⚽","scorers.html","الهدافون التاريخيون","الأسماء والأهداف والأندية والمواسم في جدول قابل للترتيب."),
-      ("🏆","archive.html","أرشيف الألقاب","أرشيف قابل للتصفية بحسب النادي والفترة والبطولة."),
-      ("📰","news.html","الأخبار والتحديثات","تغطية يومية للعاجل، وتقرير أسبوعي، وزاوية «ذاكرة الأسبوع»."),
+      ("📜","history.html","التاريخ والفترات","ثماني حقب كبرى من 1882 حتى اليوم."),
+      ("🛡️","clubs.html","ملفات الأندية","السيرة والتاريخ والألقاب والسجل."),
+      ("👤","players.html","سير اللاعبين واللاعبات","سير مختصرة لأبرز النجوم."),
+      ("⚽","scorers.html","الهدافون التاريخيون","الأسماء والأهداف والمواسم."),
+      ("🏆","archive.html","أرشيف الألقاب","تصفية بالنادي والفترة والبطولة."),
+      ("🎞️","gallery.html","المعرض","صور تاريخية ومقاطع الأهداف."),
     ]
-    sec_cards = "".join(f'<a class="card section-card" href="{h}"><span class="ico" aria-hidden="true">{i}</span><h3>{t}</h3><p>{d}</p></a>' for i,h,t,d in sections)
-    top_clubs = "".join(club_card(c) for c in sorted(clubs, key=lambda c: -c["titles"]["league"])[:6])
+    sec_cards = "".join(f'<a class="card section-card reveal" data-tilt href="{h}"><span class="ico pop" aria-hidden="true">{i}</span><h3>{t}</h3><p>{d}</p></a>' for i,h,t,d in sections)
+    chapters = "".join(f'<article class="chapter" data-year="{y}" data-label="{e(l)}"><span class="k">{y}</span><h3>{e(t)}</h3><p>{e(d)}</p></article>' for y,l,t,d in STORY)
+    top_clubs = "".join(f'<div class="reveal">{club_card(c)}</div>' for c in sorted(clubs, key=lambda c: -c["titles"]["league"])[:6])
     latest = "".join(news_card(n) for n in sorted(news, key=lambda n: n["date"], reverse=True)[:3])
-    sc = "".join(f'<tr><td class="num">{s["rank"]}</td><td>{e(s["name"])}</td><td class="num">{s["goals"]}</td><td>{e(s["clubs"])}</td></tr>' for s in scorers["alltime"][:3])
-    legends = "".join(player_card(PLAYER[i]) for i in ["khatib","aboutrika","salah"])
-    body = f'''
-<section class="hero" aria-labelledby="hero-title">{HERO_ART}<div class="wrap">
-<span class="eyebrow">ذاكرة الكرة المصرية · منذ 1907</span>
-<h1 id="hero-title">تاريخنا</h1>
-<p class="lead">من ملاعب الجزيرة الأولى إلى منصات التتويج القارية: حكاية الدوري المصري وأنديته ونجومه، موثّقة بالمصادر ومحدّثة باستمرار.</p>
-<form class="searchbox" action="search.html" role="search"><label class="sr-only" for="q">ابحث في تاريخنا</label>
-<input id="q" name="q" type="search" placeholder="ابحث عن نادٍ، لاعب، موسم، أو بطولة…" autocomplete="off">
-<button class="btn" type="submit">بحث</button></form>
-<div class="chips" aria-label="عمليات بحث مقترحة"><a class="chip" href="search.html?q=الشاذلي">الشاذلي</a><a class="chip" href="search.html?q=1969">1969</a><a class="chip" href="search.html?club=ismaily">الإسماعيلي</a><a class="chip" href="archive.html?comp=caf_cl">أبطال أفريقيا</a></div>
-</div></section>
+    tiles = "".join(gallery_tile(m) for m in media if m["type"] == "photo")
+    first_video = next(m for m in media if m["type"] == "video")
+    legends = "".join(f'<div class="reveal">{player_card(PLAYER[i])}</div>' for i in ["khatib","aboutrika","salah"])
+    body = HERO3D + f'''
 <div class="wrap"><div class="stats" role="list">
-<div class="stat" role="listitem"><b>1948</b><span>انطلاق الدوري الممتاز</span></div>
-<div class="stat" role="listitem"><b>7</b><span>أندية توّجت بالدوري</span></div>
-<div class="stat" role="listitem"><b>7</b><span>ألقاب أمم أفريقيا للمنتخب</span></div>
-<div class="stat" role="listitem"><b>173</b><span>هدفاً للهدّاف التاريخي</span></div>
+<div class="stat reveal" role="listitem"><b data-count="1948">1948</b><span>انطلاق الدوري الممتاز</span></div>
+<div class="stat reveal" role="listitem"><b data-count="7">7</b><span>أندية توّجت بالدوري</span></div>
+<div class="stat reveal" role="listitem"><b data-count="7">7</b><span>ألقاب أمم أفريقيا للمنتخب</span></div>
+<div class="stat reveal" role="listitem"><b data-count="173">173</b><span>هدفاً للهدّاف التاريخي</span></div>
 </div></div>
-<section class="block"><div class="wrap"><div class="sec-head"><div><h2>أقسام الموقع</h2><p>كل قسم يجيب عن سؤال: ماذا حدث؟ من صنعه؟ وما مصدره؟</p></div></div>
-<div class="grid g3">{sec_cards}</div></div></section>
-<section class="block" style="background:var(--surface-2)"><div class="wrap"><div class="sec-head"><div><h2>رحلة عبر الحقب</h2><p>اسحب لاستعراض الحقب الثماني للكرة المصرية.</p></div><a class="btn ghost" href="history.html">الخط الزمني كاملاً</a></div>
-<div class="era-strip">{era_links}</div></div></section>
-<section class="block"><div class="wrap"><div class="sec-head"><div><h2>أندية صنعت التاريخ</h2><p>الأندية السبعة التي توّجت بالدوري، ومعها قوى صاعدة.</p></div><a class="btn ghost" href="clubs.html">كل الأندية</a></div>
-<div class="grid g3">{top_clubs}</div></div></section>
-<section class="block"><div class="wrap layout"><div>
-<div class="sec-head"><div><h2>آخر الأخبار</h2><p>مختارة وفق معايير تحرير معلنة ومصادر موثوقة.</p></div><a class="btn ghost" href="news.html">كل الأخبار</a></div>
-<div class="grid">{latest}</div></div>
-<aside class="aside"><div class="card"><h3>الهدافون التاريخيون</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>اللاعب</th><th>أهداف</th><th>النادي</th></tr></thead><tbody>{sc}</tbody></table></div><a href="scorers.html">الجدول الكامل ←</a></div>
-<div class="card"><h3>المعرض المرئي</h3><button class="video" type="button" data-video="" aria-label="تشغيل فيديو: لحظات خالدة في الكرة المصرية">{stripes_svg()}<span class="play"><i aria-hidden="true">▶</i><span>لحظات خالدة</span></span></button>
-<p class="meta">مساحة لمقاطع مرخّصة تُحمَّل عند الطلب فقط حفاظاً على سرعة الصفحة.</p></div></aside></div></section>
-<section class="block" style="background:var(--surface-2)"><div class="wrap"><div class="sec-head"><div><h2>أساطير من الملعب</h2><p>سير مختصرة لنجوم كتبوا فصولاً لا تُنسى.</p></div><a class="btn ghost" href="players.html">كل السير</a></div>
-<div class="grid g3">{legends}</div></div></section>'''
-    ld = {"@context":"https://schema.org","@type":"WebSite","name":SITE,"url":SITE_URL,"inLanguage":"ar",
+<section class="story" id="story" aria-labelledby="story-title"><div class="wrap">
+<h2 id="story-title" class="reveal">الحكاية في ستة فصول</h2><p class="reveal" style="color:#D3CAB8;max-width:620px">مرّر لتعبر أكثر من قرن من الكرة المصرية؛ السنة تتبعك.</p>
+<div class="story-grid"><div class="story-sticky" aria-hidden="true"><div><div class="yr" id="story-year">1907</div><p class="cap" id="story-cap">التأسيس</p></div><div class="track"><i id="story-bar"></i></div></div>
+<div>{chapters}</div></div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head reveal"><div><h2>أقسام الموقع</h2><p>كل قسم يجيب عن سؤال: ماذا حدث؟ من صنعه؟ وما مصدره؟</p></div></div>
+<div class="grid g3 stagger">{sec_cards}</div></div></section>
+<section class="block" style="background:var(--surface-2)"><div class="wrap"><div class="sec-head reveal"><div><h2>من الأرشيف</h2><p>صور تاريخية ومقاطع خالدة، تُحمَّل عند الحاجة فقط.</p></div><a class="btn ghost" href="gallery.html">المعرض كاملاً</a></div>
+<div class="layout"><div class="gallery" style="columns:2 220px">{tiles}</div>
+<aside class="aside">{video_player(first_video)}</aside></div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head reveal"><div><h2>أندية صنعت التاريخ</h2><p>الأندية التي توّجت بالدوري، ومعها قوى صاعدة.</p></div><a class="btn ghost" href="clubs.html">كل الأندية</a></div>
+<div class="grid g3 stagger">{top_clubs}</div></div></section>
+<section class="block" style="background:var(--surface-2)"><div class="wrap"><div class="sec-head reveal"><div><h2>أساطير من الملعب</h2><p>سير مختصرة لنجوم كتبوا فصولاً لا تُنسى.</p></div><a class="btn ghost" href="players.html">كل السير</a></div>
+<div class="grid g3 stagger">{legends}</div></div></section>
+<section class="block"><div class="wrap"><div class="sec-head reveal"><div><h2>آخر الأخبار</h2><p>مختارة وفق معايير تحرير معلنة ومصادر موثوقة.</p></div><a class="btn ghost" href="news.html">كل الأخبار</a></div>
+<div class="grid g3">{latest}</div></div></section>
+{instagram_section()}
+{LIGHTBOX}'''
+    ld = {"@context":"https://schema.org","@type":"WebSite","name":SITE,"url":SITE_URL,"inLanguage":"ar","sameAs":[IG["url"]],
           "potentialAction":{"@type":"SearchAction","target":SITE_URL+"/search.html?q={q}","query-input":"required name=q"}}
-    page("index.html", SITE, "تاريخنا: موقع عربي يوثّق تاريخ الدوري المصري وكرة القدم المصرية منذ التأسيس حتى اليوم، بملفات الأندية وسير اللاعبين والهدافين وأرشيف الألقاب والأخبار.", body, "index.html", jsonld=ld)
+    page("index.html", SITE, "تاريخنا: موقع عربي يوثّق تاريخ الدوري المصري وكرة القدم المصرية منذ التأسيس حتى اليوم، بملفات الأندية وسير اللاعبين والهدافين وأرشيف الألقاب والمعرض والأخبار.", body, "index.html", jsonld=ld)
+
+def build_gallery():
+    eras_used = [x for x in eras if any(era_of(m["year"]) == x["id"] for m in media)]
+    chips = ('<button type="button" data-filter="" aria-pressed="true">الكل</button><button type="button" data-filter="photo" aria-pressed="false">صور</button>'
+             '<button type="button" data-filter="video" aria-pressed="false">فيديو</button>' +
+             "".join(f'<button type="button" data-filter="{x["id"]}" aria-pressed="false">{e(x["name"])}</button>' for x in eras_used))
+    tiles = "".join(gallery_tile(m) for m in media)
+    videos = "".join(video_player(m) for m in media if m["type"] == "video")
+    body = head("المعرض", "صور تاريخية ومقاطع لأهداف ولحظات خالدة. كل وسيط يحمل مصدره وحقوقه، ولا يُحمَّل الفيديو إلا عند الضغط عليه.", [(None,"المعرض")]) + f'''
+<div class="wrap" style="margin-top:12px"><nav class="chipbar" data-target="gal" aria-label="تصفية المعرض">{chips}</nav>
+<div class="gallery" id="gal">{tiles}</div>
+<h2 style="margin-top:36px">مقاطع خالدة</h2><div class="grid g3">{videos}</div>
+<p class="callout" style="margin-top:24px">الصور المعروضة حالياً رسوم توضيحية مؤقتة، وتُستبدل بالصور والمقاطع الأصلية فور الحصول على ترخيص النشر من أصحاب الحقوق، مع ذكر المصدر أسفل كل وسيط.</p></div>{LIGHTBOX}'''
+    page("gallery.html","المعرض","معرض صور تاريخية ومقاطع فيديو لأهداف ولحظات خالدة في كرة القدم المصرية.",body,"gallery.html")
+
+def build_brand():
+    tiles = ""
+    for c in clubs:
+        off = official_logo(c["id"])
+        status = '<span class="tag ok">ملف رسمي</span>' if off else '<span class="tag warn">رمز مؤقت، ليس الشعار الرسمي</span>'
+        tiles += (f'<div class="reveal"><div class="logo-tile"><div class="on light">{crest(c)}</div><div class="on dark">{crest(c)}</div></div>'
+                  f'<div class="logo-meta"><b>{e(c["name"])}</b>{status}</div></div>')
+    body = head("دليل الشعارات", "نعرض شعارات الأندية كما هي، دون أي تعديل، وبإذن أصحابها. هذه الصفحة تشرح قواعد الاستخدام وحالة كل ملف.", [(None,"دليل الشعارات")]) + f'''
+<div class="wrap" style="margin-top:20px">
+<div class="dos"><div class="card"><h3>✅ نفعل</h3><ul><li>نستخدم الملف الرسمي من النادي فقط (SVG أولاً).</li><li>نترك مساحة فارغة حول الشعار تساوي ربع ارتفاعه.</li><li>نعرضه على خلفية محايدة فاتحة أو داكنة.</li><li>نلتزم بحد أدنى 32 بكسل على الشاشة.</li><li>نعرض الشعارات المتجاورة بالحجم نفسه.</li></ul></div>
+<div class="card"><h3>⛔ لا نفعل</h3><ul><li>لا نغيّر الألوان ولا نمدّ الشعار ولا نديره.</li><li>لا نضيف ظلالاً أو حدوداً أو تأثيرات ثلاثية الأبعاد على الشعار.</li><li>لا نضعه فوق صور أو خلفيات مزدحمة.</li><li>لا نحرّكه ولا نقصّه ولا ندمجه مع شعار آخر.</li><li>لا نستخدمه بطريقة توحي برعاية أو شراكة غير قائمة.</li></ul></div></div>
+<h2 style="margin-top:32px">الشعارات</h2><div class="grid g3 stagger">{tiles}</div>
+<p class="callout" style="margin-top:20px">لإضافة شعار رسمي: ضع الملف في <code>assets/logos/&lt;id&gt;.svg</code> (مثل <code>ahly.svg</code>) ثم أعد توليد الموقع، فيحلّ محل الرمز المؤقت في كل الصفحات تلقائياً.</p></div>'''
+    page("brand.html","دليل الشعارات","قواعد استخدام شعارات أندية الدوري المصري في موقع تاريخنا.",body,"")
 
 def build_history():
     out = []
@@ -246,7 +369,7 @@ def build_clubs():
         rows = "".join(f'<tr><td>{e(t["season"])}</td><td>{e(COMP[t["comp"]])}</td><td>{e(t["note"])}</td></tr>' for t in sorted([t for t in titles["items"] if t["club"]==c["id"]], key=lambda t:t["year"]))
         pl = "".join(player_card(p,"../") for p in players if c["id"] in p["clubs"])
         nw = "".join(news_card(n,"../") for n in news if c["id"] in n["clubs"])
-        body = head(c["name"], f'«{e(c["nickname"])}» · {e(c["city"])} · تأسس عام {c["founded"]}', [("clubs.html","الأندية"),(None,c["name"])], 1).replace('<h1>', f'<div class="club-hero">{crest(c)}<div><h1>',1).replace('</h1>', f'</h1><p class="meta" lang="en" dir="ltr" style="text-align:right">{e(c["name_en"])}</p></div></div>',1)
+        body = head(c["name"], f'«{e(c["nickname"])}» · {e(c["city"])} · تأسس عام {c["founded"]}', [("clubs.html","الأندية"),(None,c["name"])], 1).replace('<h1>', f'<div class="club-hero">{crest(c, pre="../")}<div><h1>',1).replace('</h1>', f'</h1><p class="meta" lang="en" dir="ltr" style="text-align:right">{e(c["name_en"])}</p></div></div>',1)
         body += f'''<div class="wrap layout" style="margin-top:20px"><article class="prose">
 <div class="facts"><div class="fact"><b>{c["founded"]}</b><span>سنة التأسيس</span></div><div class="fact"><b>{e(c["city"])}</b><span>المدينة</span></div>
 <div class="fact"><b>{c["titles"]["league"]}</b><span>لقب دوري</span></div><div class="fact"><b>{c["titles"]["caf_cl"]}</b><span>دوري أبطال أفريقيا</span></div></div>
@@ -371,6 +494,6 @@ if __name__ == "__main__":
     if OUT.exists(): shutil.rmtree(OUT)
     shutil.copytree(ROOT/"assets", OUT/"assets")
     (OUT/"assets/img/logo.svg").write_text(LOGO.replace('aria-hidden="true"','xmlns="http://www.w3.org/2000/svg"'),encoding="utf-8")
-    for f in [build_home,build_history,build_clubs,build_players,build_scorers,build_archive,build_news,build_sources,build_search,build_404,build_index]: f()
+    for f in [build_home,build_gallery,build_brand,build_history,build_clubs,build_players,build_scorers,build_archive,build_news,build_sources,build_search,build_404,build_index]: f()
     build_meta()
     print(f"تم توليد {len(pages)} صفحة في {OUT}")
