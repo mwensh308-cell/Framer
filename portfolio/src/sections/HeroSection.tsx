@@ -62,7 +62,7 @@ export default function HeroSection() {
           inactiveTransition="transform 0.6s ease-in-out"
         >
           <img
-            src={`${import.meta.env.BASE_URL}portrait.jpg`}
+            src={`${import.meta.env.BASE_URL}portrait.webp`}
             alt={`${profile.fullName} (${profile.name})`}
             className="w-full rotate-[-3deg] rounded-[28px] border-[6px] border-[#D7E2EA] object-cover shadow-[0_30px_80px_rgba(0,0,0,0.6)] sm:rounded-b-none sm:border-b-0"
             draggable={false}

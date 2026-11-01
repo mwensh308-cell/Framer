@@ -9,5 +9,5 @@ npm run build    # production build into dist/
 ```
 
 - Content (name, services, projects, contact) lives in `src/data.ts`.
-- The hero portrait is `public/portrait.jpg`. Replace it to change the photo.
+- The hero portrait is `public/portrait.webp`. Replace it to change the photo.
 - Sections: `src/sections/`. Reusable pieces (FadeIn, Magnet, AnimatedText, ContactButton, LiveProjectButton): `src/components/`.
