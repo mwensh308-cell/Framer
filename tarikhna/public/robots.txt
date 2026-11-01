@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://tarikhna.example/sitemap.xml
+Sitemap: https://tarikhna-nassersasa86-2183s-projects.vercel.app/sitemap.xml
