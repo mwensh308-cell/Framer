@@ -71,8 +71,8 @@ uniform float uTime; uniform float uScan; uniform vec3 cA; uniform vec3 cB; unif
 varying vec3 vNormal; varying vec3 vPos; varying float vNoise; varying vec3 vView;
 void main(){
   float fres = pow(1. - max(dot(vNormal, vView), 0.), 2.2);
-  vec3 base = mix(cC, cA, smoothstep(.08, .38, vNoise));
-  vec3 col = base * (.25 + .6*fres) + cB * pow(fres, 3.) * .7;
+  vec3 base = mix(cC, cA, smoothstep(.17, .42, vNoise));
+  vec3 col = base * (.45 + .6*fres) + cB * pow(fres, 3.) * .7;
   // contour lines (topographic inspection feel)
   float lines = abs(fract(vPos.y*9. + vNoise*3.) - .5);
   col += cB * smoothstep(.07, .0, lines) * .35 * (1.-fres);
@@ -92,7 +92,7 @@ async function initHero() {
     if (!(t.getContext('webgl2') || t.getContext('webgl'))) throw new Error('no webgl');
     THREE = await import('three');
   } catch (e) {
-    canvas.style.background = 'radial-gradient(60% 60% at 70% 40%, rgba(255,106,43,.25), transparent 70%), radial-gradient(40% 40% at 30% 70%, rgba(95,211,196,.15), transparent 70%)';
+    canvas.style.background = 'radial-gradient(60% 60% at 70% 40%, rgba(198,255,61,.22), transparent 70%), radial-gradient(40% 40% at 30% 70%, rgba(157,133,255,.22), transparent 70%)';
     return;
   }
   setLoad(0.6);
@@ -106,7 +106,7 @@ async function initHero() {
 
   const uniforms = {
     uTime: { value: 0 }, uMouse: { value: new THREE.Vector2() }, uAmp: { value: 0.2 }, uScan: { value: 0 },
-    cA: { value: new THREE.Color('#FF6A2B') }, cB: { value: new THREE.Color('#5FD3C4') }, cC: { value: new THREE.Color('#1B1E22') },
+    cA: { value: new THREE.Color('#C6FF3D') }, cB: { value: new THREE.Color('#9D85FF') }, cC: { value: new THREE.Color('#2A2380') },
   };
   const blob = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.0, small ? 28 : 56),
@@ -116,8 +116,8 @@ async function initHero() {
   group.add(blob);
 
   // Orbit rings — reads as gear / sensor gimbal
-  const ringMat = new THREE.LineBasicMaterial({ color: 0x2A2E33, transparent: true, opacity: 0.9 });
-  const ringMat2 = new THREE.LineBasicMaterial({ color: 0xFF6A2B, transparent: true, opacity: 0.55 });
+  const ringMat = new THREE.LineBasicMaterial({ color: 0x2E3370, transparent: true, opacity: 0.9 });
+  const ringMat2 = new THREE.LineBasicMaterial({ color: 0xC6FF3D, transparent: true, opacity: 0.55 });
   const mkRing = (r, mat, seg = 160, dash = 0) => {
     const pts = [];
     for (let i = 0; i <= seg; i++) {
@@ -143,7 +143,7 @@ async function initHero() {
   }
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xECE7DD, size: 0.018, transparent: true, opacity: 0.55, depthWrite: false }));
+  const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xEEF0FF, size: 0.018, transparent: true, opacity: 0.55, depthWrite: false }));
   scene.add(pts);
 
   function layout() {
@@ -320,6 +320,28 @@ function ui() {
     });
   });
 
+  // Lede: word-by-word reveal (English only; never used on Arabic text)
+  document.querySelectorAll('.lede').forEach((lede) => {
+    let wi = 0;
+    const wrap = (node) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            const sp = document.createElement('span'); sp.className = 'w'; sp.style.setProperty('--wi', wi++); sp.textContent = part; frag.appendChild(sp);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) wrap(n);
+      });
+    };
+    wrap(lede);
+    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { lede.classList.add('words-in'); o.disconnect(); } }, { threshold: 0.4 }).observe(lede);
+  });
+  // Skill chips: stagger index
+  document.querySelectorAll('.skill-group').forEach((g) => g.querySelectorAll('li').forEach((li, i) => li.style.setProperty('--ci', i)));
+
   // Counters
   const cIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
@@ -347,6 +369,23 @@ function ui() {
   }
 
   if (!finePointer || reduce) return;
+
+  // Cursor follower ring (native cursor stays visible)
+  const cur = document.querySelector('.cursor');
+  if (cur) {
+    let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, live = false;
+    addEventListener('pointermove', (e) => {
+      tx = e.clientX; ty = e.clientY; cur.classList.add('on');
+      cur.classList.toggle('hover', !!e.target.closest('a, button, .card, .polaroid, .skill-group li'));
+      if (!live) { live = true; requestAnimationFrame(follow); }
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
+    function follow() {
+      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
+      cur.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) requestAnimationFrame(follow); else live = false;
+    }
+  }
 
   // 3D tilt (cards + polaroid) with pointer-tracked glow
   const tilt = (el, max, base = '') => {
