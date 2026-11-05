@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Noto+Naskh+Arabic:wght@400;500;600&family=Reem+Kufi:wght@400;500;600&display=swap">
 <style>
 /* Layout: a single quiet column like a mushaf page — framed photo, a thin
-   octagonal ornament, and three pages switched by hash (#about #memoir #quran). */
+   octagonal ornament, and two pages switched by hash (#about #memoir). */
 :root{
   --bg:#f3f4ef;          /* stone, slightly green */
   --paper:#fbfbf8;
@@ -159,7 +159,6 @@ footer .closing{font-family:var(--f-classic);font-size:1.15rem;color:var(--green
   <ul>
     <li><a href="#about">التعريف</a></li>
     <li><a href="#memoir">المذكرات</a></li>
-    <li><a href="#quran">المسبحة</a></li>
   </ul>
 </nav>
 
@@ -183,6 +182,33 @@ footer .closing{font-family:var(--f-classic);font-size:1.15rem;color:var(--green
       <span class="age">عاش تسعًا وسبعين سنة</span>
     </div>
   </div>
+
+  <div class="prose">
+    <span class="eyebrow">ذكر</span>
+    <h2>مسبحة الذكر</h2>
+    <p class="lede">سبّح بما تيسّر، واهدِ ثوابه إلى روحه.</p>
+  </div>
+  <div class="misbaha" aria-labelledby="h-misbaha">
+    <fieldset class="dhikr-list" style="border:0;margin:0;padding:0">
+      <legend id="h-misbaha" class="eyebrow" style="margin-bottom:6px">اختر الذكر</legend>
+    </fieldset>
+    <div class="counter">
+      <p class="current" id="current" aria-live="polite"></p>
+      <button class="bead" id="bead" type="button" aria-label="سبّح: اضغط للعدّ">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="3"/>
+          <circle id="ring" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/>
+        </svg>
+        <span class="face"><span class="count" id="count">٠</span><span class="of" id="of">من ٣٣</span></span>
+      </button>
+      <div class="row">
+        <button class="btn" id="reset" type="button">إعادة العدّ</button>
+        <button class="btn" id="target" type="button">الهدف: ٣٣</button>
+      </div>
+      <p class="total" id="total"></p>
+    </div>
+  </div>
+  <p class="note">يُحفظ العدّ في متصفحك وحده، ولا يُرسل إلى أي جهة. اضغط على الدائرة أو على مفتاح المسافة للعدّ.</p>
 
   <article class="surah" aria-label="سورة الفاتحة">
     <div class="surah-head"><h2>سورة الفاتحة</h2><span>مكية · ٧ آيات</span></div>
@@ -283,37 +309,6 @@ footer .closing{font-family:var(--f-classic);font-size:1.15rem;color:var(--green
   </ol>
 </section>
 
-<!-- ============ السورة والمسبحة ============ -->
-<section data-view="quran" aria-labelledby="h-quran" hidden>
-  <div class="prose">
-    <span class="eyebrow">ذكر</span>
-    <h2 id="h-quran">مسبحة الذكر</h2>
-    <p class="lede">سبّح بما تيسّر، واهدِ ثوابه إلى روحه. تجد سور الفاتحة ويس والإخلاص والأدعية في الصفحة الأولى تحت الصورة.</p>
-  </div>
-
-
-  <div class="misbaha" aria-labelledby="h-misbaha">
-    <fieldset class="dhikr-list" style="border:0;margin:0;padding:0">
-      <legend id="h-misbaha" class="eyebrow" style="margin-bottom:6px">اختر الذكر</legend>
-    </fieldset>
-    <div class="counter">
-      <p class="current" id="current" aria-live="polite"></p>
-      <button class="bead" id="bead" type="button" aria-label="سبّح: اضغط للعدّ">
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="3"/>
-          <circle id="ring" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/>
-        </svg>
-        <span class="face"><span class="count" id="count">٠</span><span class="of" id="of">من ٣٣</span></span>
-      </button>
-      <div class="row">
-        <button class="btn" id="reset" type="button">إعادة العدّ</button>
-        <button class="btn" id="target" type="button">الهدف: ٣٣</button>
-      </div>
-      <p class="total" id="total"></p>
-    </div>
-  </div>
-  <p class="note">يُحفظ العدّ في متصفحك وحده، ولا يُرسل إلى أي جهة. اضغط على الدائرة أو على مفتاح المسافة للعدّ.</p>
-</section>
 
 
 <footer>
