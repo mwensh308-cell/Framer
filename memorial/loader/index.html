@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>رجب سيد أحمد</title>
+<style>body{margin:0;background:#f3f4ef;color:#1f2a26;font-family:"Amiri","Traditional Arabic",serif;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center}@media (prefers-color-scheme:dark){body{background:#121816;color:#e6ebe6}}p{font-size:1.4rem;padding:16px}</style>
+</head>
+<body>
+<p id="msg">بسم الله الرحمن الرحيم</p>
+<script>
+(function(){
+  var URL='https://raw.githubusercontent.com/mwensh308-cell/Framer/dbf6c08d5f68077b3edd85043fc6ec43a878f9cd/memorial/site/index.html';
+  var SHA='568d10de87453752f2987abb8292649a08c2a3632fdfc953c110f7cb2e73870d';
+  function fail(){document.getElementById('msg').textContent='تعذّر تحميل الصفحة، أعد المحاولة بعد قليل.';}
+  fetch(URL).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(buf){
+    return crypto.subtle.digest('SHA-256',buf).then(function(d){
+      var hex=[].map.call(new Uint8Array(d),function(b){return ('0'+b.toString(16)).slice(-2)}).join('');
+      if(hex!==SHA) throw 0;
+      var html=new TextDecoder('utf-8').decode(buf);
+      document.open();document.write(html);document.close();
+    });
+  }).catch(fail);
+})();
+</script>
+</body>
+</html>
