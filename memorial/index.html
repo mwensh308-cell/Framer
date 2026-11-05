@@ -118,6 +118,11 @@ blockquote{margin:0;padding:4px 18px;border-inline-start:3px solid var(--gold);f
 .note{font-size:.95rem;color:var(--muted)}
 
 .bism{font-family:var(--f-quran);font-size:1.6rem;text-align:center;color:var(--green);margin:0}
+.clamp{position:relative;overflow:hidden;transition:max-height .6s ease}
+.clamp.collapsed::after{content:"";position:absolute;inset:auto 0 0;height:6em;background:linear-gradient(to bottom,transparent,var(--paper));pointer-events:none}
+.more{align-self:center;display:inline-flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:1rem;padding:8px 22px;border-color:var(--green);color:var(--green)}
+.more svg{width:14px;height:14px;transition:transform .3s}
+.more[aria-expanded="true"] svg{transform:rotate(180deg)}
 .duas{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:28px clamp(16px,4vw,40px);display:flex;flex-direction:column;gap:18px}
 .duas .surah-head h2{font-size:1.35rem;color:var(--green)}
 .dua{display:flex;flex-direction:column;gap:4px}
@@ -380,5 +385,32 @@ footer .closing{font-family:var(--f-classic);font-size:1.15rem;color:var(--green
   $('reset').addEventListener('click',function(){st.counts[st.i]=0;save();render()});
   $('target').addEventListener('click',function(){st.t=(st.t+1)%TARGETS.length;save();render()});
   render();
+  /* ---- read more for long surahs ---- */
+  var LIMIT=360, slow=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  [].slice.call(document.querySelectorAll('.surah .quran')).forEach(function(p,k){
+    if(p.scrollHeight<=LIMIT+160) return;
+    p.id=p.id||'surah-text-'+k;
+    p.classList.add('clamp','collapsed'); p.style.maxHeight=LIMIT+'px';
+    var b=document.createElement('button');
+    b.type='button'; b.className='btn more'; b.setAttribute('aria-controls',p.id); b.setAttribute('aria-expanded','false');
+    b.innerHTML='<span>اقرأ باقي السورة</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+    p.after(b);
+    p.addEventListener('transitionend',function(e){ if(e.propertyName==='max-height'&&!p.classList.contains('collapsed')) p.style.maxHeight='none'; });
+    b.addEventListener('click',function(){
+      var open=p.classList.contains('collapsed');
+      if(open){
+        p.style.maxHeight=p.scrollHeight+'px'; p.classList.remove('collapsed');
+        if(!slow) p.style.maxHeight='none';
+        b.querySelector('span').textContent='إخفاء باقي السورة';
+      }else{
+        p.style.maxHeight=p.scrollHeight+'px'; p.offsetHeight;
+        p.style.maxHeight=LIMIT+'px'; p.classList.add('collapsed');
+        b.querySelector('span').textContent='اقرأ باقي السورة';
+        var top=p.closest('.surah').getBoundingClientRect().top;
+        if(top<0) p.closest('.surah').scrollIntoView({behavior:slow?'smooth':'auto'});
+      }
+      b.setAttribute('aria-expanded',String(open));
+    });
+  });
 })();
 </script>
