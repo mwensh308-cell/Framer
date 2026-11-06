@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ClothingRailHero from "@/components/ui/product-rail-gallery";
-import { SECTIONS, type Product, type SectionSlug } from "@/lib/products";
+import { AddToCart } from "@/components/add-to-cart";
+import { SECTIONS, formatPrice, type Product, type SectionSlug } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 const LABELS: Record<Product["category"], string> = { tops: "Tops", knitwear: "Knitwear", outerwear: "Outerwear" };
@@ -41,13 +42,14 @@ export function ShopView({ title, intro, items, active }: { title: string; intro
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex items-baseline justify-between gap-3">
                   <h3 className="text-sm font-medium">{item.name}</h3>
-                  <span className="text-sm tabular-nums">{item.tag}</span>
+                  <span className="text-sm tabular-nums">{formatPrice(item.price)}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {LABELS[item.category]}
                   {item.isNew && " · New"}
                 </p>
                 {item.description && <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{item.description}</p>}
+                <AddToCart id={item.id} name={item.name} />
               </div>
             </li>
           ))}

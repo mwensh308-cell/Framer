@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search } from "lucide-react";
+import { CartButton } from "@/components/cart-button";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -41,9 +42,7 @@ export function SiteHeader() {
           <Link href="/shop" aria-label="Search the shop" className="rounded-full p-2 text-muted-foreground hover:text-foreground">
             <Search className="size-4" />
           </Link>
-          <Link href="/shop" aria-label="Shop all" className="rounded-full p-2 text-muted-foreground hover:text-foreground">
-            <ShoppingBag className="size-4" />
-          </Link>
+          <CartButton />
         </div>
       </div>
       <nav aria-label="Main" className="flex gap-6 overflow-x-auto px-4 pb-3 text-sm text-muted-foreground sm:hidden">
