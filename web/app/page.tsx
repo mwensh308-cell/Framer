@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Search, ShoppingBag } from "lucide-react";
 import ClothingRailHero from "@/components/ui/product-rail-gallery";
-import { RAIL_DEMO_ITEMS } from "@/components/ui/product-rail-gallery-demo";
+import { ELWENSH_ITEMS } from "@/lib/products";
 
 export default function Home() {
   return (
@@ -28,8 +28,8 @@ export default function Home() {
 
       <main className="flex flex-1 items-center">
         <ClothingRailHero
-          items={RAIL_DEMO_ITEMS}
-          hanger="none"
+          items={ELWENSH_ITEMS}
+          hanger="wood"
           eyebrow="ELWENSH · New season"
           heading="Ten pieces on the rail. Pick one up."
           caption="Brush along the rail, slide a hanger, lift a piece to see the back."
