@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Palace Courtyard Walkthrough</title>
+<meta name="description" content="A procedural 9:16 3D walkthrough of an ancient Persian-style palace courtyard, styled like a museum virtual tour.">
+<style>
+  :root {
+    --page-bg: #0d0d10;
+    --page-fg: #d9d6d0;
+    --stage-bg: #000;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --page-bg: #ecebe7; --page-fg: #2a2723; }
+  }
+  :root[data-theme="light"] { --page-bg: #ecebe7; --page-fg: #2a2723; }
+  :root[data-theme="dark"]  { --page-bg: #0d0d10; --page-fg: #d9d6d0; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--page-bg);
+    color: var(--page-fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+                 "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  /* 9:16 stage: max 720x1280, fits viewport with a 16px gutter */
+  .stage {
+    position: relative;
+    width: min(720px, calc(100vw - 32px), calc((100dvh - 32px) * 9 / 16));
+    aspect-ratio: 9 / 16;
+    background: var(--stage-bg);
+    overflow: hidden;
+    container-type: inline-size;
+    border-radius: 0;
+    isolation: isolate;
+  }
+  @supports not (height: 1dvh) {
+    .stage { width: min(720px, calc(100vw - 32px), calc((100vh - 32px) * 9 / 16)); }
+  }
+  /* Optional laptop-style bezel, off by default (?bezel=1) */
+  .stage.bezel {
+    border: 2.4cqw solid #141416;
+    border-radius: 4.4cqw;
+    box-shadow: 0 0 0 1px #2c2c30, 0 30px 80px rgba(0,0,0,.45);
+  }
+  canvas#scene { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  canvas#scene:active { cursor: grabbing; }
+
+  .pov {
+    position: absolute;
+    top: 7cqw;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #000;
+    font-weight: 800;
+    font-size: 4.6cqw;
+    line-height: 1.2;
+    padding: 2.2cqw 4.2cqw;
+    border-radius: 2.6cqw;
+    white-space: nowrap;
+    box-shadow: 0 1.2cqw 4cqw rgba(0,0,0,.25);
+    pointer-events: none;
+    z-index: 3;
+    letter-spacing: -0.01em;
+  }
+
+  .caption {
+    position: absolute;
+    left: 6cqw;
+    right: 6cqw;
+    bottom: 9cqw;
+    color: #fff;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    transform: translateY(2cqw);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    text-shadow: 0 .3cqw 2cqw rgba(0,0,0,.55);
+  }
+  .caption.show { opacity: 1; transform: none; }
+  .caption .kicker {
+    font-size: 2.5cqw;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    opacity: .85;
+    display: flex;
+    align-items: center;
+    gap: 2cqw;
+    margin-bottom: 1.6cqw;
+  }
+  .caption .kicker::before {
+    content: "";
+    width: 7cqw; height: 2px;
+    background: #f3cf98;
+  }
+  .caption h2 {
+    margin: 0;
+    font-size: 6.6cqw;
+    font-weight: 750;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .caption p {
+    margin: 1.4cqw 0 0;
+    font-size: 3.1cqw;
+    opacity: .9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shade {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 2;
+    background:
+      linear-gradient(to top, rgba(20,10,4,.55), rgba(20,10,4,0) 30%),
+      linear-gradient(to bottom, rgba(20,10,4,.18), rgba(20,10,4,0) 18%);
+  }
+  .fader {
+    position: absolute; inset: 0; background: #000;
+    opacity: 0; pointer-events: none; z-index: 4;
+    transition: opacity .7s ease;
+  }
+  .fader.on { opacity: 1; }
+
+  .fallback {
+    position: absolute; inset: 0;
+    display: none;
+    place-items: center;
+    text-align: center;
+    padding: 8cqw;
+    z-index: 5;
+    color: #f1e6d6;
+    background: radial-gradient(circle at 30% 30%, #4a3423, #17110c 70%);
+    font-size: 3.8cqw;
+    line-height: 1.45;
+  }
+  .fallback.on { display: grid; }
+  .fallback strong { display: block; font-size: 5cqw; margin-bottom: 2cqw; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caption, .fader { transition: none; }
+    .caption { opacity: 1; transform: none; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+  <main class="stage" id="stage">
+    <canvas id="scene" role="img" aria-label="3D view of a procedurally built ancient Persian-style palace courtyard with columned hall, relief walls and a distant gate"></canvas>
+    <div class="shade"></div>
+    <div class="pov">POV: Claude can't do this 😩</div>
+    <div class="caption" id="caption" aria-live="polite">
+      <div class="kicker">Virtual Tour · Gallery 3</div>
+      <h2>Tribute &amp; Gift Giving</h2>
+      <p>Envoys climb the great stair bearing offerings for the king.</p>
+    </div>
+    <div class="fader" id="fader"></div>
+    <div class="fallback" id="fallback" role="alert"><div><strong>3D view unavailable</strong><span id="fallbackMsg">Your browser could not start WebGL, so the walkthrough can't be shown. Try a recent desktop or mobile browser with hardware acceleration turned on.</span></div></div>
+  </main>
+
+<script>
+  // Classic script: runs even if the module graph fails to load.
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var t = q.get('theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    if (q.get('bezel') === '1') document.getElementById('stage').classList.add('bezel');
+    window.__palaceFail = function (msg) {
+      var fb = document.getElementById('fallback');
+      if (msg) document.getElementById('fallbackMsg').textContent = msg;
+      fb.classList.add('on');
+    };
+    setTimeout(function () {
+      if (!window.__palaceReady) window.__palaceFail('The 3D engine could not be loaded (network or CDN blocked). Check your connection and reload the page.');
+    }, 12000);
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 't' || e.key === 'T') {
+        var root = document.documentElement;
+        var cur = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        root.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light');
+      }
+    });
+  })();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const stage = document.getElementById('stage');
+const canvas = document.getElementById('scene');
+const caption = document.getElementById('caption');
+const fader = document.getElementById('fader');
+const params = new URLSearchParams(location.search);
+
+function hasWebGL() {
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+  } catch (e) { return false; }
+}
+
+let renderer;
+try {
+  if (!hasWebGL()) throw new Error('no webgl');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+} catch (e) {
+  window.__palaceReady = true;
+  window.__palaceFail();
+  throw e;
+}
+canvas.addEventListener('webglcontextlost', (e) => {
+  e.preventDefault();
+  window.__palaceFail('The graphics context was lost. Reload the page to restart the walkthrough.');
+});
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+const HAZE = new THREE.Color('#e7c29a');
+scene.fog = new THREE.Fog(HAZE, 45, 260);
+
+const camera = new THREE.PerspectiveCamera(52, 9 / 16, 0.1, 900);
+
+/* ---------------------------------------------------------------- helpers */
+const rand = (() => { let s = 1337; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3();
+
+// Transform a primitive, strip uv, tag a vertex colour, return non-indexed geometry ready to merge.
+function part(geo, { p = [0, 0, 0], r = [0, 0, 0], s = [1, 1, 1], c = '#ffffff' } = {}) {
+  const m = new THREE.Matrix4().compose(_v.set(...p), _q.setFromEuler(_e.set(...r)), _s.set(...s));
+  geo.applyMatrix4(m);
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  g.deleteAttribute('uv');
+  const col = new THREE.Color(c);
+  const n = g.attributes.position.count;
+  const arr = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { arr[i * 3] = col.r; arr[i * 3 + 1] = col.g; arr[i * 3 + 2] = col.b; }
+  g.setAttribute('color', new THREE.BufferAttribute(arr, 3));
+  return g;
+}
+const lathe = (pts, seg = 32) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), seg);
+
+/* ---------------------------------------------------------------- sky */
+const SUN_DIR = new THREE.Vector3(-0.80, 0.36, 0.30).normalize();
+const sky = new THREE.Mesh(
+  new THREE.SphereGeometry(600, 32, 16),
+  new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: {
+      uZenith: { value: new THREE.Color('#7f9fc0') },
+      uHorizon: { value: HAZE.clone() },
+      uWarm: { value: new THREE.Color('#f39a5a') },
+      uSun: { value: SUN_DIR },
+    },
+    vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: `
+      uniform vec3 uZenith, uHorizon, uWarm, uSun; varying vec3 vDir;
+      void main(){
+        vec3 d = normalize(vDir);
+        float h = d.y;
+        float t = smoothstep(-0.02, 0.55, h);
+        vec3 col = mix(uHorizon, uZenith, pow(t, 0.75));
+        float left = clamp(-d.x * 0.6 + 0.45, 0.0, 1.0);
+        col = mix(col, uWarm, (1.0 - t) * left * 0.65);
+        float s = max(dot(d, normalize(uSun)), 0.0);
+        col += uWarm * pow(s, 6.0) * 0.55 + vec3(1.0, 0.86, 0.62) * pow(s, 350.0) * 4.0;
+        col = mix(col, uHorizon, smoothstep(0.03, -0.08, h));
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  })
+);
+sky.renderOrder = -1;
+scene.add(sky);
+
+/* ---------------------------------------------------------------- lights */
+const hemi = new THREE.HemisphereLight('#dfe7f2', '#b78a5c', 1.25);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight('#ffcf9c', 3.0);
+sun.target.position.set(0, 0, -10);
+sun.position.copy(sun.target.position).addScaledVector(SUN_DIR, 120);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -72, right: 72, top: 72, bottom: -72, near: 10, far: 300 });
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.04;
+scene.add(sun, sun.target);
+
+/* ---------------------------------------------------------------- materials (shared) */
+const stoneMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.88, metalness: 0 });
+const carvedMat = new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.82, metalness: 0 });
+const treeMat = new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.95, flatShading: true });
+const farMat = new THREE.MeshStandardMaterial({ color: '#b99a7c', roughness: 1, flatShading: true });
+
+/* ---------------------------------------------------------------- ground + paved floor */
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400), new THREE.MeshStandardMaterial({ color: '#c6a173', roughness: 1 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+function pavingTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const g = c.getContext('2d');
+  g.fillStyle = '#8f7353'; g.fillRect(0, 0, 512, 512);
+  const n = 4, sz = 512 / n;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const l = 66 + rand() * 9, h = 30 + rand() * 6;
+    g.fillStyle = `hsl(${h} 38% ${l}%)`;
+    g.fillRect(x * sz + 3, y * sz + 3, sz - 6, sz - 6);
+    for (let k = 0; k < 160; k++) {
+      g.fillStyle = `rgba(${rand() < .5 ? '255,240,220' : '90,60,35'},${0.05 + rand() * 0.07})`;
+      g.fillRect(x * sz + 3 + rand() * (sz - 8), y * sz + 3 + rand() * (sz - 8), 2 + rand() * 6, 2 + rand() * 6);
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  return t;
+}
+const PLAT = { w: 60, d: 124, cz: -12, top: 3 };
+const floorTex = pavingTexture();
+floorTex.repeat.set(PLAT.w / 4, PLAT.d / 4);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(PLAT.w, PLAT.d), new THREE.MeshStandardMaterial({ map: floorTex, roughness: 0.9 }));
+floor.rotation.x = -Math.PI / 2;
+floor.position.set(0, PLAT.top, PLAT.cz);
+floor.receiveShadow = true;
+scene.add(floor);
+
+/* ---------------------------------------------------------------- all box-shaped stonework: ONE InstancedMesh */
+const boxes = [];
+const addBox = (x, y, z, w, h, d, c = '#d7b58b', ry = 0) => boxes.push({ x, y, z, w, h, d, c, ry });
+
+// stepped platform (3 tiers)
+addBox(0, 0.5, PLAT.cz, PLAT.w + 6, 1, PLAT.d + 6, '#c9a57a');
+addBox(0, 1.0, PLAT.cz, PLAT.w + 3, 2, PLAT.d + 3, '#d1ad82');
+addBox(0, 1.49, PLAT.cz, PLAT.w, 2.98, PLAT.d, '#d9b78c');
+// grand stair at the entrance (front edge z = 50)
+const FRONT = PLAT.cz + PLAT.d / 2;
+for (let i = 0; i < 8; i++) {
+  const top = PLAT.top - i * 0.375;
+  addBox(0, top / 2, FRONT + (i + 0.5) * 0.9, 18, top, 0.9, i % 2 ? '#d6b388' : '#dcba90');
+}
+for (const sx of [-1, 1]) { // balustrade blocks beside the stair
+  for (let i = 0; i < 4; i++) {
+    const top = PLAT.top + 1.1 - i * 0.75;
+    addBox(sx * 9.6, top / 2, FRONT + (i + 0.5) * 1.8, 1.2, top, 1.8, '#cfa97e');
+  }
+}
+
+// courtyard walls
+const WALL_H = 8, WALL_TOP = PLAT.top + WALL_H, SIDE_X = 29.5, Z_COURT0 = -2, Z_FAR = -70;
+for (const sx of [-1, 1]) {
+  addBox(sx * SIDE_X, PLAT.top + WALL_H / 2, (Z_COURT0 + Z_FAR) / 2, 1, WALL_H, Z_COURT0 - Z_FAR, '#d3ae84');
+  // relief band backing + ledges
+  addBox(sx * (SIDE_X - 0.55), PLAT.top + 3.4, (Z_COURT0 + Z_FAR) / 2 - 1, 0.12, 4.4, Z_COURT0 - Z_FAR - 6, '#c79f74');
+  for (const yy of [1.1, 3.4, 5.7]) addBox(sx * (SIDE_X - 0.65), PLAT.top + yy, (Z_COURT0 + Z_FAR) / 2 - 1, 0.25, 0.18, Z_COURT0 - Z_FAR - 6, '#e0c39c');
+}
+// far wall with a gate opening (|x| < 4)
+for (const sx of [-1, 1]) addBox(sx * 17, PLAT.top + WALL_H / 2 + 0.5, Z_FAR, 26, WALL_H + 1, 1.6, '#d3ae84');
+// gate pylons, lintel, cavetto cornice
+for (const sx of [-1, 1]) addBox(sx * 5.6, PLAT.top + 7.5, Z_FAR, 3.2, 15, 3.4, '#d8b58a');
+addBox(0, PLAT.top + 14, Z_FAR, 14.4, 2, 3.4, '#d1ad82');
+addBox(0, PLAT.top + 15.3, Z_FAR, 15.6, 0.6, 4.0, '#e2c49d');
+addBox(0, PLAT.top + 15.8, Z_FAR, 16.4, 0.4, 4.4, '#e7cba5');
+// stepped merlons along wall tops
+function merlons(x0, z0, x1, z1, top) {
+  const len = Math.hypot(x1 - x0, z1 - z0), n = Math.floor(len / 1.5), ry = Math.atan2(x1 - x0, z1 - z0);
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, x = x0 + (x1 - x0) * t, z = z0 + (z1 - z0) * t;
+    addBox(x, top + 0.3, z, 0.7, 0.6, 1.0, '#dab88e', ry);
+    addBox(x, top + 0.8, z, 0.7, 0.4, 0.55, '#dab88e', ry);
+  }
+}
+for (const sx of [-1, 1]) merlons(sx * SIDE_X, Z_COURT0, sx * SIDE_X, Z_FAR + 1, WALL_TOP);
+merlons(-SIDE_X, Z_FAR, -7.4, Z_FAR, WALL_TOP + 1);
+merlons(7.4, Z_FAR, SIDE_X, Z_FAR, WALL_TOP + 1);
+// tree planters
+const TREE_SPOTS = [[-22, -64], [-15, -63], [-11, -65.5], [11.5, -64.5], [17, -63], [23, -65], [-25, -40], [25, -26]];
+for (const [x, z] of TREE_SPOTS) addBox(x, PLAT.top + 0.3, z, 2.2, 0.6, 2.2, '#bf9a6f');
+
+const boxMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), stoneMat, boxes.length);
+{
+  const m = new THREE.Matrix4(), col = new THREE.Color();
+  boxes.forEach((b, i) => {
+    m.compose(_v.set(b.x, b.y, b.z), _q.setFromEuler(_e.set(0, b.ry, 0)), _s.set(b.w, b.h, b.d));
+    boxMesh.setMatrixAt(i, m);
+    col.set(b.c).offsetHSL(0, 0, (rand() - 0.5) * 0.025);
+    boxMesh.setColorAt(i, col);
+  });
+}
+boxMesh.castShadow = boxMesh.receiveShadow = true;
+scene.add(boxMesh);
+
+/* ---------------------------------------------------------------- column: one merged geometry (base + fluted shaft + bull capital) */
+function columnGeometry() {
+  const P = [];
+  const base = '#d6b48b', shaftC = '#dcbb92', cap = '#cda57b', bull = '#c39a70', dark = '#a98057';
+  P.push(part(new THREE.BoxGeometry(1.9, 0.4, 1.9), { p: [0, 0.2, 0], c: base }));
+  P.push(part(new THREE.BoxGeometry(1.6, 0.2, 1.6), { p: [0, 0.5, 0], c: base }));
+  // bell-shaped base
+  P.push(part(lathe([[0.001, 0.6], [0.95, 0.6], [0.92, 0.75], [0.82, 0.95], [0.7, 1.15], [0.62, 1.3], [0.6, 1.36], [0.001, 1.36]], 24), { c: base }));
+  P.push(part(new THREE.TorusGeometry(0.6, 0.09, 6, 24), { p: [0, 1.4, 0], r: [Math.PI / 2, 0, 0], c: base }));
+  // fluted shaft
+  const H = 10, sh = new THREE.CylinderGeometry(0.5, 0.56, H, 72, 1, true);
+  const pos = sh.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i), r = Math.hypot(x, z), th = Math.atan2(z, x);
+    const f = Math.pow(Math.abs(Math.sin(9 * th)), 0.8);
+    const k = 1 - 0.055 * f;
+    pos.setX(i, (x / r) * r * k); pos.setZ(i, (z / r) * r * k);
+  }
+  sh.computeVertexNormals();
+  P.push(part(sh, { p: [0, 1.4 + H / 2, 0], c: shaftC }));
+  const topY = 1.4 + H;
+  P.push(part(new THREE.TorusGeometry(0.5, 0.08, 6, 24), { p: [0, topY, 0], r: [Math.PI / 2, 0, 0], c: cap }));
+  // palm / lotus flare
+  P.push(part(lathe([[0.001, 0], [0.5, 0], [0.56, 0.25], [0.7, 0.55], [0.9, 0.8], [0.98, 0.92], [0.001, 0.92]], 20), { p: [0, topY + 0.05, 0], c: cap }));
+  for (let i = 0; i < 12; i++) { // petal ribs
+    const a = (i / 12) * Math.PI * 2;
+    P.push(part(new THREE.BoxGeometry(0.08, 0.8, 0.12), { p: [Math.cos(a) * 0.75, topY + 0.5, Math.sin(a) * 0.75], r: [0, -a, 0], c: cap }));
+  }
+  // volute block with vertical scrolls
+  const vY = topY + 0.97;
+  P.push(part(new THREE.BoxGeometry(0.95, 1.6, 0.95), { p: [0, vY + 0.8, 0], c: cap }));
+  for (const sz of [-1, 1]) for (const yy of [0.35, 1.25]) {
+    P.push(part(new THREE.CylinderGeometry(0.24, 0.24, 1.05, 10), { p: [0, vY + yy, sz * 0.5], r: [0, 0, Math.PI / 2], c: cap }));
+    P.push(part(new THREE.CylinderGeometry(0.24, 0.24, 1.05, 10), { p: [sz * 0.5, vY + yy, 0], r: [Math.PI / 2, 0, 0], c: cap }));
+  }
+  P.push(part(new THREE.BoxGeometry(1.3, 0.22, 1.3), { p: [0, vY + 1.7, 0], c: cap }));
+  // double bull protome (two forequarters back to back along x)
+  const bY = vY + 1.81;
+  P.push(part(new THREE.BoxGeometry(0.9, 0.35, 1.0), { p: [0, bY + 0.17, 0], c: bull })); // saddle
+  for (const sx of [-1, 1]) {
+    P.push(part(new THREE.SphereGeometry(0.62, 10, 7), { p: [sx * 0.8, bY + 0.55, 0], s: [1.45, 1.0, 0.95], c: bull })); // chest
+    P.push(part(new THREE.BoxGeometry(0.55, 0.62, 0.5), { p: [sx * 1.62, bY + 0.86, 0], r: [0, 0, sx * -0.35], c: bull })); // head
+    P.push(part(new THREE.BoxGeometry(0.34, 0.36, 0.42), { p: [sx * 1.95, bY + 0.62, 0], r: [0, 0, sx * -0.35], c: bull })); // muzzle
+    for (const sz of [-1, 1]) {
+      P.push(part(new THREE.ConeGeometry(0.075, 0.55, 8), { p: [sx * 1.52, bY + 1.3, sz * 0.2], r: [sz * 0.5, 0, sx * -0.55], c: dark })); // horns
+      P.push(part(new THREE.BoxGeometry(0.12, 0.18, 0.22), { p: [sx * 1.45, bY + 1.05, sz * 0.32], c: bull })); // ears
+      P.push(part(new THREE.BoxGeometry(0.75, 0.24, 0.24), { p: [sx * 1.3, bY + 0.08, sz * 0.24], c: bull })); // folded legs
+      P.push(part(new THREE.BoxGeometry(0.22, 0.2, 0.26), { p: [sx * 1.7, bY + 0.06, sz * 0.24], c: dark })); // hooves
+    }
+    P.push(part(new THREE.BoxGeometry(0.3, 0.55, 0.62), { p: [sx * 1.25, bY + 0.6, 0], c: '#b98f66' })); // mane collar
+  }
+  const g = mergeGeometries(P, false);
+  g.computeBoundingSphere();
+  return g;
+}
+
+const cols = [];
+// hypostyle hall: 6 x 6 grid either side of a 12-unit aisle
+for (const x of [-18, -12, -6, 6, 12, 18]) for (const z of [40, 34, 28, 22, 16, 10]) cols.push([x, z, 1, 0]);
+// courtyard colonnades
+for (const x of [-23, 23]) for (const z of [-10, -19, -28, -37, -46]) cols.push([x, z, 0.92, Math.PI / 2]);
+// two tall columns framing the distant gate
+cols.push([-8.5, -58, 1.28, 0], [8.5, -58, 1.28, 0]);
+
+const colMesh = new THREE.InstancedMesh(columnGeometry(), carvedMat, cols.length);
+{
+  const m = new THREE.Matrix4(), col = new THREE.Color();
+  cols.forEach(([x, z, s, ry], i) => {
+    m.compose(_v.set(x, PLAT.top, z), _q.setFromEuler(_e.set(0, ry + (rand() - 0.5) * 0.06, 0)), _s.set(s, s, s));
+    colMesh.setMatrixAt(i, m);
+    colMesh.setColorAt(i, col.setScalar(1).offsetHSL(0, 0, (rand() - 0.5) * 0.04));
+  });
+}
+colMesh.castShadow = colMesh.receiveShadow = true;
+scene.add(colMesh);
+
+/* ---------------------------------------------------------------- tribute procession relief (instanced figures) */
+function figureGeometry() {
+  const P = [];
+  const c = '#bb946b', d = '#a7825c';
+  P.push(part(new THREE.CylinderGeometry(0.13, 0.2, 0.85, 6), { p: [0, 0.43, 0], s: [1, 1, 0.45], c }));
+  P.push(part(new THREE.SphereGeometry(0.1, 6, 4), { p: [0, 0.97, 0], s: [1, 1, 0.6], c }));
+  P.push(part(new THREE.CylinderGeometry(0.075, 0.1, 0.14, 6), { p: [0, 1.1, 0], s: [1, 1, 0.6], c: d })); // cap
+  P.push(part(new THREE.BoxGeometry(0.18, 0.16, 0.08), { p: [0.2, 0.68, 0], c: d })); // offering
+  P.push(part(new THREE.CylinderGeometry(0.03, 0.03, 0.32, 6), { p: [0.13, 0.66, 0], r: [0, 0, 1.2], c })); // arm
+  return mergeGeometries(P, false);
+}
+const figs = [];
+for (const sx of [-1, 1]) for (const yy of [1.2, 3.5]) {
+  for (let z = -6; z > Z_FAR + 6; z -= 1.15) {
+    if (rand() < 0.08) continue;
+    figs.push([sx * (SIDE_X - 0.62), PLAT.top + yy + 0.05, z + (rand() - 0.5) * 0.15, rand() < 0.15 ? 1.15 : 1.75]);
+  }
+}
+const figMesh = new THREE.InstancedMesh(figureGeometry(), carvedMat, figs.length);
+{
+  const m = new THREE.Matrix4(), col = new THREE.Color();
+  figs.forEach(([x, y, z, s], i) => {
+    // figures face toward the far gate (-z), flattened against the wall
+    m.compose(_v.set(x, y, z), _q.setFromEuler(_e.set(0, Math.PI / 2, 0)), _s.set(s, s, s));
+    figMesh.setMatrixAt(i, m);
+    figMesh.setColorAt(i, col.setScalar(1).offsetHSL(0, 0, (rand() - 0.5) * 0.06));
+  });
+}
+figMesh.castShadow = figMesh.receiveShadow = true;
+scene.add(figMesh);
+
+/* ---------------------------------------------------------------- trees (cypress, instanced) */
+function treeGeometry() {
+  const P = [];
+  P.push(part(new THREE.CylinderGeometry(0.14, 0.2, 1.6, 6), { p: [0, 0.8, 0], c: '#6b4a2e' }));
+  const f1 = new THREE.ConeGeometry(1.05, 4.8, 9, 4);
+  const f2 = new THREE.ConeGeometry(0.75, 3.2, 8, 3);
+  for (const g of [f1, f2]) {
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      if (p.getY(i) > 2.3) continue;
+      const k = 1 + (rand() - 0.5) * 0.22;
+      p.setX(i, p.getX(i) * k); p.setZ(i, p.getZ(i) * k);
+    }
+  }
+  P.push(part(f1, { p: [0, 3.6, 0], c: '#4f6b34' }));
+  P.push(part(f2, { p: [0, 6.2, 0], c: '#5b7a3b' }));
+  const g = mergeGeometries(P, false);
+  g.computeVertexNormals();
+  return g;
+}
+const treeMesh = new THREE.InstancedMesh(treeGeometry(), treeMat, TREE_SPOTS.length);
+{
+  const m = new THREE.Matrix4(), col = new THREE.Color();
+  TREE_SPOTS.forEach(([x, z], i) => {
+    const s = 0.85 + rand() * 0.45;
+    m.compose(_v.set(x, PLAT.top + 0.55, z), _q.setFromEuler(_e.set(0, rand() * 6, 0)), _s.set(s, s * (0.9 + rand() * 0.3), s));
+    treeMesh.setMatrixAt(i, m);
+    treeMesh.setColorAt(i, col.setScalar(1).offsetHSL((rand() - 0.5) * 0.03, 0, (rand() - 0.5) * 0.06));
+  });
+}
+treeMesh.castShadow = treeMesh.receiveShadow = true;
+scene.add(treeMesh);
+
+/* ---------------------------------------------------------------- distant hills (lost in haze) */
+const hills = new THREE.InstancedMesh(new THREE.ConeGeometry(1, 1, 7), farMat, 14);
+{
+  const m = new THREE.Matrix4();
+  for (let i = 0; i < 14; i++) {
+    const x = -320 + i * 48 + (rand() - 0.5) * 30, z = -230 - rand() * 120;
+    m.compose(_v.set(x, 12, z), _q.setFromEuler(_e.set(0, rand() * 3, 0)), _s.set(70 + rand() * 60, 30 + rand() * 30, 50));
+    hills.setMatrixAt(i, m);
+  }
+}
+scene.add(hills);
+// a dark ridge behind the platform, like the hillside the palace leans against
+const ridge = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 9), farMat);
+ridge.scale.set(140, 46, 60); ridge.position.set(-40, 20, -150);
+scene.add(ridge);
+
+/* ---------------------------------------------------------------- dust motes */
+const DUST = 450;
+const dustGeo = new THREE.BufferGeometry();
+{
+  const a = new Float32Array(DUST * 3);
+  for (let i = 0; i < DUST; i++) { a[i * 3] = (rand() - 0.5) * 60; a[i * 3 + 1] = PLAT.top + rand() * 16; a[i * 3 + 2] = -70 + rand() * 130; }
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(a, 3));
+}
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: '#ffe3bd', size: 0.09, transparent: true, opacity: 0.55, depthWrite: false }));
+scene.add(dust);
+
+/* ---------------------------------------------------------------- controls */
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.minPolarAngle = Math.PI * 0.12;
+controls.maxPolarAngle = Math.PI * 0.84;   // allows looking up the columns from eye level
+controls.minDistance = 1.5;
+controls.maxDistance = 70;
+controls.screenSpacePanning = false;       // right-drag / two-finger drag walks along the floor
+controls.rotateSpeed = 0.55;
+controls.panSpeed = 0.9;
+controls.zoomSpeed = 0.8;
+controls.listenToKeyEvents(window);
+
+/* ---------------------------------------------------------------- auto-fly path */
+// keyframes every SEG seconds: [camera position, look target]
+const SEG = 3;
+const KEYS = [
+  [[0, 2.1, 72], [0, 6.5, 30]],
+  [[0, 3.3, 62], [0, 7, 20]],
+  [[0, 4.8, 51], [0, 7, 10]],
+  [[0, 4.8, 42], [0, 7.2, 0]],
+  [[0.2, 4.8, 33], [0.5, 7.5, -10]],
+  [[0.8, 4.8, 25], [3, 9.5, 8]],
+  [[2.2, 4.8, 19], [8, 15.5, 16]],     // pan up the right-hand column row
+  [[2.6, 5.0, 13.5], [5, 16.5, -2]],
+  [[1.2, 5.2, 7.5], [-7, 15.5, 2]],    // ...across to the left-hand row
+  [[0, 5.6, 1], [-1, 10, -40]],
+  [[0, 6.2, -12], [0, 10, -66]],
+];
+const FLY_T = SEG * (KEYS.length - 1);
+const posCurve = new THREE.CatmullRomCurve3(KEYS.map(k => new THREE.Vector3(...k[0])), false, 'centripetal');
+const tgtCurve = new THREE.CatmullRomCurve3(KEYS.map(k => new THREE.Vector3(...k[1])), false, 'centripetal');
+const ease = (u) => { const s = u * u * (3 - 2 * u); return u + (s - u) * 0.45; };
+function samplePath(t, pos, tgt) {
+  const u = ease(THREE.MathUtils.clamp(t / FLY_T, 0, 1));
+  posCurve.getPoint(u, pos); tgtCurve.getPoint(u, tgt);
+}
+
+const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+let reduceMotion = reduceMQ.matches;
+const START_IDLE = params.has('delay') ? Math.max(0, +params.get('delay')) : 3;
+const RESUME_IDLE = 8;
+const BLEND = 2.4;
+
+// state: 'wait' (initial idle) | 'fly' | 'user' | 'blend' | 'end'
+let mode = 'wait';
+let flyT = 0, idleT = 0, blendT = 0, endT = 0, dragging = false, clock = 0;
+const curPos = new THREE.Vector3(), curTgt = new THREE.Vector3();
+const pathPos = new THREE.Vector3(), pathTgt = new THREE.Vector3();
+const fromPos = new THREE.Vector3(), fromTgt = new THREE.Vector3();
+
+samplePath(0, curPos, curTgt);
+camera.position.copy(curPos);
+controls.target.copy(curTgt);
+controls.update();
+
+function setCaption(on) {
+  if (reduceMotion) { caption.classList.add('show'); return; }
+  caption.classList.toggle('show', on);
+}
+setCaption(false);
+
+function userActed() {
+  idleT = 0;
+  if (mode === 'fly' || mode === 'blend' || mode === 'end' || mode === 'wait') {
+    if (mode === 'end') fader.classList.remove('on');
+    mode = 'user';
+    controls.target.copy(curTgt);
+    controls.update();
+  }
+}
+controls.addEventListener('start', () => { dragging = true; userActed(); });
+controls.addEventListener('end', () => { dragging = false; idleT = 0; });
+canvas.addEventListener('wheel', userActed, { passive: true });
+canvas.addEventListener('pointerdown', userActed);
+window.addEventListener('keydown', (e) => { if (e.key.startsWith('Arrow')) userActed(); });
+reduceMQ.addEventListener?.('change', (e) => {
+  reduceMotion = e.matches;
+  if (reduceMotion) { if (mode !== 'user') { mode = 'user'; controls.target.copy(curTgt); } setCaption(true); fader.classList.remove('on'); }
+});
+
+const FLOOR = (x, z) => (Math.abs(x) < PLAT.w / 2 && Math.abs(z - PLAT.cz) < PLAT.d / 2 ? PLAT.top : 0) + 0.6;
+
+/* ---------------------------------------------------------------- resize */
+function resize() {
+  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+/* ---------------------------------------------------------------- loop */
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.5, (now - last) / 1000); last = now; clock += dt;
+
+  if (mode === 'wait') {
+    idleT += dt;
+    controls.update();
+    curPos.copy(camera.position); curTgt.copy(controls.target);
+    if (!reduceMotion && idleT >= START_IDLE) { mode = 'fly'; flyT = 0; }
+  } else if (mode === 'user') {
+    controls.update();
+    if (!dragging) idleT += dt;
+    curPos.copy(camera.position); curTgt.copy(controls.target);
+    if (!reduceMotion && !dragging && idleT >= RESUME_IDLE) {
+      mode = 'blend'; blendT = 0; fromPos.copy(curPos); fromTgt.copy(curTgt);
+      if (flyT >= FLY_T) flyT = 0;
+    }
+  } else if (mode === 'blend') {
+    blendT += dt;
+    const k = THREE.MathUtils.smoothstep(blendT / BLEND, 0, 1);
+    samplePath(flyT, pathPos, pathTgt);
+    curPos.lerpVectors(fromPos, pathPos, k);
+    curTgt.lerpVectors(fromTgt, pathTgt, k);
+    if (blendT >= BLEND) mode = 'fly';
+  } else if (mode === 'fly') {
+    flyT += dt;
+    samplePath(flyT, curPos, curTgt);
+    if (flyT > 4) setCaption(true);
+    if (flyT >= FLY_T + 1.8) { mode = 'end'; endT = 0; fader.classList.add('on'); }
+  } else if (mode === 'end') {
+    endT += dt;
+    if (endT > 0.8 && endT - dt <= 0.8) {
+      flyT = 0; samplePath(0, curPos, curTgt); setCaption(false);
+      fader.classList.remove('on');
+    }
+    if (endT > 0.8) { flyT += dt; samplePath(flyT, curPos, curTgt); }
+    if (endT > 1.6) mode = 'fly';
+  }
+
+  if (mode !== 'user' && mode !== 'wait') {
+    camera.position.copy(curPos);
+    controls.target.copy(curTgt);
+    camera.lookAt(curTgt);
+  }
+  // never sink below the floor
+  const fy = FLOOR(camera.position.x, camera.position.z);
+  if (camera.position.y < fy) camera.position.y = fy;
+
+  sky.position.copy(camera.position);
+  if (!reduceMotion) { dust.rotation.y = Math.sin(clock * 0.05) * 0.04; dust.position.y = Math.sin(clock * 0.3) * 0.25; }
+
+  renderer.render(scene, camera);
+  window.__palaceStats = { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, mode, flyT: +flyT.toFixed(2), fps: +(1 / Math.max(dt, 1e-3)).toFixed(1) };
+  requestAnimationFrame(frame);
+}
+window.__palaceReady = true;
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
