@@ -15,7 +15,7 @@
     "typecheck": "npm --prefix web run typecheck",
     "seed": "node --no-warnings server/seed.js --reset",
     "test": "node --no-warnings --test test/*.test.js",
-    "postinstall": "npm --prefix web install --no-audit --no-fund"
+    "postinstall": "npm --prefix web install --include=dev --no-audit --no-fund"
   },
   "dependencies": {
     "express": "^5.1.0",
