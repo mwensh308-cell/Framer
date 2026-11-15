@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   res.set({
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Content-Security-Policy': "default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'",
+    'Content-Security-Policy': "default-src 'self'; img-src 'self' https: data:; media-src 'self' https://d8j0ntlcm91z4.cloudfront.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'",
   });
   next();
 });
@@ -45,10 +45,13 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true, fallthrough: false }));
 app.use('/admin', express.static(join(root, 'admin'), { maxAge: '5m' }));
-app.use(express.static(join(root, 'public'), { maxAge: '5m' }));
+// Public site: the Vite build of web/ (run `npm run build`). Hashed assets are cached for a year.
+const site = join(root, 'web', 'dist');
+app.use('/assets', express.static(join(site, 'assets'), { maxAge: '1y', immutable: true }));
+app.use(express.static(site, { maxAge: '5m', index: false }));
 // SPA fallbacks
 app.get(/^\/admin(\/.*)?$/, (req, res) => res.sendFile(join(root, 'admin', 'index.html')));
-app.get(/^\/(?!api\/).*/, (req, res) => res.sendFile(join(root, 'public', 'index.html')));
+app.get(/^\/(?!api\/|uploads\/).*/, (req, res, next) => res.sendFile(join(site, 'index.html'), (err) => err && next(Object.assign(new Error('Site not built: run npm run build'), { status: 503 }))));
 
 app.use((err, req, res, next) => {
   console.error(err);

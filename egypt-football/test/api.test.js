@@ -46,6 +46,17 @@ test('public archive endpoints return seeded data', async () => {
   assert.equal((await call('/api/v1/players/nobody')).status, 404);
 });
 
+test('Arabic content and the continental-titles series are served', async () => {
+  const salah = await call('/api/v1/players/mohamed-salah');
+  assert.match(salah.body.bio_ar, /ليفربول/);
+  assert.ok(salah.body.career.some((s) => s.club_ar === 'ليفربول'));
+  const afcon = await call('/api/v1/competitions/africa-cup-of-nations');
+  assert.equal(afcon.body.titles.find((t) => t.season === '2008').runner_up_ar, 'الكاميرون');
+  const cont = await call('/api/v1/stats/continental');
+  assert.equal(cont.body.total, 22);
+  assert.deepEqual(cont.body.years.find((y) => y.year === 2024), { year: 2024, n: 2 });
+});
+
 test('admin requires sign-in and rejects bad passwords', async () => {
   assert.equal((await call('/api/admin/overview', { auth: false })).status, 401);
   assert.equal((await call('/api/admin/login', { method: 'POST', body: { email: 'admin@example.com', password: 'wrong-password' } })).status, 401);

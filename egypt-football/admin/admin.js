@@ -37,21 +37,22 @@ const SCHEMA = {
     ['enabled', 'Enabled', 'bool'], ['filter_terms', 'Keep items mentioning (comma-separated; empty keeps all)', 'textarea', { wide: true, rows: 3 }]] },
   events: { label: 'Timeline events', columns: ['date', 'title_en', 'featured', 'status'], fields: [
     ['date', 'Date', 'date', { required: true }], ['title_en', 'Title (English)', 'text', { required: true, wide: true }], ['title_ar', 'Title (Arabic)', 'rtl', { wide: true }],
-    ['body_en', 'Description', 'textarea', { wide: true, rows: 4 }], ['club_id', 'Related club', 'ref', { ref: 'clubs' }], ['player_id', 'Related player', 'ref', { ref: 'players' }],
+    ['body_en', 'Description (English)', 'textarea', { wide: true, rows: 4 }], ['body_ar', 'Description (Arabic)', 'textarea', { wide: true, rows: 4, rtl: true }], ['club_id', 'Related club', 'ref', { ref: 'clubs' }], ['player_id', 'Related player', 'ref', { ref: 'players' }],
     ['featured', 'Featured on home page', 'bool'], ['status', 'Status', 'select', { options: STATUS }]] },
   players: { label: 'Players', columns: ['name_en', 'position', 'birth_date', 'is_legend', 'status'], children: [['player_spells', 'player_id', 'Career spells']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true, hint: 'e.g. mohamed-salah' }],
-    ['nickname', 'Nickname', 'text'], ['position', 'Position', 'select', { options: ['GK', 'DF', 'MF', 'FW', 'COACH'] }], ['era_id', 'Era', 'ref', { ref: 'eras' }],
-    ['birth_date', 'Born', 'text', { hint: 'YYYY-MM-DD or YYYY' }], ['death_date', 'Died', 'text'], ['birthplace', 'Birthplace', 'text'],
+    ['nickname', 'Nickname (English)', 'text'], ['nickname_ar', 'Nickname (Arabic)', 'rtl'], ['position', 'Position', 'select', { options: ['GK', 'DF', 'MF', 'FW', 'COACH'] }], ['era_id', 'Era', 'ref', { ref: 'eras' }],
+    ['birth_date', 'Born', 'text', { hint: 'YYYY-MM-DD or YYYY' }], ['death_date', 'Died', 'text'], ['birthplace', 'Birthplace (English)', 'text'], ['birthplace_ar', 'Birthplace (Arabic)', 'rtl'],
     ['intl_caps', 'Egypt caps', 'number'], ['intl_goals', 'Egypt goals', 'number'], ['portrait_url', 'Portrait', 'url', { upload: true }],
     ['bio_en', 'Biography (English)', 'textarea', { wide: true }], ['bio_ar', 'Biography (Arabic)', 'textarea', { wide: true, rtl: true }],
     ['is_legend', 'Legend', 'bool'], ['status', 'Status', 'select', { options: STATUS }]] },
   player_spells: { label: 'Career spells', hidden: true, columns: ['club_name', 'club_id', 'from_year', 'to_year'], fields: [
-    ['player_id', 'Player', 'ref', { ref: 'players', required: true }], ['club_id', 'Egyptian club', 'ref', { ref: 'clubs' }], ['club_name', 'Or other club name', 'text'],
+    ['player_id', 'Player', 'ref', { ref: 'players', required: true }], ['club_id', 'Egyptian club', 'ref', { ref: 'clubs' }], ['club_name', 'Or other club name (English)', 'text'], ['club_name_ar', 'Other club name (Arabic)', 'rtl'],
     ['from_year', 'From', 'number'], ['to_year', 'To', 'number'], ['apps', 'Appearances', 'number'], ['goals', 'Goals', 'number']] },
   clubs: { label: 'Clubs', columns: ['crest_url', 'name_en', 'city', 'founded_year', 'status'], children: [['club_milestones', 'club_id', 'Journey milestones']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true }],
-    ['nickname_en', 'Nickname', 'text'], ['city', 'City', 'text'], ['founded_year', 'Founded', 'number'], ['stadium', 'Stadium', 'text'],
+    ['nickname_en', 'Nickname (English)', 'text'], ['nickname_ar', 'Nickname (Arabic)', 'rtl'], ['city', 'City (English)', 'text'], ['city_ar', 'City (Arabic)', 'rtl'],
+    ['founded_year', 'Founded', 'number'], ['stadium', 'Stadium (English)', 'text'], ['stadium_ar', 'Stadium (Arabic)', 'rtl'],
     ['colors', 'Colours (hex, comma-separated)', 'text', { hint: '#C8102E,#FFFFFF' }],
     ['crest_url', 'Club logo (2027 edition)', 'url', { upload: true, wide: true, hint: 'Upload the official logo file supplied or licensed by the club (PNG, SVG or WebP, transparent background).' }],
     ['history_en', 'History (English)', 'textarea', { wide: true }], ['history_ar', 'History (Arabic)', 'textarea', { wide: true, rtl: true }],
@@ -63,18 +64,19 @@ const SCHEMA = {
   competitions: { label: 'Competitions', columns: ['name_en', 'scope', 'kind', 'first_year'], children: [['titles', 'competition_id', 'Titles won']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true }],
     ['scope', 'Scope', 'select', { options: ['domestic', 'continental', 'international'] }], ['kind', 'Type', 'select', { options: ['league', 'cup', 'supercup', 'tournament'] }],
-    ['first_year', 'First held', 'number'], ['summary_en', 'Summary', 'textarea', { wide: true, rows: 3 }]] },
+    ['first_year', 'First held', 'number'], ['summary_en', 'Summary (English)', 'textarea', { wide: true, rows: 3 }], ['summary_ar', 'Summary (Arabic)', 'textarea', { wide: true, rows: 3, rtl: true }]] },
   titles: { label: 'Titles', columns: ['season', 'competition_id', 'winner_club_id', 'winner_team_id'], fields: [
     ['competition_id', 'Competition', 'ref', { ref: 'competitions', required: true }], ['season', 'Season', 'text', { required: true, hint: '1986 or 2005-06' }],
     ['winner_club_id', 'Winning club', 'ref', { ref: 'clubs' }], ['winner_team_id', 'Or winning national team', 'ref', { ref: 'national_teams' }],
-    ['runner_up', 'Runner-up', 'text'], ['final_score', 'Final score', 'text'], ['host', 'Host', 'text'], ['notes_en', 'Notes', 'textarea', { wide: true, rows: 3 }]] },
+    ['runner_up', 'Runner-up (English)', 'text'], ['runner_up_ar', 'Runner-up (Arabic)', 'rtl'], ['final_score', 'Final score', 'text'], ['host', 'Host (English)', 'text'], ['host_ar', 'Host (Arabic)', 'rtl'], ['notes_en', 'Notes', 'textarea', { wide: true, rows: 3 }]] },
   national_teams: { label: 'National teams', columns: ['crest_url', 'name_en', 'category'], children: [['tournament_appearances', 'team_id', 'Tournament appearances']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true }],
     ['category', 'Category', 'select', { options: ['senior', 'olympic', 'u20', 'u17', 'women', 'futsal', 'beach'] }],
-    ['crest_url', 'Team logo (2027 edition)', 'url', { upload: true, wide: true, hint: 'The official Egyptian FA / team logo file (PNG, SVG or WebP).' }], ['summary_en', 'Summary', 'textarea', { wide: true, rows: 3 }]] },
+    ['crest_url', 'Team logo (2027 edition)', 'url', { upload: true, wide: true, hint: 'The official Egyptian FA / team logo file (PNG, SVG or WebP).' }], ['summary_en', 'Summary (English)', 'textarea', { wide: true, rows: 3 }], ['summary_ar', 'Summary (Arabic)', 'textarea', { wide: true, rows: 3, rtl: true }]] },
   tournament_appearances: { label: 'Tournament appearances', hidden: true, columns: ['year', 'tournament', 'result'], fields: [
     ['team_id', 'Team', 'ref', { ref: 'national_teams', required: true }], ['tournament', 'Tournament', 'text', { required: true }], ['year', 'Year', 'number', { required: true }],
-    ['host', 'Host', 'text'], ['result', 'Result', 'text'], ['coach', 'Coach', 'text'], ['notes_en', 'Notes', 'textarea', { wide: true, rows: 3 }]] },
+    ['host', 'Host (English)', 'text'], ['host_ar', 'Host (Arabic)', 'rtl'], ['result', 'Result', 'select', { options: ['Champions', 'Runners-up', 'Third place', 'Fourth place', 'Group stage', 'First round', ''] }],
+    ['coach', 'Coach (English)', 'text'], ['coach_ar', 'Coach (Arabic)', 'rtl'], ['notes_en', 'Notes (English)', 'textarea', { wide: true, rows: 3 }], ['notes_ar', 'Notes (Arabic)', 'textarea', { wide: true, rows: 3, rtl: true }]] },
 };
 
 // Reference lookups (id -> label), cached per session.

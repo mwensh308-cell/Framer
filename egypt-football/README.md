@@ -3,7 +3,8 @@
 The history of Egyptian football (players, clubs, championships, national teams), a live news feed, and an admin dashboard.
 
 - **Brief, stack, data model, IA, screens, performance, accessibility, roadmap and API:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-- **Working MVP:** Node 22.5+, Express, built-in SQLite. No build step.
+- **Public site:** Arabic, right-to-left, built with Vite 5 + React 18 + TypeScript + Tailwind CSS 3.4 (`web/`)
+- **Server, API and admin dashboard:** Node 22.5+, Express, built-in SQLite
 
 ## Run
 
@@ -12,8 +13,18 @@ npm install
 ```
 
 ```bash
+npm run build
+```
+
+```bash
 ADMIN_PASSWORD='choose-a-long-password' SESSION_SECRET='random-string' npm start
 ```
+
+`npm install` also installs the site's dependencies in `web/`. `npm run build` builds the site into `web/dist`, which the server serves.
+
+For development with hot reload, run the server (`npm run dev`) and the site (`npm run dev:web`) in two terminals, then open the Vite address. It forwards `/api` to the server.
+
+If you have a database from an earlier version, the new Arabic columns are added automatically, but the Arabic text is only filled in by a fresh seed (`npm run seed` deletes and re-creates everything).
 
 - Site: http://localhost:3000
 - Admin: http://localhost:3000/admin (sign in as `admin@example.com`, or whatever `ADMIN_EMAIL` is set to)
@@ -41,12 +52,26 @@ The tests cover the public API, login, role permissions, the CSRF guard, feed pa
 ## Layout
 
 ```
-server/   index.js (app) · schema.sql · db.js · auth.js · news.js (aggregator + SSE bus) · seed.js · routes/
-public/   public site (index.html, styles.css, app.js)
+server/   index.js (app) · schema.sql · db.js · auth.js · news.js (aggregator + SSE bus) · seed.js · seed-ar.js (Arabic content) · routes/
+web/      public site, Arabic RTL (Vite + React + Tailwind): components/Hero.tsx, Nav.tsx, ui.tsx · pages/ · lib/router.tsx
 admin/    dashboard (index.html, admin.css, admin.js)
 docs/     ARCHITECTURE.md
 test/     api.test.js
 ```
+
+## Design
+
+The public site follows the "Apogee" hero design: full-screen video, glass navigation pills, a glass stat card with a staggered bar chart, weight-450 type and the original CSS keyframes and timing. Adaptations:
+
+- **Arabic and right-to-left.** Line height is raised from 0.95 to 1.15 because Arabic letters are taller.
+- **Fonts.** Noto Sans Arabic and Inter replace Suisse Intl, which has no Arabic letters and was linked from an unlicensed mirror. Both are variable fonts, so weight 450 is exact.
+- **Real data in the stat card.** It shows continental titles won by Egyptian clubs: each of the 32 bars is a two-year window, the height is the running total, and bright bars mark windows with a new title.
+- **Logo.** The site uses its own pyramid mark instead of the Apogee logo.
+- **Motion.** Pages change with a 3D turn (View Transitions API). All motion stops when reduced motion is on.
+
+The hero video is the one from the design prompt, hosted on a third-party CDN (allowed in the CSP via `media-src`). Before launch, host a video you have the rights to, and update `HERO_VIDEO` in `web/src/components/Hero.tsx` and the CSP in `server/index.js`.
+
+The admin dashboard keeps its own cream-and-ink design, with an English interface and Arabic fields for every text.
 
 ## Logos
 

@@ -6,6 +6,7 @@ import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { db, run, get } from './db.js';
 import { hashPassword } from './auth.js';
+import { applyArabic, ARABIC_NEWS } from './seed-ar.js';
 
 const ERAS = [
   ['founding', 'The founding years', 'سنوات التأسيس', 1907, 1933, 'Clubs are born in Cairo, Alexandria and Port Said; the FA is founded in 1921 and Egypt plays at the 1920, 1924 and 1928 Olympics.'],
@@ -248,13 +249,12 @@ export function seed({ reset = false } = {}) {
     const password = process.env.ADMIN_PASSWORD || randomBytes(9).toString('base64url');
     const admin = run('INSERT INTO users (email,name,role,password_hash) VALUES (?,?,?,?)', email, 'Site Admin', 'admin', hashPassword(password));
 
+    applyArabic();
+
     const now = Date.now();
-    [
-      ['Welcome to the Pharaohs’ Archive', 'The archive opens with profiles of Egypt’s greatest players, the stories of its oldest clubs and every Africa Cup of Nations triumph.'],
-      ['How the live news feed works', 'Headlines about Egyptian football are collected from major outlets every few minutes. Each item links to the original story.'],
-    ].forEach(([title, excerpt], i) => {
+    ARABIC_NEWS.forEach(([title, excerpt], i) => {
       run(`INSERT INTO news (guid_hash,title,excerpt,body,language,published_at,author_id,pinned) VALUES (?,?,?,?,?,?,?,?)`,
-        `local-seed-${i}`, title, excerpt, excerpt, 'en', new Date(now - i * 3600_000).toISOString(), admin.lastInsertRowid, i === 0 ? 1 : 0);
+        `local-seed-${i}`, title, excerpt, excerpt, 'ar', new Date(now - i * 3600_000).toISOString(), admin.lastInsertRowid, i === 0 ? 1 : 0);
     });
 
     db.exec('COMMIT');

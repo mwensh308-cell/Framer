@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Latin glyphs and digits from Inter, Arabic from Noto Sans Arabic (both variable: weight 450 is exact). */
+  font-family: 'Inter', 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(60% 45% at 85% 0%, rgba(122, 24, 48, 0.32), transparent 70%),
+    radial-gradient(55% 40% at 5% 35%, rgba(34, 52, 150, 0.28), transparent 70%),
+    #080A19;
+  background-attachment: fixed;
+  color: #fff;
+  min-height: 100vh;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-scale {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bar-grow {
+  from { transform: scaleY(0); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+
+.animate-fade-up    { animation: fade-up    0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-down  { animation: fade-down  0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-left  { animation: fade-left  0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-right { animation: fade-right 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-scale { animation: fade-scale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.animate-bar-grow {
+  animation: bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* ---------- Site additions (not part of the hero spec) ---------- */
+
+/* 3D page transitions between routes (View Transitions API). Going back reverses direction. */
+::view-transition-old(root) { animation: page-out 0.55s cubic-bezier(0.65, 0, 0.35, 1) both; transform-origin: 100% 50%; }
+::view-transition-new(root) { animation: page-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: 0% 50%; }
+html[data-nav='back']::view-transition-old(root) { animation-name: page-out-back; transform-origin: 0% 50%; }
+html[data-nav='back']::view-transition-new(root) { animation-name: page-in-back; transform-origin: 100% 50%; }
+@keyframes page-out { to { transform: perspective(1600px) translateZ(-260px) rotateY(60deg); opacity: 0; } }
+@keyframes page-in { from { transform: perspective(1600px) translateZ(-260px) rotateY(-60deg); opacity: 0; } }
+@keyframes page-out-back { to { transform: perspective(1600px) translateZ(-260px) rotateY(-60deg); opacity: 0; } }
+@keyframes page-in-back { from { transform: perspective(1600px) translateZ(-260px) rotateY(60deg); opacity: 0; } }
+
+/* Route-loading bar */
+@keyframes loading { from { transform: scaleX(0); } to { transform: scaleX(0.85); } }
+.loading-bar { transform-origin: 100% 50%; animation: loading 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Native select menus stay readable on the dark theme */
+select option { background: #11100f; color: #fff; }
+
+:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-fade-scale, .animate-bar-grow {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}

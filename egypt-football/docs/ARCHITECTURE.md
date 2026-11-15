@@ -19,8 +19,8 @@
 
 | Layer | Production target | MVP in this repo (same contracts) |
 |---|---|---|
-| Public frontend | **Next.js (App Router) + React Server Components**, static generation with incremental revalidation for archive pages | Vanilla ES modules, History API router (`public/`) |
-| Styling / motion | CSS custom properties + CSS Modules; motion through CSS and `IntersectionObserver`, with View Transitions for page changes | Same approach (`public/styles.css`) |
+| Public frontend | **Next.js (App Router) + React Server Components**, static generation with incremental revalidation for archive pages | **Vite 5 + React 18 + TypeScript + Tailwind 3.4**, Arabic RTL, small History-API router with data loaders (`web/`) |
+| Styling / motion | Tailwind; CSS keyframes and View Transitions | Tailwind arbitrary values (no theme extensions), CSS keyframes with `animation-delay`, View Transitions for 3D page turns |
 | Admin | Next.js route group `/admin` with React Hook Form + Zod and TanStack Table | Schema-driven vanilla SPA (`admin/`) |
 | API | Node.js (NestJS or Next.js route handlers), REST `/api/v1`, OpenAPI spec | Express 5 (`server/routes`) |
 | Database | **PostgreSQL 16** (Prisma), `pg_trgm` + Arabic-normalised search columns | SQLite (`node:sqlite`) with identical tables |
@@ -95,7 +95,9 @@ Later: `/ar/...` mirrored routes with `hreflang`, `/eras/:slug`, `/matches/:id`,
 | Admin editor | Data entry | Forms generated from the schema, RTL Arabic fields, drafts, nested child records (career spells, milestones, titles, appearances) |
 | Admin users | Access control | Role select, activate/deactivate, reset password, invite |
 
-**Visual language:** strictly two-tone, **cream (`#f4ecdc`) and ink black (`#121110`)**. Emphasis comes from inversion (ink fill on cream), outlined type and weight, not extra colours. Dark mode swaps the two. Barlow Condensed for display, Source Serif for long reading, IBM Plex Sans / Plex Sans Arabic for the interface. Club and team logos are the only full-colour elements, shown on a cream disc with an ink ring; official logos are never recoloured.
+**Public site (current):** the "Apogee" design, adapted to Arabic. Deep navy `#080A19` behind a looping nebula video; glass surfaces `rgba(17,16,15,0.35)` with 17–30px blur; white text at 80% for body copy; `#E9E9E9` light buttons with `#0A0707` text; 11–13px radii on controls and 24–33px on cards; weight 450 throughout. Entrance animations use `cubic-bezier(0.16,1,0.3,1)` with `forwards` fill, staggered by delay. The README lists the adaptations.
+
+**Admin dashboard and earlier site version:** strictly two-tone, **cream (`#f4ecdc`) and ink black (`#121110`)**. Emphasis comes from inversion (ink fill on cream), outlined type and weight, not extra colours. Dark mode swaps the two. Barlow Condensed for display, Source Serif for long reading, IBM Plex Sans / Plex Sans Arabic for the interface. Club and team logos are the only full-colour elements, shown on a cream disc with an ink ring; official logos are never recoloured.
 
 **Motion & 3D:**
 - Page changes swing in 3D on a vertical hinge using the View Transitions API (with a CSS fallback). Going back reverses the direction, and the header stays fixed.

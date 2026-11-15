@@ -15,7 +15,19 @@ db.exec(readFileSync(join(here, 'schema.sql'), 'utf8'));
 
 // Lightweight migrations for databases created by earlier versions.
 const hasColumn = (table, col) => db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
-if (!hasColumn('national_teams', 'crest_url')) db.exec('ALTER TABLE national_teams ADD COLUMN crest_url TEXT');
+const ADDED_COLUMNS = {
+  national_teams: ['crest_url', 'summary_ar'],
+  clubs: ['nickname_ar', 'city_ar', 'stadium_ar'],
+  players: ['nickname_ar', 'birthplace_ar'],
+  player_spells: ['club_name_ar'],
+  competitions: ['summary_ar'],
+  titles: ['runner_up_ar', 'host_ar'],
+  tournament_appearances: ['host_ar', 'coach_ar', 'notes_ar'],
+  events: ['body_ar'],
+};
+for (const [table, cols] of Object.entries(ADDED_COLUMNS)) {
+  for (const col of cols) if (!hasColumn(table, col)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} TEXT`);
+}
 
 /** Plain objects instead of null-prototype rows, so JSON and spreads behave normally. */
 const plain = (row) => (row ? { ...row } : row);
@@ -31,21 +43,21 @@ export const run = (sql, ...params) => db.prepare(sql).run(...params);
 export const ENTITIES = {
   players: {
     table: 'players',
-    columns: ['slug', 'name_en', 'name_ar', 'nickname', 'birth_date', 'death_date', 'birthplace', 'position',
+    columns: ['slug', 'name_en', 'name_ar', 'nickname', 'nickname_ar', 'birth_date', 'death_date', 'birthplace', 'birthplace_ar', 'position',
       'era_id', 'portrait_url', 'bio_en', 'bio_ar', 'intl_caps', 'intl_goals', 'is_legend', 'status'],
     search: ['name_en', 'name_ar', 'nickname'],
     order: 'name_en',
   },
   clubs: {
     table: 'clubs',
-    columns: ['slug', 'name_en', 'name_ar', 'nickname_en', 'city', 'founded_year', 'stadium', 'colors',
+    columns: ['slug', 'name_en', 'name_ar', 'nickname_en', 'nickname_ar', 'city', 'city_ar', 'founded_year', 'stadium', 'stadium_ar', 'colors',
       'crest_url', 'history_en', 'history_ar', 'status'],
     search: ['name_en', 'name_ar', 'city'],
     order: 'founded_year',
   },
   player_spells: {
     table: 'player_spells',
-    columns: ['player_id', 'club_id', 'club_name', 'from_year', 'to_year', 'apps', 'goals'],
+    columns: ['player_id', 'club_id', 'club_name', 'club_name_ar', 'from_year', 'to_year', 'apps', 'goals'],
     search: ['club_name'],
     order: 'player_id, from_year',
   },
@@ -57,31 +69,31 @@ export const ENTITIES = {
   },
   competitions: {
     table: 'competitions',
-    columns: ['slug', 'name_en', 'name_ar', 'scope', 'kind', 'first_year', 'summary_en'],
+    columns: ['slug', 'name_en', 'name_ar', 'scope', 'kind', 'first_year', 'summary_en', 'summary_ar'],
     search: ['name_en', 'name_ar'],
     order: 'first_year',
   },
   titles: {
     table: 'titles',
-    columns: ['competition_id', 'season', 'winner_club_id', 'winner_team_id', 'runner_up', 'final_score', 'host', 'notes_en'],
+    columns: ['competition_id', 'season', 'winner_club_id', 'winner_team_id', 'runner_up', 'runner_up_ar', 'final_score', 'host', 'host_ar', 'notes_en'],
     search: ['season', 'runner_up'],
     order: 'season DESC',
   },
   national_teams: {
     table: 'national_teams',
-    columns: ['slug', 'name_en', 'name_ar', 'category', 'crest_url', 'summary_en'],
+    columns: ['slug', 'name_en', 'name_ar', 'category', 'crest_url', 'summary_en', 'summary_ar'],
     search: ['name_en'],
     order: 'id',
   },
   tournament_appearances: {
     table: 'tournament_appearances',
-    columns: ['team_id', 'tournament', 'year', 'host', 'result', 'coach', 'notes_en'],
+    columns: ['team_id', 'tournament', 'year', 'host', 'host_ar', 'result', 'coach', 'coach_ar', 'notes_en', 'notes_ar'],
     search: ['tournament', 'result', 'host'],
     order: 'year DESC',
   },
   events: {
     table: 'events',
-    columns: ['date', 'title_en', 'title_ar', 'body_en', 'club_id', 'player_id', 'featured', 'status'],
+    columns: ['date', 'title_en', 'title_ar', 'body_en', 'body_ar', 'club_id', 'player_id', 'featured', 'status'],
     search: ['title_en', 'title_ar'],
     order: 'date DESC',
   },
