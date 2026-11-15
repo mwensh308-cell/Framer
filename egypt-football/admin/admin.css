@@ -1,12 +1,13 @@
 :root {
-  --bg: #f4f2ee; --panel: #fff; --ink: #1a1714; --ink-2: #5b544c; --line: #e1dbd0;
-  --accent: #b3141f; --ok: #1d7a46; --warn: #9a6a00; --err: #b3141f; --focus: #0b57d0;
-  --side: #14110f; --side-ink: #e9e2d5;
+  /* Cream and ink black. Status colours are kept only where they carry meaning (ok / warning / error). */
+  --bg: #f4ecdc; --panel: #faf5ea; --ink: #121110; --ink-2: #4b463f; --line: #d6cbb5;
+  --accent: #121110; --ok: #1d6b40; --warn: #85600a; --err: #a3161f; --focus: #121110;
+  --side: #121110; --side-ink: #f4ecdc;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #121010; --panel: #1b1816; --ink: #f0e9dc; --ink-2: #ada392; --line: #34302b;
-    --accent: #ff5a5f; --ok: #4cc286; --warn: #e0b548; --err: #ff6b6b; --focus: #8ab4f8; color-scheme: dark; }
+  :root { --bg: #121110; --panel: #191714; --ink: #f4ecdc; --ink-2: #b9ae9b; --line: #34302a;
+    --accent: #f4ecdc; --ok: #6fcf97; --warn: #e6c060; --err: #ff7b7b; --focus: #f4ecdc; --side: #0a0908; color-scheme: dark; }
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 'IBM Plex Sans', system-ui, sans-serif; }
@@ -86,3 +87,13 @@ td.actions { white-space: nowrap; text-align: right; }
 
 .toast { position: fixed; right: 20px; bottom: 20px; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.25); z-index: 10; }
 .pager { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+
+.thumb { width: 32px; height: 32px; object-fit: contain; border-radius: 50%; background: var(--panel); border: 1px solid var(--line); padding: 2px; }
+.upload { display: flex; gap: 14px; align-items: center; }
+.upload__preview { width: 72px; height: 72px; object-fit: contain; border: 1px solid var(--line); border-radius: 50%; background: var(--bg); padding: 6px; flex: none; }
+.upload__controls { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+.upload__controls input { flex: 1 1 220px; }
+.upload label.btn { cursor: pointer; }
+.content { animation: admin-in .45s cubic-bezier(.65,0,.35,1) both; transform-origin: 0 50%; }
+@keyframes admin-in { from { opacity: 0; transform: perspective(1400px) rotateY(8deg) translateZ(-40px); } }
+@media (prefers-reduced-motion: reduce) { .content { animation: none; } }

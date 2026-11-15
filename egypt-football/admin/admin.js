@@ -28,7 +28,7 @@ const SCHEMA = {
   news: { label: 'News', columns: ['title', 'status', 'pinned', 'published_at'], fields: [
     ['title', 'Headline', 'text', { wide: true, required: true }], ['excerpt', 'Summary', 'textarea', { wide: true, rows: 3 }],
     ['body', 'Article body (in-house stories)', 'textarea', { wide: true }], ['url', 'External link', 'url'],
-    ['image_url', 'Image URL', 'url'], ['language', 'Language', 'select', { options: ['en', 'ar'] }],
+    ['image_url', 'Image', 'url', { upload: true }], ['language', 'Language', 'select', { options: ['en', 'ar'] }],
     ['tags', 'Tags (comma-separated)', 'text'], ['published_at', 'Publish time', 'datetime'],
     ['status', 'Status', 'select', { options: ['published', 'draft', 'hidden'] }], ['pinned', 'Pin to top', 'bool']] },
   news_sources: { label: 'News sources', columns: ['name', 'enabled', 'last_status', 'last_polled_at', 'items_ingested'], fields: [
@@ -43,16 +43,17 @@ const SCHEMA = {
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true, hint: 'e.g. mohamed-salah' }],
     ['nickname', 'Nickname', 'text'], ['position', 'Position', 'select', { options: ['GK', 'DF', 'MF', 'FW', 'COACH'] }], ['era_id', 'Era', 'ref', { ref: 'eras' }],
     ['birth_date', 'Born', 'text', { hint: 'YYYY-MM-DD or YYYY' }], ['death_date', 'Died', 'text'], ['birthplace', 'Birthplace', 'text'],
-    ['intl_caps', 'Egypt caps', 'number'], ['intl_goals', 'Egypt goals', 'number'], ['portrait_url', 'Portrait URL', 'url'],
+    ['intl_caps', 'Egypt caps', 'number'], ['intl_goals', 'Egypt goals', 'number'], ['portrait_url', 'Portrait', 'url', { upload: true }],
     ['bio_en', 'Biography (English)', 'textarea', { wide: true }], ['bio_ar', 'Biography (Arabic)', 'textarea', { wide: true, rtl: true }],
     ['is_legend', 'Legend', 'bool'], ['status', 'Status', 'select', { options: STATUS }]] },
   player_spells: { label: 'Career spells', hidden: true, columns: ['club_name', 'club_id', 'from_year', 'to_year'], fields: [
     ['player_id', 'Player', 'ref', { ref: 'players', required: true }], ['club_id', 'Egyptian club', 'ref', { ref: 'clubs' }], ['club_name', 'Or other club name', 'text'],
     ['from_year', 'From', 'number'], ['to_year', 'To', 'number'], ['apps', 'Appearances', 'number'], ['goals', 'Goals', 'number']] },
-  clubs: { label: 'Clubs', columns: ['name_en', 'city', 'founded_year', 'status'], children: [['club_milestones', 'club_id', 'Journey milestones']], fields: [
+  clubs: { label: 'Clubs', columns: ['crest_url', 'name_en', 'city', 'founded_year', 'status'], children: [['club_milestones', 'club_id', 'Journey milestones']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true }],
     ['nickname_en', 'Nickname', 'text'], ['city', 'City', 'text'], ['founded_year', 'Founded', 'number'], ['stadium', 'Stadium', 'text'],
-    ['colors', 'Colours (hex, comma-separated)', 'text', { hint: '#C8102E,#FFFFFF' }], ['crest_url', 'Crest URL', 'url'],
+    ['colors', 'Colours (hex, comma-separated)', 'text', { hint: '#C8102E,#FFFFFF' }],
+    ['crest_url', 'Club logo (2027 edition)', 'url', { upload: true, wide: true, hint: 'Upload the official logo file supplied or licensed by the club (PNG, SVG or WebP, transparent background).' }],
     ['history_en', 'History (English)', 'textarea', { wide: true }], ['history_ar', 'History (Arabic)', 'textarea', { wide: true, rtl: true }],
     ['status', 'Status', 'select', { options: STATUS }]] },
   club_milestones: { label: 'Milestones', hidden: true, columns: ['year', 'kind', 'title_en'], fields: [
@@ -67,9 +68,10 @@ const SCHEMA = {
     ['competition_id', 'Competition', 'ref', { ref: 'competitions', required: true }], ['season', 'Season', 'text', { required: true, hint: '1986 or 2005-06' }],
     ['winner_club_id', 'Winning club', 'ref', { ref: 'clubs' }], ['winner_team_id', 'Or winning national team', 'ref', { ref: 'national_teams' }],
     ['runner_up', 'Runner-up', 'text'], ['final_score', 'Final score', 'text'], ['host', 'Host', 'text'], ['notes_en', 'Notes', 'textarea', { wide: true, rows: 3 }]] },
-  national_teams: { label: 'National teams', columns: ['name_en', 'category'], children: [['tournament_appearances', 'team_id', 'Tournament appearances']], fields: [
+  national_teams: { label: 'National teams', columns: ['crest_url', 'name_en', 'category'], children: [['tournament_appearances', 'team_id', 'Tournament appearances']], fields: [
     ['name_en', 'Name (English)', 'text', { required: true }], ['name_ar', 'Name (Arabic)', 'rtl'], ['slug', 'URL slug', 'text', { required: true }],
-    ['category', 'Category', 'select', { options: ['senior', 'olympic', 'u20', 'u17', 'women', 'futsal', 'beach'] }], ['summary_en', 'Summary', 'textarea', { wide: true, rows: 3 }]] },
+    ['category', 'Category', 'select', { options: ['senior', 'olympic', 'u20', 'u17', 'women', 'futsal', 'beach'] }],
+    ['crest_url', 'Team logo (2027 edition)', 'url', { upload: true, wide: true, hint: 'The official Egyptian FA / team logo file (PNG, SVG or WebP).' }], ['summary_en', 'Summary', 'textarea', { wide: true, rows: 3 }]] },
   tournament_appearances: { label: 'Tournament appearances', hidden: true, columns: ['year', 'tournament', 'result'], fields: [
     ['team_id', 'Team', 'ref', { ref: 'national_teams', required: true }], ['tournament', 'Tournament', 'text', { required: true }], ['year', 'Year', 'number', { required: true }],
     ['host', 'Host', 'text'], ['result', 'Result', 'text'], ['coach', 'Coach', 'text'], ['notes_en', 'Notes', 'textarea', { wide: true, rows: 3 }]] },
@@ -168,6 +170,7 @@ async function list(entity, params) {
     if (col === 'status' || col === 'last_status') return `<span class="pill pill--${esc(v || 'draft')}">${esc(v || '—')}</span>`;
     if (['pinned', 'enabled', 'featured', 'is_legend'].includes(col)) return v ? 'Yes' : '';
     if (col.endsWith('_at')) return when(v);
+    if (col === 'crest_url') return v ? `<img class="thumb" src="${esc(v)}" alt="" width="32" height="32">` : '<span class="muted">No logo</span>';
     if (col.endsWith('_id')) return esc(await refLabel(col, v));
     return `<div class="truncate">${esc(v)}</div>`;
   };
@@ -196,7 +199,11 @@ async function fieldHtml([name, label, type, opt = {}], value) {
     case 'textarea': return wrap(`<textarea id="${id}" name="${name}" rows="${opt.rows || 8}" ${opt.rtl ? 'dir="rtl" lang="ar"' : ''} ${req}>${esc(v)}</textarea>`);
     case 'rtl': return wrap(`<input id="${id}" name="${name}" dir="rtl" lang="ar" value="${esc(v)}" ${req}>`);
     case 'number': return wrap(`<input id="${id}" name="${name}" type="number" value="${esc(v)}" ${req}>`);
-    case 'url': return wrap(`<input id="${id}" name="${name}" type="url" value="${esc(v)}" ${req}>`);
+    case 'url':
+      if (!opt.upload) return wrap(`<input id="${id}" name="${name}" type="url" value="${esc(v)}" ${req}>`);
+      return wrap(`<div class="upload"><img class="upload__preview" data-preview="${name}" src="${esc(v)}" alt="" ${v ? '' : 'hidden'}>
+        <div class="upload__controls"><input id="${id}" name="${name}" value="${esc(v)}" placeholder="/uploads/… or https://…" ${req}>
+        <label class="btn btn--ghost btn--sm">Upload file<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-upload="${name}" class="sr-only"></label></div></div>`);
     case 'date': return wrap(`<input id="${id}" name="${name}" type="date" value="${esc(String(v).slice(0, 10))}" ${req}>`);
     case 'datetime': return wrap(`<input id="${id}" name="${name}" type="datetime-local" value="${v ? esc(new Date(v).toISOString().slice(0, 16)) : ''}">`);
     case 'bool': return `<div class="field"><label><input type="checkbox" name="${name}" ${v ? 'checked' : ''}> ${esc(label)}</label></div>`;
@@ -233,6 +240,18 @@ async function edit(entity, id, params) {
     ${ro ? '<p class="muted">You have read-only access.</p>' : `<div class="form-actions"><button class="btn">Save</button>${!isNew && can('admin') ? '<button type="button" class="btn btn--danger" data-delete>Delete</button>' : ''}</div>`}</form>
     <div data-children></div>`;
   const form = c.querySelector('[data-edit]');
+  form.querySelectorAll('[data-upload]').forEach((file) => file.addEventListener('change', async () => {
+    const f = file.files[0];
+    if (!f) return;
+    const res = await fetch('/api/admin/uploads', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': f.type }, body: f });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { toast(data.error || 'Upload failed'); return; }
+    form.elements[file.dataset.upload].value = data.url;
+    const img = form.querySelector(`[data-preview="${file.dataset.upload}"]`);
+    img.src = data.url; img.hidden = false;
+    toast('Uploaded. Save to apply.');
+  }));
+  form.querySelectorAll('[data-preview]').forEach((img) => form.elements[img.dataset.preview].addEventListener('input', (e) => { img.src = e.target.value; img.hidden = !e.target.value; }));
   c.querySelector('[data-back]').addEventListener('click', () => (history.length > 1 ? history.back() : (location.hash = `#/e/${entity}`)));
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

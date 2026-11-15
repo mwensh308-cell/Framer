@@ -24,10 +24,12 @@ const ago = (iso) => {
   const h = Math.round(m / 60); if (h < 24) return `${h} h ago`;
   return fmtDate(iso);
 };
-const crest = (c) => {
-  const [a = '#555', b = '#fff'] = (c.colors || '').split(',');
-  return `<span class="crest" aria-hidden="true" style="background:linear-gradient(135deg,${esc(a)} 55%,${esc(b)} 55%)">${initials(c.name_en)}</span>`;
-};
+// Official logo when an editor has uploaded one (2027 edition), otherwise an ink monogram.
+// alt is empty because the name is always printed beside the logo.
+const crest = (c, size = '') => (c.crest_url
+  ? `<span class="crest crest--img ${size}"><img src="${esc(c.crest_url)}" alt="" loading="lazy" decoding="async"></span>`
+  : `<span class="crest ${size}" aria-hidden="true">${initials(c.name_en)}</span>`);
+const split = (text, emWord) => text.split(' ').map((w, i) => `<span class="w" style="--i:${i}">${w === emWord ? `<em>${w}</em>` : w}</span>`).join(' ');
 const setTitle = (t) => { document.title = t ? `${t} — The Pharaohs' Archive` : "The Pharaohs' Archive"; };
 const loading = () => { main.innerHTML = `<div class="wrap section"><div class="grid">${'<div class="skeleton"></div>'.repeat(6)}</div></div>`; };
 const errorView = (e) => html`<div class="wrap error"><h1>${e.status === 404 ? 'Not in the archive' : 'Something went wrong'}</h1>
@@ -40,7 +42,10 @@ const io = 'IntersectionObserver' in window ? new IntersectionObserver((entries)
   for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
 }, { rootMargin: '0px 0px -10% 0px' }) : null;
 function enhance() {
-  main.querySelectorAll('.reveal').forEach((el) => (io && !reduceMotion ? io.observe(el) : el.classList.add('in')));
+  main.querySelectorAll('.reveal').forEach((el) => {
+    el.style.setProperty('--d', `${([...el.parentElement.children].indexOf(el) % 8) * 70}ms`);
+    io && !reduceMotion ? io.observe(el) : el.classList.add('in');
+  });
   main.querySelectorAll('[data-count]').forEach((el) => {
     const target = Number(el.dataset.count);
     if (reduceMotion || !target) { el.textContent = target; return; }
@@ -78,10 +83,10 @@ async function home() {
   main.innerHTML = html`
   <section class="hero"><div class="wrap">
     <p class="hero__kicker">Since 1907</p>
-    <h1>The story of <em>Egyptian</em> football</h1>
+    <h1 class="split">${split('The story of Egyptian football', 'Egyptian')}</h1>
     <p class="hero__lede">Africa’s first World Cup nation, record champions of the continent, and the clubs, players and rivalries that made the game a national passion.</p>
     <p><a class="btn" href="/timeline" data-link>Walk the timeline</a> <a class="btn btn--ghost" href="/players" data-link>Meet the players</a></p>
-    <svg class="hero__glyph" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 29 28H3Z"/></svg>
+    <div class="pyramid" aria-hidden="true"><div class="pyramid__body"><span class="face f1"></span><span class="face f2"></span><span class="face f3"></span><span class="face f4"></span><span class="base"></span></div></div>
   </div></section>
   <div class="wrap"><dl class="stats">
     <div class="stat"><dt>AFCON titles</dt><dd class="gold" data-count="${stats.afcon_titles}">${stats.afcon_titles}</dd></div>
@@ -169,7 +174,7 @@ async function club(slug) {
   const max = Math.max(1, ...c.honours.map((h) => h.count));
   main.innerHTML = html`<header class="detail-head"><div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/clubs" data-link>Clubs</a> / ${esc(c.city)}</nav>
-    <div class="row">${raw(crest(c))}<div>${c.name_ar ? `<span class="ar" lang="ar">${esc(c.name_ar)}</span>` : ''}</div></div>
+    <div class="row">${raw(crest(c, 'crest--lg'))}<div>${c.name_ar ? `<span class="ar" lang="ar">${esc(c.name_ar)}</span>` : ''}</div></div>
     <h1>${esc(c.name_en)}</h1>${c.nickname_en ? `<p class="hero__lede">${esc(c.nickname_en)}</p>` : ''}
     <dl class="facts"><div><dt>Founded</dt><dd>${esc(c.founded_year)}</dd></div><div><dt>City</dt><dd>${esc(c.city)}</dd></div>
       <div><dt>Stadium</dt><dd>${esc(c.stadium || '—')}</dd></div><div><dt>Major titles recorded</dt><dd>${c.honours.reduce((n, h) => n + h.count, 0)}</dd></div></dl>
@@ -220,8 +225,8 @@ async function nationalTeams() {
   setTitle('National teams');
   const teams = await api('/national-teams');
   main.innerHTML = html`<div class="wrap detail-head"><h1>National teams</h1><p class="hero__lede">The Pharaohs and every Egyptian national side, from the Olympic teams of the 1920s to the youth and women’s teams.</p></div>
-  <div class="wrap section"><div class="grid">${teams.map((t) => html`<a class="card reveal" href="/national-teams/${esc(t.slug)}" data-link><h3>${esc(t.name_en)}</h3>
-    <span class="ar" lang="ar">${esc(t.name_ar)}</span><p class="muted">${esc(t.summary_en || '')}</p><div class="card__meta"><span class="badge">${esc(t.category)}</span></div></a>`)}</div></div>`;
+  <div class="wrap section"><div class="grid">${teams.map((t) => html`<a class="card reveal" href="/national-teams/${esc(t.slug)}" data-link>
+    <div class="row">${raw(crest(t))}<div><h3>${esc(t.name_en)}</h3><span class="ar" lang="ar">${esc(t.name_ar)}</span></div></div><p class="muted">${esc(t.summary_en || '')}</p><div class="card__meta"><span class="badge">${esc(t.category)}</span></div></a>`)}</div></div>`;
 }
 
 async function nationalTeam(slug) {
@@ -229,7 +234,7 @@ async function nationalTeam(slug) {
   setTitle(t.name_en);
   const by = Object.groupBy ? Object.groupBy(t.appearances, (a) => a.tournament) : t.appearances.reduce((o, a) => ((o[a.tournament] ||= []).push(a), o), {});
   main.innerHTML = html`<header class="detail-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/national-teams" data-link>National teams</a></nav>
-    <span class="ar" lang="ar">${esc(t.name_ar)}</span><h1>${esc(t.name_en)}</h1><p class="hero__lede">${esc(t.summary_en || '')}</p></div></header>
+    <div class="row">${raw(crest(t, 'crest--lg'))}<span class="ar" lang="ar">${esc(t.name_ar)}</span></div><h1>${esc(t.name_en)}</h1><p class="hero__lede">${esc(t.summary_en || '')}</p></div></header>
   ${Object.entries(by).map(([name, rows]) => html`<section class="section"><div class="wrap"><h2>${esc(name)}</h2>
     <div class="table-scroll"><table class="table"><thead><tr><th scope="col">Year</th><th scope="col">Host</th><th scope="col">Result</th><th scope="col">Coach</th><th scope="col">Notes</th></tr></thead>
     <tbody>${rows.map((a) => html`<tr><td><strong>${a.year}</strong></td><td>${esc(a.host || '—')}</td>
@@ -332,9 +337,18 @@ async function render() {
   enhance();
 }
 
+// 3D page transition: View Transitions API where available, CSS animation otherwise.
+async function transition(update, back = false) {
+  document.documentElement.dataset.nav = back ? 'back' : 'forward';
+  if (reduceMotion) return update();
+  if (document.startViewTransition) return document.startViewTransition(update).finished.catch(() => {});
+  await update();
+  main.classList.remove('page-enter'); void main.offsetWidth; main.classList.add('page-enter');
+}
+
 function navigate(url) {
   history.pushState(null, '', url);
-  render().then(() => { window.scrollTo(0, 0); main.focus({ preventScroll: true }); });
+  transition(async () => { await render(); window.scrollTo(0, 0); }).then(() => main.focus({ preventScroll: true }));
 }
 
 document.addEventListener('click', (e) => {
@@ -350,12 +364,29 @@ document.addEventListener('submit', (e) => {
   const q = new FormData(e.target).get('q');
   navigate(`/search?q=${encodeURIComponent(q)}`);
 });
-addEventListener('popstate', render);
+addEventListener('popstate', () => transition(render, true));
 
 const toggle = document.querySelector('.nav-toggle');
 const nav = document.getElementById('primary-nav');
 const closeNav = () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
 toggle.addEventListener('click', () => { const open = nav.classList.toggle('open'); toggle.setAttribute('aria-expanded', String(open)); });
+
+// ---------- 3D card tilt (fine pointers only) ----------
+if (!reduceMotion && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let active = null;
+  const reset = (c) => { c.classList.remove('tilt'); c.style.removeProperty('--rx'); c.style.removeProperty('--ry'); };
+  document.addEventListener('pointermove', (e) => {
+    const card = e.target.closest?.('.card');
+    if (active && active !== card) reset(active);
+    active = card;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`);
+    card.style.setProperty('--rx', `${(0.5 - (e.clientY - r.top) / r.height) * 12}deg`);
+    card.classList.add('tilt');
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => active && reset(active));
+}
 
 // ---------- live news ----------
 const ticker = document.getElementById('ticker');

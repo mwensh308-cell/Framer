@@ -4,6 +4,10 @@ import assert from 'node:assert/strict';
 process.env.DB_PATH = ':memory:';
 process.env.ADMIN_PASSWORD = 'test-password-123';
 process.env.SESSION_SECRET = 'test-secret';
+const { mkdtempSync } = await import('node:fs');
+const { tmpdir } = await import('node:os');
+const { join } = await import('node:path');
+process.env.UPLOAD_DIR = mkdtempSync(join(tmpdir(), 'pa-uploads-'));
 
 const { app } = await import('../server/index.js');
 const { parseFeed, ingest, pollSource } = await import('../server/news.js');
@@ -109,4 +113,25 @@ test('polling pushes new items to the live stream', async () => {
     fetchImpl: async (url, opts) => { assert.equal(opts.headers['If-None-Match'], '"v1"'); return new Response(null, { status: 304 }); },
   });
   assert.equal(notModified.status, 'not-modified');
+});
+
+test('editors can upload a logo and attach it to a national team', async () => {
+  const png = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(32)]);
+  const up = await fetch(base + '/api/admin/uploads', { method: 'POST', headers: { Cookie: cookie, 'Content-Type': 'image/png' }, body: png });
+  assert.equal(up.status, 201);
+  const { url } = await up.json();
+  assert.match(url, /^\/uploads\/[a-f0-9]{24}\.png$/);
+
+  const served = await fetch(base + url);
+  assert.equal(served.status, 200);
+  assert.match(served.headers.get('content-security-policy'), /sandbox/);
+
+  const fake = await fetch(base + '/api/admin/uploads', { method: 'POST', headers: { Cookie: cookie, 'Content-Type': 'image/png' }, body: 'not an image' });
+  assert.equal(fake.status, 400, 'content must match the declared type');
+  const anon = await fetch(base + '/api/admin/uploads', { method: 'POST', headers: { 'Content-Type': 'image/png' }, body: png });
+  assert.equal(anon.status, 401);
+
+  const team = get("SELECT id FROM national_teams WHERE slug = 'egypt'");
+  await call(`/api/admin/national_teams/${team.id}`, { method: 'PUT', body: { crest_url: url } });
+  assert.equal((await call('/api/v1/national-teams/egypt')).body.crest_url, url);
 });

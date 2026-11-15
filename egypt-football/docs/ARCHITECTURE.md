@@ -95,9 +95,16 @@ Later: `/ar/...` mirrored routes with `hreflang`, `/eras/:slug`, `/matches/:id`,
 | Admin editor | Data entry | Forms generated from the schema, RTL Arabic fields, drafts, nested child records (career spells, milestones, titles, appearances) |
 | Admin users | Access control | Role select, activate/deactivate, reset password, invite |
 
-**Visual language:** papyrus-paper background, ink black, flag red only for live and action states, pharaonic gold only for honours. Barlow Condensed for display, Source Serif for long reading, IBM Plex Sans / Plex Sans Arabic for the interface. Dark mode follows the system setting.
+**Visual language:** strictly two-tone, **cream (`#f4ecdc`) and ink black (`#121110`)**. Emphasis comes from inversion (ink fill on cream), outlined type and weight, not extra colours. Dark mode swaps the two. Barlow Condensed for display, Source Serif for long reading, IBM Plex Sans / Plex Sans Arabic for the interface. Club and team logos are the only full-colour elements, shown on a cream disc with an ink ring; official logos are never recoloured.
 
-**Motion:** reveal-on-scroll, count-up numbers, bars that grow, and a highlight flash on new news. All motion is under 1 second and switched off under `prefers-reduced-motion`.
+**Motion & 3D:**
+- Page changes swing in 3D on a vertical hinge using the View Transitions API (with a CSS fallback). Going back reverses the direction, and the header stays fixed.
+- The hero headline rises word by word on a 3D hinge beside a rotating CSS-3D pyramid.
+- Cards tip into place as you scroll (staggered) and tilt toward the pointer. Logos flip 360° on hover.
+- The live headline flips in, numbers count up, honour bars grow and timeline dots pop.
+- All motion is CSS-driven, uses only `transform` and `opacity` (GPU-friendly), and is switched off entirely under `prefers-reduced-motion`.
+
+**Logos (2027 edition):** `clubs.crest_url` and `national_teams.crest_url` hold the official logo. Editors upload the file the club or the Egyptian FA supplies or licenses (PNG, SVG or WebP) in the dashboard. Until a logo is uploaded, an ink monogram is shown.
 
 ## 6. Performance
 
@@ -162,6 +169,7 @@ Admin (`/api/admin`, cookie session; minimum role in brackets)
 | `POST /:entity` · `PUT /:entity/:id` (editor) | Create / update (allow-listed columns) |
 | `DELETE /:entity/:id` (admin) | Delete |
 | `POST /news_sources/:id/poll` · `POST /news/poll-all` (editor) | Ingest feeds now |
+| `POST /uploads` (editor) | Raw `image/png, jpeg, webp, svg+xml` body (max 2 MB, file signature checked) → `{ url: "/uploads/<sha>.png" }`; files are served long-cached and sandboxed |
 | `GET/POST /users` · `PUT/DELETE /users/:id` (admin) | User management |
 
 `:entity` ∈ `players, player_spells, clubs, club_milestones, competitions, titles, national_teams, tournament_appearances, events, news, news_sources`.

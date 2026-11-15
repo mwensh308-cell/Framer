@@ -5,12 +5,17 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = process.env.DB_PATH || join(here, '..', 'data', 'archive.db');
+export const UPLOAD_DIR = process.env.UPLOAD_DIR || join(here, '..', 'data', 'uploads');
 
 if (DB_PATH !== ':memory:') mkdirSync(dirname(DB_PATH), { recursive: true });
 
 export const db = new DatabaseSync(DB_PATH);
 db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
 db.exec(readFileSync(join(here, 'schema.sql'), 'utf8'));
+
+// Lightweight migrations for databases created by earlier versions.
+const hasColumn = (table, col) => db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
+if (!hasColumn('national_teams', 'crest_url')) db.exec('ALTER TABLE national_teams ADD COLUMN crest_url TEXT');
 
 /** Plain objects instead of null-prototype rows, so JSON and spreads behave normally. */
 const plain = (row) => (row ? { ...row } : row);
@@ -64,7 +69,7 @@ export const ENTITIES = {
   },
   national_teams: {
     table: 'national_teams',
-    columns: ['slug', 'name_en', 'name_ar', 'category', 'summary_en'],
+    columns: ['slug', 'name_en', 'name_ar', 'category', 'crest_url', 'summary_en'],
     search: ['name_en'],
     order: 'id',
   },

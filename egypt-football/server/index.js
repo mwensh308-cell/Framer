@@ -1,7 +1,7 @@
 import express from 'express';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { get } from './db.js';
+import { get, UPLOAD_DIR } from './db.js';
 import { publicApi } from './routes/public.js';
 import { adminApi } from './routes/admin.js';
 import { startScheduler } from './news.js';
@@ -28,7 +28,8 @@ app.use(express.json({ limit: '1mb' }));
 
 // Admin writes must be JSON: with SameSite=Strict cookies this blocks cross-site form CSRF.
 app.use('/api/admin', (req, res, next) => {
-  if (req.method !== 'GET' && req.method !== 'DELETE' && !req.is('application/json')) {
+  const imageUpload = req.path === '/uploads' && req.is('image/*'); // forms cannot send image/* cross-site
+  if (req.method !== 'GET' && req.method !== 'DELETE' && !req.is('application/json') && !imageUpload) {
     return res.status(415).json({ error: 'Content-Type must be application/json' });
   }
   next();
@@ -38,6 +39,11 @@ app.use('/api/v1', publicApi);
 app.use('/api/admin', adminApi);
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
+// Uploaded logos: long-cached, and sandboxed so an SVG opened directly can never run script.
+app.use('/uploads', (req, res, next) => {
+  res.set('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+  next();
+}, express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true, fallthrough: false }));
 app.use('/admin', express.static(join(root, 'admin'), { maxAge: '5m' }));
 app.use(express.static(join(root, 'public'), { maxAge: '5m' }));
 // SPA fallbacks

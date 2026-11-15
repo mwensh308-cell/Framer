@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS clubs (
   founded_year  INTEGER,
   stadium       TEXT,
   colors        TEXT,                 -- comma-separated hex values
-  crest_url     TEXT,
+  crest_url     TEXT,                 -- official club logo (editor-uploaded, 2027 edition)
   history_en    TEXT,                 -- long-form Markdown
   history_ar    TEXT,
   status        TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft','published','archived')),
@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS national_teams (
   name_en     TEXT NOT NULL,
   name_ar     TEXT,
   category    TEXT NOT NULL CHECK (category IN ('senior','olympic','u20','u17','women','futsal','beach')),
+  crest_url   TEXT,                   -- federation / team logo (editor-uploaded, 2027 edition)
   summary_en  TEXT
 );
 

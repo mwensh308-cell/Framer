@@ -1,6 +1,8 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { createHash, randomBytes } from 'node:crypto';
-import { all, get, run, audit, ENTITIES } from '../db.js';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { all, get, run, audit, ENTITIES, UPLOAD_DIR } from '../db.js';
 import { requireRole, verifyPassword, hashPassword, issueToken, sessionCookie } from '../auth.js';
 import { newsBus, pollSource, pollDue, NEWS_SELECT } from '../news.js';
 
@@ -70,6 +72,32 @@ adminApi.post('/news_sources/:id/poll', requireRole('editor'), async (req, res) 
 });
 
 adminApi.post('/news/poll-all', requireRole('editor'), async (req, res) => res.json(await pollDue({ force: true })));
+
+// ---- Logo / image uploads ----------------------------------------------------------------
+// Raw image body (Content-Type: image/*). Files are content-addressed, so re-uploading the same
+// logo returns the same URL. The file signature must match the declared type.
+
+const IMAGE_TYPES = {
+  'image/png': ['png', (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))],
+  'image/jpeg': ['jpg', (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff],
+  'image/webp': ['webp', (b) => b.subarray(0, 4).toString() === 'RIFF' && b.subarray(8, 12).toString() === 'WEBP'],
+  'image/svg+xml': ['svg', (b) => /<svg[\s>]/i.test(b.subarray(0, 2048).toString())],
+};
+
+adminApi.post('/uploads', requireRole('editor'), express.raw({ type: Object.keys(IMAGE_TYPES), limit: '2mb' }), (req, res) => {
+  const type = String(req.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  const spec = IMAGE_TYPES[type];
+  if (!spec || !Buffer.isBuffer(req.body) || !req.body.length) {
+    return res.status(415).json({ error: 'Upload a PNG, JPEG, WebP or SVG image (max 2 MB)' });
+  }
+  const [ext, looksRight] = spec;
+  if (!looksRight(req.body)) return res.status(400).json({ error: 'File content does not match its image type' });
+  const name = `${createHash('sha256').update(req.body).digest('hex').slice(0, 24)}.${ext}`;
+  mkdirSync(UPLOAD_DIR, { recursive: true });
+  writeFileSync(join(UPLOAD_DIR, name), req.body);
+  audit(req.user.id, 'create', 'uploads', null, name);
+  res.status(201).json({ url: `/uploads/${name}` });
+});
 
 // ---- Users (admin only) -------------------------------------------------------------------
 

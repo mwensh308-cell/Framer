@@ -27,6 +27,7 @@ If `ADMIN_PASSWORD` is unset, a random password is printed when the database is 
 | `SESSION_SECRET` | random per boot | Signs admin sessions |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `admin@example.com` / random | First admin account |
 | `NEWS_POLLING` | on | Set to `off` to disable the feed scheduler |
+| `UPLOAD_DIR` | `data/uploads` | Where uploaded logos and images are stored |
 | `NODE_USE_ENV_PROXY=1` | — | Make feed fetching use `HTTPS_PROXY` when behind a proxy |
 
 ## Test
@@ -46,6 +47,10 @@ admin/    dashboard (index.html, admin.css, admin.js)
 docs/     ARCHITECTURE.md
 test/     api.test.js
 ```
+
+## Logos
+
+Club and national team logos (2027 editions) are added in the dashboard. Open a club or national team, then use **Upload file** next to the logo field and press **Save**. Use only official files supplied or licensed by the club or the Egyptian FA. Logos are trademarks, so none are bundled with the code. Until a logo is added, the site shows a monogram.
 
 ## About the seed data
 
