@@ -5,13 +5,13 @@
   "description": "The Pharaohs' Archive — history of Egyptian football: players, clubs, championships, national teams, live news and an admin dashboard.",
   "type": "module",
   "engines": {
-    "node": ">=22.5"
+    "node": "22.x"
   },
   "scripts": {
     "start": "node --no-warnings server/index.js",
     "dev": "node --no-warnings --watch server/index.js",
     "dev:web": "npm --prefix web run dev",
-    "build": "npm --prefix web run build",
+    "build": "node scripts/build.mjs",
     "typecheck": "npm --prefix web run typecheck",
     "seed": "node --no-warnings server/seed.js --reset",
     "test": "node --no-warnings --test test/*.test.js",

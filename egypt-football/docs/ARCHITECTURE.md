@@ -59,7 +59,7 @@ users 1─* audit_log
 | `news` | guid_hash (dedupe), url, title, excerpt, body (in-house only), language, pinned, status | External items store only a headline and excerpt, then link out |
 | `users` / `audit_log` | role, active / who, action, entity, summary, time | Every write is logged |
 
-The full DDL is in [`server/schema.sql`](../server/schema.sql). For production, add `revisions` (a JSON snapshot before each update, so any edit can be rolled back), `media`, `sources_citations` (a reference URL per fact), and `matches` / `lineups` for match-level history.
+The full DDL is in [`server/schema.js`](../server/schema.js). For production, add `revisions` (a JSON snapshot before each update, so any edit can be rolled back), `media`, `sources_citations` (a reference URL per fact), and `matches` / `lineups` for match-level history.
 
 ## 4. Information architecture
 

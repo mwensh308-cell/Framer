@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { get, UPLOAD_DIR } from './db.js';
 import { publicApi } from './routes/public.js';
 import { adminApi } from './routes/admin.js';
-import { startScheduler } from './news.js';
+import { startScheduler, pollDue } from './news.js';
 import { seed } from './seed.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,6 +35,19 @@ app.use('/api/admin', (req, res, next) => {
   next();
 });
 
+// Serverless (Vercel) has no background timer: check due feeds when someone opens the news,
+// at most once a minute per instance, waiting no more than 4 seconds.
+if (process.env.VERCEL && process.env.NEWS_POLLING !== 'off') {
+  let lastPoll = 0;
+  app.use(['/api/v1/news', '/api/v1/stats'], async (req, res, next) => {
+    if (Date.now() - lastPoll > 60_000) {
+      lastPoll = Date.now();
+      await Promise.race([pollDue().catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
+    }
+    next();
+  });
+}
+
 app.use('/api/v1', publicApi);
 app.use('/api/admin', adminApi);
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
@@ -45,8 +58,8 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true, fallthrough: false }));
 app.use('/admin', express.static(join(root, 'admin'), { maxAge: '5m' }));
-// Public site: the Vite build of web/ (run `npm run build`). Hashed assets are cached for a year.
-const site = join(root, 'web', 'dist');
+// Public site + admin: built into public/ by `npm run build` (on Vercel the CDN serves this folder).
+const site = join(root, 'public');
 app.use('/assets', express.static(join(site, 'assets'), { maxAge: '1y', immutable: true }));
 app.use(express.static(site, { maxAge: '5m', index: false }));
 // SPA fallbacks
@@ -64,3 +77,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     if (process.env.NEWS_POLLING !== 'off') startScheduler();
   });
 }
+
+export default app;

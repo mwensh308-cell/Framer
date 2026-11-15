@@ -1,3 +1,5 @@
+// Relational schema (SQLite for the MVP; maps 1:1 to PostgreSQL). Kept as a JS module so it is always bundled.
+export default `
 -- The Pharaohs' Archive — relational schema (SQLite for the MVP; maps 1:1 to PostgreSQL).
 -- Every bilingual text field has _en / _ar columns. Every editorial table has status + timestamps
 -- so the admin dashboard can draft, publish and audit changes.
@@ -196,3 +198,4 @@ CREATE TABLE IF NOT EXISTS audit_log (
   created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at DESC);
+`;

@@ -52,7 +52,7 @@ The tests cover the public API, login, role permissions, the CSRF guard, feed pa
 ## Layout
 
 ```
-server/   index.js (app) · schema.sql · db.js · auth.js · news.js (aggregator + SSE bus) · seed.js · seed-ar.js (Arabic content) · routes/
+server/   index.js (app) · schema.js · db.js · auth.js · news.js (aggregator + SSE bus) · seed.js · seed-ar.js (Arabic content) · routes/
 web/      public site, Arabic RTL (Vite + React + Tailwind): components/Hero.tsx, Nav.tsx, ui.tsx · pages/ · lib/router.tsx
 admin/    dashboard (index.html, admin.css, admin.js)
 docs/     ARCHITECTURE.md

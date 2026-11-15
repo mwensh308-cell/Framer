@@ -1,17 +1,20 @@
 import { DatabaseSync } from 'node:sqlite';
-import { readFileSync, mkdirSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
+import SCHEMA from './schema.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const DB_PATH = process.env.DB_PATH || join(here, '..', 'data', 'archive.db');
-export const UPLOAD_DIR = process.env.UPLOAD_DIR || join(here, '..', 'data', 'uploads');
+// On Vercel only /tmp is writable: the database is created and seeded there per function instance.
+const DATA_DIR = process.env.VERCEL ? '/tmp' : join(here, '..', 'data');
+const DB_PATH = process.env.DB_PATH || join(DATA_DIR, 'archive.db');
+export const UPLOAD_DIR = process.env.UPLOAD_DIR || join(DATA_DIR, 'uploads');
 
 if (DB_PATH !== ':memory:') mkdirSync(dirname(DB_PATH), { recursive: true });
 
 export const db = new DatabaseSync(DB_PATH);
 db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
-db.exec(readFileSync(join(here, 'schema.sql'), 'utf8'));
+db.exec(SCHEMA);
 
 // Lightweight migrations for databases created by earlier versions.
 const hasColumn = (table, col) => db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
