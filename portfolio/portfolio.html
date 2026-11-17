@@ -1,0 +1,576 @@
+<title>Mostafa Nasser</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one centred column of frosted-glass panels floating over a live ASCII grid of moths (single dark look, by design) */
+:root{
+  --bg:#06070c;
+  --text:#e8ebf7;
+  --soft:rgba(232,235,247,.72);
+  --muted:rgba(232,235,247,.46);
+  --accent:#7aa2ff;
+  --warm:#e8a27c;
+  --edge:rgba(255,255,255,.1);
+  --rim:rgba(255,255,255,.18);
+  --chip:rgba(255,255,255,.05);
+  --glass-a:rgba(14,16,26,.62);
+  --glass-b:rgba(10,12,20,.48);
+  --sans:Geist,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.field{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;font-family:var(--mono)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+
+.glass{
+  background:linear-gradient(135deg,var(--glass-a),var(--glass-b));
+  border:1px solid var(--edge);
+  box-shadow:inset 1px 1px 0 var(--rim),inset -1px -1px 0 rgba(255,255,255,.04),0 16px 48px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35);
+  -webkit-backdrop-filter:blur(10px) saturate(170%);backdrop-filter:blur(10px) saturate(170%);
+}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:center;pointer-events:none}
+.bar{pointer-events:auto;display:flex;align-items:center;gap:4px;padding:4px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.bar .mark{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.04em;padding:0 12px 0 10px;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4d1be,var(--warm) 70%);flex:none}
+.bar a{height:32px;display:inline-flex;align-items:center;padding:0 13px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:color .25s,background .25s}
+.bar a:hover,.bar a:focus-visible{color:var(--text);background:rgba(255,255,255,.08);outline:none}
+
+/* column */
+.wrap{position:relative;z-index:10;max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 96px;display:flex;flex-direction:column;gap:20px}
+
+/* hero */
+.hero{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-block:56px 40px;pointer-events:none}
+.hero::before{content:"";position:absolute;z-index:-1;inset:8% -4%;background:radial-gradient(closest-side,rgba(6,7,12,.82),rgba(6,7,12,.55) 60%,rgba(6,7,12,0));pointer-events:none}
+.hero a,.hero button{pointer-events:auto}
+.avatar{width:78px;height:78px;border-radius:50%;position:relative;overflow:hidden;border:1px solid var(--rim);box-shadow:0 10px 30px rgba(0,0,0,.5);display:grid;place-items:center}
+.avatar::before{content:"";position:absolute;inset:0;opacity:.62;background:repeating-linear-gradient(176deg,rgba(255,255,255,.18) 0 2px,rgba(0,0,0,.18) 2px 5px),radial-gradient(circle at 35% 30%,#9a9ea8,#4a4d55 62%,#24262c)}
+.avatar span{position:relative;font-family:var(--mono);font-weight:600;font-size:20px;letter-spacing:.02em;color:#f2f3f8}
+.eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+.hero h1{margin:0;font-weight:500;font-size:clamp(38px,8vw,64px);line-height:1.04;letter-spacing:-.035em;text-wrap:balance;text-shadow:0 0 8px var(--bg),0 0 28px var(--bg),0 0 60px var(--bg)}
+.lede{margin:0;max-width:56ch;color:var(--soft);font-size:17px;text-wrap:balance;text-shadow:0 0 6px var(--bg),0 0 24px var(--bg)}
+.roles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.roles li{font-family:var(--mono);font-weight:500;font-size:12px;padding:5px 11px;border-radius:999px;background:rgba(10,12,20,.7);border:1px solid var(--edge);color:var(--soft)}
+.ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}
+.btn{height:40px;display:inline-flex;align-items:center;gap:8px;padding:0 18px;border-radius:999px;font:500 14px var(--sans);text-decoration:none;border:1px solid var(--edge);color:var(--text);background:rgba(10,12,20,.7);cursor:pointer;transition:background .25s,border-color .25s}
+.btn:hover{background:rgba(255,255,255,.1)}
+.btn.primary{background:var(--text);color:#0b0d14;border-color:transparent}
+.btn.primary:hover{background:#fff}
+.btn:focus-visible,.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* panels */
+.panel{border-radius:24px;padding:28px clamp(18px,4vw,32px);display:flex;flex-direction:column;gap:18px}
+.panel > header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel h2{margin:0;font-size:22px;font-weight:500;letter-spacing:-.02em}
+.tag{font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.panel p{margin:0;color:var(--soft);max-width:66ch}
+
+/* projects */
+.projects{display:grid;grid-template-columns:1fr;gap:12px}
+.proj{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:18px;border-radius:16px;background:var(--chip);border:1px solid var(--edge)}
+.proj h3{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.proj .kind{font-family:var(--mono);font-size:11.5px;color:var(--muted);grid-column:1}
+.proj .status{grid-column:2;grid-row:1 / span 2;align-self:start;font-family:var(--mono);font-weight:600;font-size:11px;padding:4px 10px;border-radius:999px;white-space:nowrap;border:1px solid var(--edge);color:var(--soft)}
+.status.live{color:#ffd2b8;border-color:rgba(232,162,124,.45);background:rgba(232,162,124,.1)}
+.proj p,.proj ul{grid-column:1 / -1}
+.proj ul{margin:4px 0 0;padding-left:18px;color:var(--soft)}
+.proj ul li{margin:2px 0}
+.species{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
+.species li{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft);padding:3px 10px 3px 8px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--edge)}
+.species i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.ascii{grid-column:1 / -1;margin:6px 0 0;font-family:var(--mono);font-weight:600;font-size:11px;line-height:1.25;color:var(--warm);white-space:pre;overflow-x:auto}
+
+/* experience */
+.roles-list{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}
+.job{display:grid;grid-template-columns:200px minmax(0,1fr);gap:4px 24px;padding:18px 0;border-top:1px solid var(--edge)}
+.job:first-child{border-top:0;padding-top:4px}
+.job .who{display:flex;flex-direction:column}
+.job .who strong{font-weight:500;font-size:15.5px}
+.job .who span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.job ul{margin:0;padding-left:18px;color:var(--soft)}
+.job li{margin:2px 0}
+
+/* skills */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 28px}
+.grid2 h3{margin:0 0 8px;font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.chips li{font-size:13px;padding:4px 11px;border-radius:999px;background:var(--chip);border:1px solid var(--edge);color:var(--soft)}
+.facts{margin:0;display:flex;flex-direction:column;gap:6px;color:var(--soft)}
+.facts b{color:var(--text);font-weight:500}
+
+/* contact */
+.contact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.c{padding:14px 16px;border-radius:14px;background:var(--chip);border:1px solid var(--edge);display:flex;flex-direction:column;gap:6px;min-width:0}
+.c .tag{font-size:10px}
+.c .val{font-family:var(--mono);font-size:13.5px;color:var(--text);user-select:all;overflow-wrap:anywhere}
+.copy{align-self:flex-start;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--edge);background:transparent;color:var(--soft);font:500 12px var(--sans);cursor:pointer}
+.copy:hover{background:rgba(255,255,255,.08);color:var(--text)}
+
+.foot{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:8px}
+.hint{position:fixed;z-index:20;left:max(14px,env(safe-area-inset-left,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));margin:0;font:600 11px var(--mono);letter-spacing:.02em;color:var(--muted);user-select:none;pointer-events:none}
+
+@media (max-width:720px){
+  .job{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .contact{grid-template-columns:1fr}
+  .hero{padding-block:32px 24px}
+  .bar .mark .full{display:none}
+}
+@media (max-width:420px){
+  .bar a{padding:0 10px;font-size:12.5px}
+  .bar .mark{display:none}
+  .proj{grid-template-columns:1fr}
+  .proj .status{grid-column:1;grid-row:auto;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:80px}
+</style>
+
+<canvas class="field" id="field" aria-hidden="true"></canvas>
+
+<div class="top">
+  <nav class="bar glass" aria-label="Sections">
+    <span class="mark"><span class="dot"></span>MN<span class="full">&nbsp;· Mostafa Nasser</span></span>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="name">
+    <div class="avatar" aria-hidden="true"><span>MN</span></div>
+    <p class="eyebrow">Cairo, Egypt</p>
+    <h1 id="name">Mostafa Nasser</h1>
+    <p class="lede">Mechatronics Engineering student at Helwan University. I've worked in operations, engineering support and paid media. Outside of that I build small creative-coding projects, like the moths flying behind this page.</p>
+    <ul class="roles">
+      <li>Mechatronics · Year 3</li>
+      <li>Operations</li>
+      <li>Media buying</li>
+      <li>Cisco cybersecurity</li>
+    </ul>
+    <div class="ctas">
+      <a class="btn primary" href="#projects">See projects</a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </div>
+  </section>
+
+  <section class="panel glass" id="projects" aria-labelledby="projects-h">
+    <header><h2 id="projects-h">Projects</h2><span class="tag">3 projects</span></header>
+    <div class="projects">
+      <article class="proj">
+        <h3>Glyph Animals</h3>
+        <span class="kind">Creative coding · HTML Canvas · JavaScript</span>
+        <span class="status live">Moth species live</span>
+        <p>A full-screen browser new-tab page. Flocks of animals made only of keyboard characters fly across a dark grid. Every animal is drawn from a shape function, one frame at a time: no images, sprites or libraries, just one HTML file. The moths behind this portfolio are the first species: they flutter, glide, leave fading trails and scatter when you click.</p>
+        <ul>
+          <li>Seven planned species, each with its own motion: Moth, Rabbit, Sea turtle, Squid, Owl, Flying fish and Eagle.</li>
+          <li>Frosted liquid-glass species switcher, greeting, AI composer box, and a Tweaks panel of live sliders.</li>
+          <li>Depth fog, sparkle, hue shift and a diffusing trail field. A still frame for reduced motion.</li>
+        </ul>
+        <ul class="species" aria-label="Species">
+          <li><i style="--c:rgb(232,162,124)"></i>Moth</li>
+          <li><i style="--c:rgb(248,199,181)"></i>Rabbit</li>
+          <li><i style="--c:rgb(109,176,138)"></i>Sea turtle</li>
+          <li><i style="--c:rgb(232,106,160)"></i>Squid</li>
+          <li><i style="--c:rgb(217,195,160)"></i>Owl</li>
+          <li><i style="--c:rgb(133,227,221)"></i>Flying fish</li>
+          <li><i style="--c:rgb(230,233,242)"></i>Eagle</li>
+        </ul>
+      </article>
+
+      <article class="proj">
+        <h3>Paid campaigns for local brands</h3>
+        <span class="kind">Media buying · Freelance</span>
+        <span class="status">5+ brands</span>
+        <p>I planned and ran paid advertising campaigns for more than five local brands, from setup and budget split to reporting results to each client.</p>
+        <ul>
+          <li>Tuned targeting, creatives and budgets as campaigns ran.</li>
+          <li>Studied audience behaviour and campaign data to improve return on ad spend.</li>
+          <li>Turned the numbers into clear findings and next steps for clients.</li>
+        </ul>
+      </article>
+
+      <article class="proj">
+        <h3>Cybersecurity certification</h3>
+        <span class="kind">Cisco Networking Academy</span>
+        <span class="status">Certified</span>
+        <p>A Cisco course covering the basics of keeping systems and networks safe, plus the network, operating-system and hardware fundamentals underneath.</p>
+        <ul>
+          <li>Threats, attacks and the controls that defend against them.</li>
+          <li>How the internet and networks work, and how operating systems handle access and data.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel glass" id="experience" aria-labelledby="exp-h">
+    <header><h2 id="exp-h">Experience</h2><span class="tag">Operations · Engineering · Marketing</span></header>
+    <ol class="roles-list">
+      <li class="job">
+        <div class="who"><strong>Assistant Manager</strong><span>Talabat</span></div>
+        <ul>
+          <li>Ran day-to-day operations and coordinated the team to keep work moving.</li>
+          <li>Handled customer issues and kept service quality high.</li>
+          <li>Helped meet operational targets and improve work processes.</li>
+        </ul>
+      </li>
+      <li class="job">
+        <div class="who"><strong>Assistant Engineer</strong><span>Elsewedy Electric</span></div>
+        <ul>
+          <li>Supported engineering teams on technical and operational tasks.</li>
+          <li>Took part in project documentation and reporting.</li>
+          <li>Supported maintenance and engineering work across several teams.</li>
+        </ul>
+      </li>
+      <li class="job">
+        <div class="who"><strong>Media Buyer</strong><span>Freelance</span></div>
+        <ul>
+          <li>Ran ad campaigns for more than five local brands.</li>
+          <li>Tuned campaign performance and marketing budgets.</li>
+          <li>Analysed results to improve ROI and reported findings to clients.</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section class="panel glass" id="skills" aria-labelledby="skills-h">
+    <header><h2 id="skills-h">Skills &amp; background</h2></header>
+    <div class="grid2">
+      <div>
+        <h3>Technical</h3>
+        <ul class="chips">
+          <li>Cybersecurity fundamentals</li><li>Networking basics</li><li>Operating systems</li><li>Computer hardware &amp; software</li><li>Digital marketing</li><li>Media buying</li><li>Excel</li><li>Word</li><li>PowerPoint</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Working style</h3>
+        <ul class="chips">
+          <li>Communication</li><li>Teamwork</li><li>Problem solving</li><li>Time management</li><li>Leadership</li><li>Adaptability</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Education</h3>
+        <div class="facts">
+          <span><b>Helwan University</b>, Faculty of Engineering</span>
+          <span>B.Eng. Mechatronics Engineering, third year</span>
+        </div>
+      </div>
+      <div>
+        <h3>Languages &amp; interests</h3>
+        <div class="facts">
+          <span><b>Arabic</b> native · <b>English</b> intermediate</span>
+          <span>Diplomacy, international affairs and cultural exchange</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel glass" id="contact" aria-labelledby="contact-h">
+    <header><h2 id="contact-h">Contact</h2><span class="tag">Based in Cairo</span></header>
+    <p>Open to internships, engineering roles and freelance campaign work.</p>
+    <div class="contact">
+      <div class="c"><span class="tag">Email</span><span class="val" id="v-email">mwensh308@gmail.com</span><button class="copy" type="button" data-copy="v-email">Copy</button></div>
+      <div class="c"><span class="tag">Phone</span><span class="val" id="v-phone">+20 122 909 1724</span><button class="copy" type="button" data-copy="v-phone">Copy</button></div>
+      <div class="c"><span class="tag">Location</span><span class="val">Cairo, Egypt</span></div>
+    </div>
+  </section>
+
+  <p class="foot">Background drawn live from keyboard characters · Glyph Animals</p>
+</main>
+
+<p class="hint">click to scatter</p>
+
+<script>
+(function(){
+"use strict";
+const cv=document.getElementById('field'),ctx=cv.getContext('2d');
+const RM=matchMedia('(prefers-reduced-motion: reduce)');
+const T={detail:1.3,grid:1.05,fog:.75,trail:1.55,trailFade:.15,shimmer:.3,sparkle:.12,size:1.25,farthest:.18,farBias:1.7,grip:5,sep:700,glide:2.75,density:1.05,speed:1.05,course:49};
+const BG=[6,7,12],TR=[255,196,156];
+const clamp=(x,a,b)=>x<a?a:x>b?b:x;
+function hash(a,b,c){let h=(a*374761393+b*668265263+c*2147483647)|0;h=(h^(h>>>13))*1274126177|0;h=h^(h>>>16);return (h>>>0)/4294967296;}
+
+let W=0,H=0,dpr=1,cw=9,ch=13,cols=0,rows=0,fontFam='',bgc=null;
+let st,fr,fg,fb,gr,gg,gb,chr,energy,etmp;
+let moths=[],nextId=1,simT=0,base=160;
+
+function resize(){
+  W=innerWidth;H=innerHeight;dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  cw=clamp(Math.round(W/124/T.detail),5,24);ch=Math.round(cw*1.45);
+  cols=Math.ceil(W/cw);rows=Math.ceil(H/ch);const n=cols*rows;
+  st=new Uint8Array(n);fr=new Float32Array(n);fg=new Float32Array(n);fb=new Float32Array(n);
+  gr=new Float32Array(n);gg=new Float32Array(n);gb=new Float32Array(n);chr=new Array(n);
+  energy=new Float32Array(n);etmp=new Float32Array(n);
+  fontFam=getComputedStyle(cv).fontFamily;
+  bgc=document.createElement('canvas');bgc.width=cv.width;bgc.height=cv.height;
+  const b=bgc.getContext('2d');b.setTransform(dpr,0,0,dpr,0,0);
+  b.fillStyle='rgb(6,7,12)';b.fillRect(0,0,W,H);
+  b.fillStyle='rgba(255,255,255,'+(0.055*T.grid)+')';
+  for(let x=0;x<=W;x+=cw)b.fillRect(x,0,1,H);
+  for(let y=0;y<=H;y+=ch)b.fillRect(0,y,W,1);
+  base=clamp(Math.min(W,H)*.2,80,190);
+  populate(moths.length===0);
+}
+
+function courseRad(t){return T.course*Math.PI/180;}
+function makeMoth(onScreen){
+  const roll=Math.random();
+  const depth=T.farthest+(1-T.farthest)*Math.pow(roll,T.farBias);
+  const m={id:nextId++,roll,depth,span:base*depth*T.size,x:0,y:0,vx:0,vy:0,h:courseRad(),phase:Math.random()*6.28,g:0,gT:0,startle:0,open:1};
+  const c=courseRad();m.vx=Math.cos(c)*40;m.vy=-Math.sin(c)*40;
+  if(onScreen){m.x=Math.random()*W;m.y=Math.random()*H;}else reenter(m);
+  return m;
+}
+function reenter(m){
+  const c=courseRad(),ax=Math.cos(c),ay=-Math.sin(c);
+  const wx=Math.abs(ax)*H,wy=Math.abs(ay)*W,s=m.span;
+  if(Math.random()*(wx+wy)<wx){m.x=ax>0?-s:W+s;m.y=Math.random()*H;}
+  else{m.y=ay>0?-s:H+s;m.x=Math.random()*W;}
+}
+function populate(first){
+  const target=clamp(Math.round(W*H/(48000*Math.pow(base/160,2))*T.density),1,200);
+  for(const m of moths){m.span=base*m.depth*T.size;}
+  while(moths.length>target)moths.splice(Math.floor(Math.random()*moths.length),1);
+  while(moths.length<target)moths.push(makeMoth(first||Math.random()<.5));
+  moths.sort((a,b)=>a.roll-b.roll);
+}
+
+function shed(px,py,a){
+  const i=Math.floor(px/cw),j=Math.floor(py/ch);
+  if(i<0||j<0||i>=cols||j>=rows)return;const k=j*cols+i;
+  energy[k]=Math.min(1.6,energy[k]+a*T.trail);
+}
+function stamp(px,py,r,a){
+  const ci=Math.floor(px/cw),cj=Math.floor(py/ch);
+  for(let j=cj-r;j<=cj+r;j++)for(let i=ci-r;i<=ci+r;i++){
+    if(i<0||j<0||i>=cols||j>=rows)continue;
+    const d=Math.hypot(i-ci,(j-cj)*1.4);if(d>r+.5)continue;
+    const k=j*cols+i;energy[k]=Math.min(1.6,energy[k]+a*(1-d/(r+1)));
+  }
+}
+
+function step(dt){
+  simT+=dt;const c=courseRad();
+  for(const m of moths){
+    const cruise=90*(.55+.45*m.depth)*T.speed;
+    let ax=(Math.cos(c)*cruise-m.vx)*T.grip*.4,ay=(-Math.sin(c)*cruise-m.vy)*T.grip*.4;
+    if(m.startle>0){m.startle-=dt;ax*=.2;ay*=.2;}
+    for(const o of moths){
+      if(o===m||Math.abs(o.depth-m.depth)>=.18)continue;
+      const dx=m.x-o.x,dy=m.y-o.y,R=(m.span+o.span)*.5,d=Math.hypot(dx,dy);
+      if(d<R&&d>.01){const f=T.sep*(1-d/R)/d;ax+=dx*f;ay+=dy*f;}
+    }
+    const down=Math.max(0,-Math.sin(m.phase));
+    ax+=Math.cos(m.h)*1.4*cruise*down*(1-m.g);ay-=Math.sin(m.h)*1.4*cruise*down*(1-m.g);
+    m.vx+=ax*dt;m.vy+=ay*dt;
+    const sp=Math.hypot(m.vx,m.vy),cap=1.6*cruise+(m.startle>0?300:0);
+    if(sp>cap){m.vx*=cap/sp;m.vy*=cap/sp;}
+    m.x+=m.vx*dt;m.y+=m.vy*dt;
+    if(m.gT>0)m.gT-=dt;else if(Math.random()<.35*T.glide*dt&&m.startle<=0)m.gT=.5+Math.random()*.9;
+    m.g+=((m.gT>0?1:0)-m.g)*Math.min(1,6*dt);
+    m.phase+=6.2832*2.6*(.8+.6*Math.min(1,sp/cruise))*(1-.9*m.g)*dt;
+    const want=Math.atan2(-m.vy,m.vx);let dh=want-m.h;
+    while(dh>Math.PI)dh-=6.2832;while(dh<-Math.PI)dh+=6.2832;
+    m.h+=clamp(dh,-4*dt,4*dt);
+    m.open=.1+.9*(Math.pow(.5+.5*Math.cos(m.phase),.8)*(1-m.g)+.96*m.g);
+    const s=m.span,cx=Math.cos(c),cy=-Math.sin(c);
+    const past=(cx>0&&m.x>W+s)||(cx<0&&m.x<-s)||(cy>0&&m.y>H+s)||(cy<0&&m.y<-s);
+    const far=m.x<-3*s||m.x>W+3*s||m.y<-3*s||m.y>H+3*s;
+    if(past||far){reenter(m);}
+    else{
+      const amt=.02*(1+2*down);
+      for(const sd of [-1,1]){const p=toScreen(m,.12,sd*.55*m.open);shed(p[0],p[1],amt);}
+    }
+  }
+  // trail diffuse + decay
+  const dec=Math.exp(-dt*T.trailFade);
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+    const k=j*cols+i,e=energy[k];
+    const l=i>0?energy[k-1]:e,r=i<cols-1?energy[k+1]:e,u=j>0?energy[k-cols]:e,d=j<rows-1?energy[k+cols]:e;
+    etmp[k]=((4*e+l+r+u+d)/8)*dec;
+  }
+  const t=energy;energy=etmp;etmp=t;
+}
+
+function toScreen(m,u,v){
+  const h=m.h+.06*Math.sin(m.phase),c=Math.cos(h),s=Math.sin(h);
+  return [m.x+m.span*(u*c-v*s),m.y-m.span*(u*s+v*c)];
+}
+
+/* shape: returns kind (0 none) and fills S */
+const PLAIN=1,SHINE=2,DARK=3,LIGHT=4,FUR=5;
+const S={r:0,g:0,b:0,k:0,gl:null};
+function set(r,g,b,k,gl){S.r=r;S.g=g;S.b=b;S.k=k;S.gl=gl||null;return k;}
+let LT=0;
+function lobe(du,dv,a0,a1,reach,peak,round,scal){
+  const a=Math.atan2(du,dv);if(a<a0||a>a1)return -1;
+  const t=(a-a0)/(a1-a0);LT=t;
+  let f=t<peak?t/peak:(1-t)/(1-peak);f=Math.pow(f,round);
+  let R=reach*f;if(scal)R*=1-.05*Math.abs(Math.sin(t*Math.PI*5));
+  const r=Math.hypot(du,dv);return r<R?r/R:-1;
+}
+function shape(u,v,m){
+  const av=Math.abs(v);
+  if((u-.15)*(u-.15)+v*v<.0016)return set(112,70,50,FUR,'%#8');
+  if(u>=-.04&&u<=.11&&av<.05)return set(112,70,50,FUR,'%#8');
+  if(u<-.04&&u>=-.34){const k=(u+.34)/.3,hw=.016+.03*k;
+    if(av<hw)return (Math.floor((u+.34)*22)%2)?set(70,42,32,FUR):set(150,98,72,FUR);}
+  const o=Math.max(m.open,.06),vs=av/o,lt=.6+.4*m.open;
+  let rn=lobe(u-.05,vs,-.78,.46,.64,.7,.3,false);
+  if(rn>=0){
+    const t=LT;
+    if(rn>.86){if(rn<.95&&Math.floor(t*18)%3===0)return set(252*lt,230*lt,204*lt,LIGHT);return set(84*lt,46*lt,32*lt,DARK);}
+    if(rn<.1)return set(120*lt,72*lt,50*lt,DARK);
+    if(Math.abs(rn-(.5+.05*Math.sin(t*14)))<.045)return set(150*lt,88*lt,60*lt,DARK);
+    return set((200+48*rn)*lt,(132+46*rn)*lt,(96+40*rn)*lt,SHINE);
+  }
+  rn=lobe(u+.05,vs,-1.55,-.3,.38,.5,.55,true);
+  if(rn>=0){
+    const t=LT;
+    if(rn>.86)return set(84*lt,46*lt,32*lt,DARK);
+    if(Math.hypot((t-.45)*1.6,rn-.56)<.12)return set(60*lt,30*lt,24*lt,DARK,'@');
+    if(rn<.1)return set(120*lt,72*lt,50*lt,DARK);
+    return set((200+48*rn)*lt,(132+46*rn)*lt,(96+40*rn)*lt,SHINE);
+  }
+  return 0;
+}
+
+const RAMP='.:;+=*%#',SUBX=[.25,.75,.25,.75],SUBY=[.3,.3,.72,.72];
+function rasterMoth(m,t){
+  const fog=(1-m.depth)*T.fog,ext=.78*m.span;
+  const h=m.h+.06*Math.sin(m.phase),hc=Math.cos(h),hs=Math.sin(h),sp=m.span;
+  const i0=Math.max(0,Math.floor((m.x-ext)/cw)),i1=Math.min(cols-1,Math.floor((m.x+ext)/cw));
+  const j0=Math.max(0,Math.floor((m.y-ext)/ch)),j1=Math.min(rows-1,Math.floor((m.y+ext)/ch));
+  const flick=Math.floor(t*6),spk=Math.floor(t*2.4);
+  for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){
+    const loc=(px,py)=>{const dx=px-m.x,wy=m.y-py;return [(dx*hc+wy*hs)/sp,(-dx*hs+wy*hc)/sp];};
+    let hits=0;
+    for(let q=0;q<4;q++){const p=loc((i+SUBX[q])*cw,(j+SUBY[q])*ch);if(shape(p[0],p[1],m))hits++;}
+    const [u,v]=loc((i+.5)*cw,(j+.5)*ch);
+    const kc=shape(u,v,m);if(kc)hits++;
+    if(!hits)continue;
+    const k=j*cols+i,cov=hits/5;
+    if(!kc||cov<.6){
+      if(st[k])continue;
+      if(!kc){const p=loc((i+.5)*cw,(j+.5)*ch);
+        // pick colour from any sub hit
+        for(let q=0;q<4;q++){const pp=loc((i+SUBX[q])*cw,(j+SUBY[q])*ch);if(shape(pp[0],pp[1],m))break;}}
+      const f=Math.min(1,fog+.55-.45*cov);
+      st[k]=1;gr[k]=S.r*(1-f)+BG[0]*f;gg[k]=S.g*(1-f)+BG[1]*f;gb[k]=S.b*(1-f)+BG[2]*f;
+      const gs=cov>=.5?':;':".',`";chr[k]=gs[Math.floor(hash(m.id,i,j)*gs.length)];
+      continue;
+    }
+    let r=S.r,g=S.g,b=S.b;const kind=S.k,gl=S.gl;
+    if(kind===SHINE){const sh=T.shimmer,mul=1-.4*sh+sh*Math.sin(2.2*t+9*u+6*v+2*m.h);r*=mul;g*=mul;b*=mul;}
+    const fl=1+.03*(hash(i,j,flick)*2-1);r*=fl;g*=fl;b*=fl;
+    r=r*(1-fog)+BG[0]*fog;g=g*(1-fog)+BG[1]*fog;b=b*(1-fog)+BG[2]*fog;
+    st[k]=2;fr[k]=r;fg[k]=g;fb[k]=b;
+    const hu=hash(m.id,Math.round(u*40),Math.round(v*40));
+    let ch_,cr,cg,cb;
+    if(kind===DARK){ch_=(gl||'#%@')[Math.floor(hu*(gl||'#%@').length)];cr=r*1.7+34;cg=g*1.7+30;cb=b*1.7+30;}
+    else if(kind===LIGHT){ch_='o*'[Math.floor(hu*2)];cr=r*.4;cg=g*.4;cb=b*.4;}
+    else if(kind===FUR){const s=gl||'8#@';ch_=s[Math.floor(hu*s.length)];cr=r*1.6+44;cg=g*1.6+40;cb=b*1.6+36;}
+    else{const lum=(.3*r+.59*g+.11*b)/255;const idx=clamp(Math.round((1-lum)*7)+Math.round(hu*2-1),0,7);ch_=RAMP[idx];cr=r*.42;cg=g*.42;cb=b*.42;
+      const rate=kind===SHINE?T.sparkle:T.sparkle/3;const sk=hash(i*7+m.id,j,spk);
+      if(sk<rate){const w=sk/rate;if(w<.4){cr=255;cg=255;cb=255;}else if(w<.7){cr=210;cg=230;cb=255;}else{cr=190;cg=250;cb=250;}}}
+    gr[k]=cr;gg[k]=cg;gb[k]=cb;chr[k]=ch_;
+  }
+  // antennae
+  const ac=[214*(1-fog)+BG[0]*fog,170*(1-fog)+BG[1]*fog,130*(1-fog)+BG[2]*fog];
+  for(const sd of [-1,1]){
+    const w=.01*Math.sin(t*3+m.id);
+    line(toScreen(m,.17,sd*.014),toScreen(m,.36,sd*(.13+w)),ac);
+  }
+}
+function line(a,b,col){
+  const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);if(len<1)return;
+  let an=Math.atan2(dy,dx);if(an<0)an+=Math.PI;
+  const g=an<Math.PI/8||an>7*Math.PI/8?'-':an<3*Math.PI/8?'\\':an<5*Math.PI/8?'|':'/';
+  const n=Math.ceil(len/(cw*.5));
+  for(let s=0;s<=n;s++){
+    const i=Math.floor((a[0]+dx*s/n)/cw),j=Math.floor((a[1]+dy*s/n)/ch);
+    if(i<0||j<0||i>=cols||j>=rows)continue;const k=j*cols+i;
+    if(st[k]===2)continue;st[k]=1;gr[k]=col[0];gg[k]=col[1];gb[k]=col[2];chr[k]=g;
+  }
+}
+
+function rgb(r,g,b){return 'rgb('+(r>255?255:r|0)+','+(g>255?255:g|0)+','+(b>255?255:b|0)+')';}
+function draw(t){
+  ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(bgc,0,0);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  // trail
+  const sz=Math.max(2,Math.round(.19*cw));
+  for(let k=0;k<energy.length;k++){
+    const e=energy[k];if(e<.03)continue;
+    const i=k%cols,j=(k/cols)|0,tw=.75+.25*Math.sin(5*t+hash(i,j,3)*40);
+    const stp=Math.min(6,Math.ceil(e*4));
+    ctx.fillStyle='rgba('+TR[0]+','+TR[1]+','+TR[2]+','+(.85*stp/6*tw).toFixed(3)+')';
+    const s=e>.6?sz+1:sz;ctx.fillRect(Math.round(i*cw+cw*.5-s/2),Math.round(j*ch+ch*.6-s/2),s,s);
+  }
+  st.fill(0);
+  for(const m of moths)rasterMoth(m,t);
+  ctx.font='600 '+Math.round(ch*.74)+'px '+fontFam;ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let k=0;k<st.length;k++){
+    const s=st[k];if(!s)continue;
+    const x=(k%cols)*cw,y=((k/cols)|0)*ch;
+    if(s===2){ctx.fillStyle=rgb(fr[k],fg[k],fb[k]);ctx.fillRect(x+1,y+1,cw-1,ch-1);}
+    ctx.fillStyle=rgb(gr[k],gg[k],gb[k]);ctx.fillText(chr[k],x+cw/2,y+ch/2+1);
+  }
+}
+
+let raf=0,last=0,acc=0;
+function frame(now){
+  raf=requestAnimationFrame(frame);
+  const dt=Math.min(.1,(now-(last||now))/1000);last=now;acc+=dt;
+  let n=0;while(acc>=1/60&&n<4){step(1/60);acc-=1/60;n++;}
+  if(n===4)acc=0;
+  draw(simT);
+}
+function still(){
+  for(let i=0;i<240;i++)step(1/60);
+  draw(simT);
+}
+function start(){
+  cancelAnimationFrame(raf);raf=0;
+  if(RM.matches){still();}else{last=0;raf=requestAnimationFrame(frame);}
+}
+
+let rt=0;
+addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{resize();if(RM.matches)draw(simT);},120);});
+RM.addEventListener&&RM.addEventListener('change',start);
+
+document.addEventListener('pointerdown',e=>{
+  if(RM.matches)return;
+  if(e.target.closest('a,button,input,textarea,.panel,.bar'))return;
+  const x=e.clientX,y=e.clientY;stamp(x,y,6,1.4);
+  for(const m of moths){
+    const dx=m.x-x,dy=m.y-y,d=Math.hypot(dx,dy);if(d>240)continue;
+    const k=1-d/240,f=k*420*m.depth/(d||1);
+    m.vx+=dx*f;m.vy+=dy*f;m.startle=.6+Math.random()*.6;m.gT=0;m.g=0;
+  }
+});
+
+// copy buttons
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const el=document.getElementById(btn.dataset.copy),txt=el.textContent.trim();
+    const done=l=>{btn.textContent=l;setTimeout(()=>btn.textContent='Copy',1400);};
+    const sel=()=>{try{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);}catch(_){}done('Selected');};
+    try{navigator.clipboard.writeText(txt).then(()=>done('Copied'),sel);}catch(_){sel();}
+  });
+});
+
+resize();
+if(RM.matches&&document.fonts&&document.fonts.load){document.fonts.load('600 16px "Geist Mono"').then(start,start);}else start();
+})();
+</script>
