@@ -337,7 +337,7 @@ function emitSolid(i, k, r, g, b, gl, lu, lv, u, v) {
   const fl = 1 + .06 * (hash3(i, tick6, 5) - .5);
   if (k === SHINE) {
     const sh = T.shimmer;
-    const m = 1 - .4 * sh + sh * Math.sin(2.2 * time + 9 * u + 6 * v + TILT + 2 * HEAD);
+    const m = 1 - .4 * sh + sh * Math.sin(2.2 * time + 9 * u + 6 * Math.abs(v) + TILT + 2 * HEAD);
     r *= m; g *= m; b *= m;
   }
   hue(r, g, b); r = HR; g = HG; b = HB;
@@ -553,20 +553,18 @@ function mothShape(u, v) {
   let r = lobe(u - .05, dv, -.78, .46, .64, .7, .3, 0);
   if (r >= 0) {
     const s = LS;
-    if (r > .86) return Math.sin(s * 44) > .5 ? hit(LIGHT, 252, 230, 204) : hit(DARK, 84, 46, 32);
-    if (r < .1) return hit(DARK, 120, 72, 50);
-    if (Math.abs(r - (.5 + .05 * Math.sin(s * 18))) < .05) return hit(DARK, 150, 88, 60);
-    return hit(SHINE, 200 + 48 * r, 132 + 46 * r, 96 + 40 * r);
+    if (r > .88) return (r > .9 && s > .3 && Math.sin(s * 30) > .82) ? hit(LIGHT, 252, 230, 204) : hit(DARK, 84, 46, 32);
+    if (s < .07 && r > .25) return hit(DARK, 96, 54, 38);
+    if (Math.abs(r - (.52 + .04 * Math.sin(s * 14))) < .045) return hit(DARK, 150, 88, 60);
+    return hit(SHINE, 206 + 44 * r, 140 + 44 * r, 100 + 36 * r, ':;+=');
   }
   r = lobe(u + .05, dv, -1.55, -.3, .38, .5, .55, .06);
   if (r >= 0) {
     const s = LS;
     if (r > .86) return hit(DARK, 84, 46, 32);
-    if (r < .1) return hit(DARK, 120, 72, 50);
     const ex = (s - .5) * 1.3, ey = r - .56;
     if (ex * ex + ey * ey < .022) return hit(DARK, 70, 36, 26, '@');
-    if (ex * ex + ey * ey < .045) return hit(LIGHT, 246, 214, 170);
-    return hit(SHINE, 200 + 48 * r, 132 + 46 * r, 96 + 40 * r);
+    return hit(PLAIN, 178 + 40 * r, 104 + 30 * r, 82 + 24 * r, '.:;');
   }
   return false;
 }
@@ -606,18 +604,24 @@ const Moth = {
     a.startle = rand(.6, 1.2); a.glideT = 0; a.glide = 0;
   },
   draw(a) {
-    OPEN = .1 + .9 * (Math.pow(.5 + .5 * Math.cos(a.phase), .8) * (1 - a.glide) + .96 * a.glide);
+    OPEN = .3 + .7 * (Math.pow(.5 + .5 * Math.cos(a.phase), .8) * (1 - a.glide) + .96 * a.glide);
     frame(a, a.x, a.y, a.span, a.h + .06 * Math.sin(a.phase));
     LIT = .6 + .4 * OPEN;
     raster(mothShape, .78);
     LIT = 1;
+    // continuous dark spine so the body always splits the two wings
+    const stepU = Math.min(cw, ch) * .5 / a.span;
+    for (let u = -.3; u <= .17; u += stepU) {
+      const fill = u > -.04 ? [92, 56, 40] : (Math.floor(u * 22) & 1) ? [62, 36, 28] : [128, 82, 60];
+      spot(u, 0, fill, [205, 156, 118], u > .12 ? '@' : u > -.04 ? '8' : '#');
+    }
     const wob = .012 * Math.sin(time * 3 + a.id);
     for (const sg of [-1, 1]) {
       const eu = .36, ev = (.13 + wob) * sg;
-      line(.17, .014 * sg, eu, ev, 214, 170, 130);
-      if (a.span > 70) for (let k = 1; k <= 3; k++) {
-        const t = k / 4, pu = .17 + (eu - .17) * t, pv = .014 * sg + (ev - .014 * sg) * t;
-        line(pu, pv, pu - .025, pv + .028 * sg, 214, 170, 130, null, .2);
+      line(.18, .016 * sg, eu, ev, 214, 170, 130, '*', .1);
+      if (a.span > 110) for (let k = 1; k <= 2; k++) {
+        const t = k / 3, pu = .18 + (eu - .18) * t, pv = .016 * sg + (ev - .016 * sg) * t;
+        dot(pu - .02, pv + .026 * sg, 214, 170, 130, "'", .35);
       }
     }
   },
