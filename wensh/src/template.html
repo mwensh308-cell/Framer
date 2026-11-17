@@ -96,6 +96,8 @@ html.liquid .avatar{backdrop-filter:url(#liquid-glass) blur(var(--chat-blur)) sa
 
 .hint{position:fixed;left:14px;bottom:12px;margin:0;font:600 11px "Geist Mono",ui-monospace,Menlo,monospace;letter-spacing:.02em;color:var(--muted);user-select:none;-webkit-user-select:none;pointer-events:none;z-index:5}
 
+.brand{position:fixed;z-index:25;top:24px;left:20px;margin:0;font:600 14px "Geist Mono",ui-monospace,Menlo,monospace;letter-spacing:.04em;color:var(--text-soft);user-select:none;-webkit-user-select:none;pointer-events:none;text-shadow:0 0 6px var(--bg),0 0 18px var(--bg)}
+
 /* tweaks */
 .tw-open.glass{top:16px;right:16px;z-index:10;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px 0 12px;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-soft);--blur:10px;background-color:#0a0c148c}
 .tw-open:hover{color:var(--text)}
@@ -138,6 +140,7 @@ html.liquid .tw-open.glass,html.liquid .tweaks.glass{backdrop-filter:blur(var(--
   .tw-open.glass{top:auto;bottom:max(12px,env(safe-area-inset-bottom));right:12px}
   .tweaks.glass{top:auto;left:12px;right:12px;bottom:12px;width:auto;max-height:70vh}
   .hint{bottom:max(22px,calc(env(safe-area-inset-bottom) + 10px))}
+  .brand{top:auto;left:14px;bottom:calc(max(22px,calc(env(safe-area-inset-bottom) + 10px)) + 18px);font-size:12px}
   .tw-tip{display:none}
 }
 @media (max-width:640px){
@@ -187,7 +190,7 @@ html.liquid .tw-open.glass,html.liquid .tweaks.glass{backdrop-filter:blur(var(--
 <main class="stage">
   <div class="masthead">
     <div class="avatar"></div>
-    <h1 class="greeting">Good morning, Rosalie</h1>
+    <h1 class="greeting">Good morning, wensh</h1>
   </div>
   <form class="composer glass" autocomplete="off">
     <div class="row1">
@@ -204,6 +207,7 @@ html.liquid .tw-open.glass,html.liquid .tweaks.glass{backdrop-filter:blur(var(--
   </form>
 </main>
 
+<p class="brand">wensh</p>
 <p class="hint">click to scatter</p>
 
 <script>
@@ -1574,7 +1578,7 @@ function setSpecies(key, initial) {
 const greet = document.querySelector('.greeting');
 function updateGreeting() {
   const h = new Date().getHours();
-  greet.textContent = h >= 5 && h <= 11 ? 'Good morning, Rosalie' : h >= 12 && h <= 16 ? 'Good afternoon, Rosalie' : h >= 17 && h <= 21 ? 'Good evening, Rosalie' : 'Still up, Rosalie?';
+  greet.textContent = h >= 5 && h <= 11 ? 'Good morning, wensh' : h >= 12 && h <= 16 ? 'Good afternoon, wensh' : h >= 17 && h <= 21 ? 'Good evening, wensh' : 'Still up, wensh?';
 }
 updateGreeting(); setInterval(updateGreeting, 60000);
 
