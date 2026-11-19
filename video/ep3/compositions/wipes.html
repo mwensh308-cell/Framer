@@ -10,6 +10,7 @@
       unicode-range: U+0000-00FF, U+2000-206F; }
 
     #root { position: absolute; inset: 0; overflow: hidden; }
+    .stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform: scale(1.333333); transform-origin: 0 0; }
     .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
     .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
@@ -18,7 +19,8 @@
     .bar { position: absolute; top: -200px; left: -340px; width: 2600px; height: 1480px; }
 
   </style>
-  <div id="root" data-composition-id="wipes" data-width="1920" data-height="1080">
+  <div id="root" data-composition-id="wipes" data-width="2560" data-height="1440">
+   <div id="wipes-stage" class="stage">
     <div id="wp1" class="clip wipe" data-start="4.15" data-duration="0.9" data-track-index="0"><div id="wp1-a" class="bar" style="background:#ff3d8b"></div><div id="wp1-b" class="bar" style="background:#46e0ff"></div><div id="wp1-c" class="bar" style="background:#0a0618"></div></div>
     <div id="wp2" class="clip wipe" data-start="35.91" data-duration="0.9" data-track-index="0"><div id="wp2-a" class="bar" style="background:#ff3d8b"></div><div id="wp2-b" class="bar" style="background:#46e0ff"></div><div id="wp2-c" class="bar" style="background:#0a0618"></div></div>
     <div id="wp3" class="clip wipe" data-start="76.786" data-duration="0.9" data-track-index="0"><div id="wp3-a" class="bar" style="background:#ff3d8b"></div><div id="wp3-b" class="bar" style="background:#46e0ff"></div><div id="wp3-c" class="bar" style="background:#0a0618"></div></div>
@@ -30,6 +32,7 @@
     <div id="wp9" class="clip wipe" data-start="291.97" data-duration="0.9" data-track-index="0"><div id="wp9-a" class="bar" style="background:#ff3d8b"></div><div id="wp9-b" class="bar" style="background:#46e0ff"></div><div id="wp9-c" class="bar" style="background:#0a0618"></div></div>
     <div id="wp10" class="clip wipe" data-start="331.334" data-duration="0.9" data-track-index="0"><div id="wp10-a" class="bar" style="background:#ff3d8b"></div><div id="wp10-b" class="bar" style="background:#46e0ff"></div><div id="wp10-c" class="bar" style="background:#0a0618"></div></div>
     <div id="wp11" class="clip wipe" data-start="369.694" data-duration="0.9" data-track-index="0"><div id="wp11-a" class="bar" style="background:#ff3d8b"></div><div id="wp11-b" class="bar" style="background:#46e0ff"></div><div id="wp11-c" class="bar" style="background:#0a0618"></div></div>
+   </div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });

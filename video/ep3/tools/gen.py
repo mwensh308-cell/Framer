@@ -12,7 +12,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TL = json.load(open(os.path.join(ROOT, "data/timeline.json")))
 SECS = TL["sections"]
 TOTAL = TL["total"]
-W, H = 1920, 1080
+W, H = 2560, 1440  # output canvas
+LW, LH = 1920, 1080  # layout units; .stage scales them by W/LW
 
 # Shot plan per section. "P:" marks a 2.5D parallax shot (cutout in assets/cut).
 SHOTS = {
@@ -62,13 +63,16 @@ def scene_file(cid, body, script, extra_css=""):
     return f"""<template>
   <style>{FONT}
     #root {{ position: absolute; inset: 0; overflow: hidden; background: {INK}; }}
+    .stage {{ position: absolute; left: 0; top: 0; width: {LW}px; height: {LH}px; transform: scale({W/LW:.6f}); transform-origin: 0 0; }}
     .shot, .shot .in {{ position: absolute; inset: 0; overflow: hidden; }}
     .shot img {{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }}
     .shade {{ position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }}
 {extra_css}
   </style>
   <div id="root" data-composition-id="{cid}" data-width="{W}" data-height="{H}">
+   <div id="{cid}-stage" class="stage">
 {body}
+   </div>
   </div>
   <script>
     const tl = gsap.timeline({{ paused: true }});

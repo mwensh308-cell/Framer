@@ -10,6 +10,7 @@
       unicode-range: U+0000-00FF, U+2000-206F; }
 
     #root { position: absolute; inset: 0; overflow: hidden; }
+    .stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform: scale(1.333333); transform-origin: 0 0; }
     .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
     .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
@@ -22,7 +23,8 @@
     .dot i { display: block; width: 100%; height: 100%; background: #ff3d8b; transform-origin: 100% 50%; }
 
   </style>
-  <div id="root" data-composition-id="hud" data-width="1920" data-height="1080">
+  <div id="root" data-composition-id="hud" data-width="2560" data-height="1440">
+   <div id="hud-stage" class="stage">
     <div id="hud-top" class="clip hud" data-start="4.6" data-duration="327.184" data-track-index="0"><span id="hud-badge">GTA 6 بالسعودي · الحلقة 3</span></div>
     <div id="hud-dots" class="clip dots" data-start="4.6" data-duration="327.184" data-track-index="2"><div class="dot"><i id="hud-d1"></i></div><div class="dot"><i id="hud-d2"></i></div><div class="dot"><i id="hud-d3"></i></div><div class="dot"><i id="hud-d4"></i></div><div class="dot"><i id="hud-d5"></i></div><div class="dot"><i id="hud-d6"></i></div><div class="dot"><i id="hud-d7"></i></div><div class="dot"><i id="hud-d8"></i></div></div>
     <div id="hud-ch-intro" class="clip chap" data-start="5.0" data-duration="31.36" data-track-index="1">المقدمة</div>
@@ -34,6 +36,7 @@
     <div id="hud-ch-drequan" class="clip chap" data-start="228.036" data-duration="30.564" data-track-index="1">دريكوان بريست</div>
     <div id="hud-ch-dimez" class="clip chap" data-start="259.0" data-duration="33.42" data-track-index="1">ريل دايمز</div>
     <div id="hud-ch-raul" class="clip chap" data-start="292.82" data-duration="38.964" data-track-index="1">راؤول باوتيستا</div>
+   </div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });

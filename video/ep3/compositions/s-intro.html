@@ -10,12 +10,14 @@
       unicode-range: U+0000-00FF, U+2000-206F; }
 
     #root { position: absolute; inset: 0; overflow: hidden; background: #0a0618; }
+    .stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform: scale(1.333333); transform-origin: 0 0; }
     .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
     .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
 
   </style>
-  <div id="root" data-composition-id="s-intro" data-width="1920" data-height="1080">
+  <div id="root" data-composition-id="s-intro" data-width="2560" data-height="1440">
+   <div id="s-intro-stage" class="stage">
     <div id="s-intro-shot1" class="clip shot" data-start="0.0" data-duration="5.293" data-track-index="0" style="z-index:1"><div id="s-intro-shot1-in" class="in"><img id="s-intro-shot1-img" src="assets/img/Vice_City_05.jpg" alt=""></div></div>
     <div id="s-intro-shot2" class="clip shot" data-start="4.793" data-duration="5.794" data-track-index="0" style="z-index:2"><div id="s-intro-shot2-in" class="in"><img id="s-intro-shot2-img" src="assets/img/Leonida_Keys_02.jpg" alt=""></div></div>
     <div id="s-intro-shot3" class="clip shot" data-start="10.087" data-duration="5.793" data-track-index="0" style="z-index:3"><div id="s-intro-shot3-in" class="in"><img id="s-intro-shot3-img" src="assets/img/Jason_and_Lucia_17.jpg" alt=""></div></div>
@@ -23,6 +25,7 @@
     <div id="s-intro-shot5" class="clip shot" data-start="20.673" data-duration="5.794" data-track-index="0" style="z-index:5"><div id="s-intro-shot5-in" class="in"><img id="s-intro-shot5-img" src="assets/img/Jason_and_Lucia_19.jpg" alt=""></div></div>
     <div id="s-intro-shot6" class="clip shot" data-start="25.967" data-duration="5.793" data-track-index="0" style="z-index:6"><div id="s-intro-shot6-in" class="in"><img id="s-intro-shot6-img" src="assets/img/Jason_and_Lucia_14.jpg" alt=""></div></div>
     <div id="s-intro-shade" class="clip shade" data-start="0" data-duration="31.76" data-track-index="1" style="z-index:40"></div>
+   </div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });

@@ -10,6 +10,7 @@
       unicode-range: U+0000-00FF, U+2000-206F; }
 
     #root { position: absolute; inset: 0; overflow: hidden; }
+    .stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform: scale(1.333333); transform-origin: 0 0; }
     .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
     .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
@@ -20,7 +21,8 @@
     .cap span { color: #fff; }
 
   </style>
-  <div id="root" data-composition-id="captions" data-width="1920" data-height="1080">
+  <div id="root" data-composition-id="captions" data-width="2560" data-height="1440">
+   <div id="captions-stage" class="stage">
     <div id="cap-band" class="clip" data-start="4.2" data-duration="365.944" data-track-index="0"></div>
     <div id="cap1" class="clip cap" data-start="4.252" data-duration="2.409" data-track-index="1"><span id="cap1-w1">في</span> <span id="cap1-w2">الحلقة</span> <span id="cap1-w3">الأولى</span> <span id="cap1-w4">عرفنا</span> <span id="cap1-w5">السالفة</span></div>
     <div id="cap2" class="clip cap" data-start="6.661" data-duration="2.734" data-track-index="1"><span id="cap2-w1">وفي</span> <span id="cap2-w2">الحلقة</span> <span id="cap2-w3">الثانية</span> <span id="cap2-w4">لفّينا</span> <span id="cap2-w5">ليونيدا</span> <span id="cap2-w6">من</span></div>
@@ -155,6 +157,7 @@
     <div id="cap131" class="clip cap" data-start="362.395" data-duration="2.044" data-track-index="1"><span id="cap131-w1">وإذا</span> <span id="cap131-w2">عجبتك</span> <span id="cap131-w3">الحلقة</span></div>
     <div id="cap132" class="clip cap" data-start="364.439" data-duration="2.005" data-track-index="1"><span id="cap132-w1">اشترك</span> <span id="cap132-w2">وفعّل</span> <span id="cap132-w3">الجرس</span></div>
     <div id="cap133" class="clip cap" data-start="366.444" data-duration="2.569" data-track-index="1"><span id="cap133-w1">ونشوفك</span> <span id="cap133-w2">في</span> <span id="cap133-w3">الحلقة</span> <span id="cap133-w4">الجاية</span></div>
+   </div>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
