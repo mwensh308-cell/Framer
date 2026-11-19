@@ -1,0 +1,31 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0a0618; font-family: "Archivo Black", sans-serif; }
+    #end-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #2a0b4a 0%, #0a0618 55%, #3b1240 100%); }
+    #end-glow { position: absolute; left: 90px; top: 150px; width: 900px; height: 900px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,61,139,.55), rgba(255,61,139,0) 65%); }
+    #end-title-text { background: linear-gradient(180deg, var(--accent2) 10%, var(--accent) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #end-title { position: absolute; left: 110px; right: 110px; top: 440px; text-align: center; font-size: 175px; line-height: 1; letter-spacing: -.03em; }
+    #end-rule { position: absolute; left: 240px; width: 600px; top: 680px; height: 4px; background: #fff; transform-origin: 50% 50%; }
+    #end-tag { position: absolute; left: 170px; right: 170px; top: 720px; text-align: center; color: #fff; font-size: 48px; line-height: 1.25; letter-spacing: .08em; font-family: "Inter", sans-serif; font-weight: 700; }
+    #end-note { position: absolute; left: 0; right: 0; top: 930px; text-align: center; color: rgba(255,255,255,.75); font-size: 30px; letter-spacing: .15em; font-family: "Space Mono", monospace; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1080" data-height="1920">
+    <div id="end-bg" class="clip" data-start="0" data-duration="5"></div>
+    <div id="end-glow" class="clip" data-start="0" data-duration="5"></div>
+    <div id="end-title" class="clip" data-start="0.3" data-duration="4.7"><div id="end-title-zoom"><span id="end-title-text" data-var-text="title">GTA 6</span></div></div>
+    <div id="end-rule" class="clip" data-start="1.1" data-duration="3.9"></div>
+    <div id="end-tag" class="clip" data-start="1.4" data-duration="3.6" data-var-text="tagline">Welcome back to the sunshine state</div>
+    <div id="end-note" class="clip" data-start="2.2" data-duration="2.8">UNOFFICIAL FAN INTRO</div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#end-glow", { scale: 0.4, opacity: 0 }, { scale: 1.15, opacity: 1, duration: 4.5, ease: "power2.out" }, 0);
+    tl.fromTo("#end-title", { opacity: 0, scale: 0.6, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.6)" }, 0.3);
+    tl.fromTo("#end-title-zoom", { scale: 1 }, { scale: 1.05, duration: 3.6, ease: "none" }, 1.2);
+    tl.fromTo("#end-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, 1.1);
+    tl.fromTo("#end-tag", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 1.4);
+    tl.fromTo("#end-note", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, 2.2);
+    window.__timelines["endcard"] = tl;
+  </script>
+</template>
