@@ -1,0 +1,71 @@
+<template>
+  <style>
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-latin-700-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-latin-900-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
+
+    .wipe { position: absolute; inset: 0; z-index: 5; }
+    .bar { position: absolute; top: -200px; left: -340px; width: 2600px; height: 1480px; }
+
+  </style>
+  <div id="root" data-composition-id="wipes" data-width="1920" data-height="1080">
+    <div id="wp1" class="clip wipe" data-start="4.15" data-duration="0.9" data-track-index="0"><div id="wp1-a" class="bar" style="background:#ff3d8b"></div><div id="wp1-b" class="bar" style="background:#46e0ff"></div><div id="wp1-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp2" class="clip wipe" data-start="35.91" data-duration="0.9" data-track-index="0"><div id="wp2-a" class="bar" style="background:#ff3d8b"></div><div id="wp2-b" class="bar" style="background:#46e0ff"></div><div id="wp2-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp3" class="clip wipe" data-start="76.786" data-duration="0.9" data-track-index="0"><div id="wp3-a" class="bar" style="background:#ff3d8b"></div><div id="wp3-b" class="bar" style="background:#46e0ff"></div><div id="wp3-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp4" class="clip wipe" data-start="117.422" data-duration="0.9" data-track-index="0"><div id="wp4-a" class="bar" style="background:#ff3d8b"></div><div id="wp4-b" class="bar" style="background:#46e0ff"></div><div id="wp4-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp5" class="clip wipe" data-start="155.106" data-duration="0.9" data-track-index="0"><div id="wp5-a" class="bar" style="background:#ff3d8b"></div><div id="wp5-b" class="bar" style="background:#46e0ff"></div><div id="wp5-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp6" class="clip wipe" data-start="191.278" data-duration="0.9" data-track-index="0"><div id="wp6-a" class="bar" style="background:#ff3d8b"></div><div id="wp6-b" class="bar" style="background:#46e0ff"></div><div id="wp6-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp7" class="clip wipe" data-start="227.186" data-duration="0.9" data-track-index="0"><div id="wp7-a" class="bar" style="background:#ff3d8b"></div><div id="wp7-b" class="bar" style="background:#46e0ff"></div><div id="wp7-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp8" class="clip wipe" data-start="258.15" data-duration="0.9" data-track-index="0"><div id="wp8-a" class="bar" style="background:#ff3d8b"></div><div id="wp8-b" class="bar" style="background:#46e0ff"></div><div id="wp8-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp9" class="clip wipe" data-start="291.97" data-duration="0.9" data-track-index="0"><div id="wp9-a" class="bar" style="background:#ff3d8b"></div><div id="wp9-b" class="bar" style="background:#46e0ff"></div><div id="wp9-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp10" class="clip wipe" data-start="331.334" data-duration="0.9" data-track-index="0"><div id="wp10-a" class="bar" style="background:#ff3d8b"></div><div id="wp10-b" class="bar" style="background:#46e0ff"></div><div id="wp10-c" class="bar" style="background:#0a0618"></div></div>
+    <div id="wp11" class="clip wipe" data-start="369.694" data-duration="0.9" data-track-index="0"><div id="wp11-a" class="bar" style="background:#ff3d8b"></div><div id="wp11-b" class="bar" style="background:#46e0ff"></div><div id="wp11-c" class="bar" style="background:#0a0618"></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#wp1-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 4.1);
+    tl.fromTo("#wp1-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 4.15);
+    tl.fromTo("#wp1-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 4.2);
+    tl.fromTo("#wp2-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 35.86);
+    tl.fromTo("#wp2-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 35.91);
+    tl.fromTo("#wp2-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 35.96);
+    tl.fromTo("#wp3-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 76.736);
+    tl.fromTo("#wp3-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 76.786);
+    tl.fromTo("#wp3-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 76.836);
+    tl.fromTo("#wp4-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 117.372);
+    tl.fromTo("#wp4-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 117.422);
+    tl.fromTo("#wp4-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 117.472);
+    tl.fromTo("#wp5-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 155.056);
+    tl.fromTo("#wp5-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 155.106);
+    tl.fromTo("#wp5-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 155.156);
+    tl.fromTo("#wp6-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 191.228);
+    tl.fromTo("#wp6-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 191.278);
+    tl.fromTo("#wp6-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 191.328);
+    tl.fromTo("#wp7-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 227.136);
+    tl.fromTo("#wp7-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 227.186);
+    tl.fromTo("#wp7-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 227.236);
+    tl.fromTo("#wp8-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 258.1);
+    tl.fromTo("#wp8-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 258.15);
+    tl.fromTo("#wp8-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 258.2);
+    tl.fromTo("#wp9-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 291.92);
+    tl.fromTo("#wp9-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 291.97);
+    tl.fromTo("#wp9-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 292.02);
+    tl.fromTo("#wp10-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 331.284);
+    tl.fromTo("#wp10-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 331.334);
+    tl.fromTo("#wp10-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 331.384);
+    tl.fromTo("#wp11-a", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 369.644);
+    tl.fromTo("#wp11-b", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 369.694);
+    tl.fromTo("#wp11-c", { x: 2700, skewX: -18 }, { x: -2700, skewX: -18, duration: 0.9, ease: "power3.inOut" }, 369.744);
+    window.__timelines["wipes"] = tl;
+  </script>
+</template>

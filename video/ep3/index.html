@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0618; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #root > div { position: absolute; inset: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="375.94" data-width="1920" data-height="1080">
+      <div id="title" data-composition-id="title" data-composition-src="compositions/title.html" data-start="0" data-duration="4.6" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-intro" data-composition-id="s-intro" data-composition-src="compositions/s-intro.html" data-start="4.6" data-duration="31.76" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-jason" data-composition-id="s-jason" data-composition-src="compositions/s-jason.html" data-start="36.36" data-duration="40.876" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-lucia" data-composition-id="s-lucia" data-composition-src="compositions/s-lucia.html" data-start="77.236" data-duration="40.636" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-cal" data-composition-id="s-cal" data-composition-src="compositions/s-cal.html" data-start="117.872" data-duration="37.684" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-brian" data-composition-id="s-brian" data-composition-src="compositions/s-brian.html" data-start="155.556" data-duration="36.172" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-boobie" data-composition-id="s-boobie" data-composition-src="compositions/s-boobie.html" data-start="191.728" data-duration="35.908" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-drequan" data-composition-id="s-drequan" data-composition-src="compositions/s-drequan.html" data-start="227.636" data-duration="30.964" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-dimez" data-composition-id="s-dimez" data-composition-src="compositions/s-dimez.html" data-start="258.6" data-duration="33.82" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-raul" data-composition-id="s-raul" data-composition-src="compositions/s-raul.html" data-start="292.42" data-duration="39.364" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="s-outro" data-composition-id="s-outro" data-composition-src="compositions/s-outro.html" data-start="331.784" data-duration="38.36" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="endcard" data-composition-id="endcard" data-composition-src="compositions/endcard.html" data-start="370.144" data-duration="5.796" data-track-index="0" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:1"></div>
+      <div id="hud" data-composition-id="hud" data-composition-src="compositions/hud.html" data-start="0" data-duration="375.94" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:20"></div>
+      <div id="captions" data-composition-id="captions" data-composition-src="compositions/captions.html" data-start="0" data-duration="375.94" data-track-index="2" data-track-kind="captions" data-width="1920" data-height="1080" style="z-index:30"></div>
+      <div id="wipes" data-composition-id="wipes" data-composition-src="compositions/wipes.html" data-start="0" data-duration="375.94" data-track-index="3" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:40"></div>
+      <audio id="mix" src="assets/audio/mix.m4a" data-start="0" data-duration="375.94" data-track-index="4"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

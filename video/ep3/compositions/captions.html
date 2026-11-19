@@ -1,0 +1,733 @@
+<template>
+  <style>
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-latin-700-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-latin-900-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
+
+    #cap-band { position: absolute; left: 0; right: 0; bottom: 0; height: 300px; background: linear-gradient(0deg, rgba(10,6,24,.82), rgba(10,6,24,0)); }
+    .cap { position: absolute; left: 230px; right: 230px; bottom: 132px; text-align: center; direction: rtl; z-index: 5;
+      font: 700 50px/1.45 "Cairo", sans-serif; color: #fff; text-shadow: 0 3px 12px rgba(0,0,0,.85); }
+    .cap span { color: #fff; }
+
+  </style>
+  <div id="root" data-composition-id="captions" data-width="1920" data-height="1080">
+    <div id="cap-band" class="clip" data-start="4.2" data-duration="365.944" data-track-index="0"></div>
+    <div id="cap1" class="clip cap" data-start="4.252" data-duration="2.409" data-track-index="1"><span id="cap1-w1">في</span> <span id="cap1-w2">الحلقة</span> <span id="cap1-w3">الأولى</span> <span id="cap1-w4">عرفنا</span> <span id="cap1-w5">السالفة</span></div>
+    <div id="cap2" class="clip cap" data-start="6.661" data-duration="2.734" data-track-index="1"><span id="cap2-w1">وفي</span> <span id="cap2-w2">الحلقة</span> <span id="cap2-w3">الثانية</span> <span id="cap2-w4">لفّينا</span> <span id="cap2-w5">ليونيدا</span> <span id="cap2-w6">من</span></div>
+    <div id="cap3" class="clip cap" data-start="9.395" data-duration="3.062" data-track-index="1"><span id="cap3-w1">فايس</span> <span id="cap3-w2">سيتي</span> <span id="cap3-w3">لين</span> <span id="cap3-w4">جبل</span> <span id="cap3-w5">كالاجا</span></div>
+    <div id="cap4" class="clip cap" data-start="12.457" data-duration="1.472" data-track-index="1"><span id="cap4-w1">بس</span> <span id="cap4-w2">أي</span> <span id="cap4-w3">مدينة</span> <span id="cap4-w4">ما</span></div>
+    <div id="cap5" class="clip cap" data-start="13.929" data-duration="2.747" data-track-index="1"><span id="cap5-w1">تسوى</span> <span id="cap5-w2">شي</span> <span id="cap5-w3">بدون</span> <span id="cap5-w4">ناسها</span></div>
+    <div id="cap6" class="clip cap" data-start="16.676" data-duration="2.083" data-track-index="1"><span id="cap6-w1">اليوم</span> <span id="cap6-w2">بنقعد</span> <span id="cap6-w3">مع</span> <span id="cap6-w4">الوجيه</span> <span id="cap6-w5">اللي</span></div>
+    <div id="cap7" class="clip cap" data-start="18.759" data-duration="2.787" data-track-index="1"><span id="cap7-w1">بيدخلون</span> <span id="cap7-w2">حياة</span> <span id="cap7-w3">جايسون</span> <span id="cap7-w4">ولوسيا</span></div>
+    <div id="cap8" class="clip cap" data-start="21.546" data-duration="2.161" data-track-index="1"><span id="cap8-w1">واحد</span> <span id="cap8-w2">واحد</span></div>
+    <div id="cap9" class="clip cap" data-start="23.707" data-duration="1.185" data-track-index="1"><span id="cap9-w1">مين</span> <span id="cap9-w2">صديق</span></div>
+    <div id="cap10" class="clip cap" data-start="24.892" data-duration="1.068" data-track-index="1"><span id="cap10-w1">ومين</span> <span id="cap10-w2">شريك</span></div>
+    <div id="cap11" class="clip cap" data-start="25.96" data-duration="2.044" data-track-index="1"><span id="cap11-w1">ومين</span> <span id="cap11-w2">ممكن</span> <span id="cap11-w3">يطعنك</span> <span id="cap11-w4">من</span> <span id="cap11-w5">ورا</span></div>
+    <div id="cap12" class="clip cap" data-start="28.004" data-duration="2.656" data-track-index="1"><span id="cap12-w1">وهو</span> <span id="cap12-w2">يضحك</span> <span id="cap12-w3">في</span> <span id="cap12-w4">وجهك</span></div>
+    <div id="cap13" class="clip cap" data-start="30.66" data-duration="1.745" data-track-index="1"><span id="cap13-w1">خلك</span> <span id="cap13-w2">معي</span> <span id="cap13-w3">للآخر</span></div>
+    <div id="cap14" class="clip cap" data-start="32.405" data-duration="2.933" data-track-index="1"><span id="cap14-w1">لأن</span> <span id="cap14-w2">في</span> <span id="cap14-w3">الأخير</span> <span id="cap14-w4">عندي</span> <span id="cap14-w5">سؤال</span> <span id="cap14-w6">لك</span></div>
+    <div id="cap15" class="clip cap" data-start="37.112" data-duration="2.698" data-track-index="1"><span id="cap15-w1">نبدأ</span> <span id="cap15-w2">بجايسون</span> <span id="cap15-w3">دوفال</span></div>
+    <div id="cap16" class="clip cap" data-start="39.81" data-duration="1.731" data-track-index="1"><span id="cap16-w1">جايسون</span> <span id="cap16-w2">تربّى</span> <span id="cap16-w3">بين</span> <span id="cap16-w4">ناس</span></div>
+    <div id="cap17" class="clip cap" data-start="41.541" data-duration="2.305" data-track-index="1"><span id="cap17-w1">عايشين</span> <span id="cap17-w2">على</span> <span id="cap17-w3">النصب</span> <span id="cap17-w4">والحيل</span></div>
+    <div id="cap18" class="clip cap" data-start="43.846" data-duration="3.437" data-track-index="1"><span id="cap18-w1">يعني</span> <span id="cap18-w2">الغلط</span> <span id="cap18-w3">كان</span> <span id="cap18-w4">حوله</span> <span id="cap18-w5">من</span> <span id="cap18-w6">صغره</span></div>
+    <div id="cap19" class="clip cap" data-start="47.283" data-duration="3.308" data-track-index="1"><span id="cap19-w1">دخل</span> <span id="cap19-w2">الجيش</span> <span id="cap19-w3">يحاول</span> <span id="cap19-w4">يبعد</span> <span id="cap19-w5">عن</span> <span id="cap19-w6">هالدنيا</span></div>
+    <div id="cap20" class="clip cap" data-start="50.591" data-duration="3.359" data-track-index="1"><span id="cap20-w1">بس</span> <span id="cap20-w2">الجيش</span> <span id="cap20-w3">ما</span> <span id="cap20-w4">صلّح</span> <span id="cap20-w5">اللي</span> <span id="cap20-w6">في</span> <span id="cap20-w7">داخله</span></div>
+    <div id="cap21" class="clip cap" data-start="53.95" data-duration="2.24" data-track-index="1"><span id="cap21-w1">اليوم</span> <span id="cap21-w2">هو</span> <span id="cap21-w3">في</span> <span id="cap21-w4">جزر</span> <span id="cap21-w5">الكيز</span></div>
+    <div id="cap22" class="clip cap" data-start="56.19" data-duration="3.984" data-track-index="1"><span id="cap22-w1">يشتغل</span> <span id="cap22-w2">أشغال</span> <span id="cap22-w3">جانبية</span> <span id="cap22-w4">لمهربين</span> <span id="cap22-w5">محليين</span></div>
+    <div id="cap23" class="clip cap" data-start="60.174" data-duration="3.815" data-track-index="1"><span id="cap23-w1">وكل</span> <span id="cap23-w2">اللي</span> <span id="cap23-w3">يبيه</span> <span id="cap23-w4">حياة</span> <span id="cap23-w5">بسيطة</span> <span id="cap23-w6">وهادية</span></div>
+    <div id="cap24" class="clip cap" data-start="63.989" data-duration="2.24" data-track-index="1"><span id="cap24-w1">المشكلة</span> <span id="cap24-w2">إن</span> <span id="cap24-w3">الحياة</span> <span id="cap24-w4">الهادية</span> <span id="cap24-w5">في</span></div>
+    <div id="cap25" class="clip cap" data-start="66.229" data-duration="2.708" data-track-index="1"><span id="cap25-w1">ليونيدا</span> <span id="cap25-w2">ما</span> <span id="cap25-w3">تجي</span> <span id="cap25-w4">ببلاش</span></div>
+    <div id="cap26" class="clip cap" data-start="68.937" data-duration="3.568" data-track-index="1"><span id="cap26-w1">وجايسون</span> <span id="cap26-w2">عنده</span> <span id="cap26-w3">قلب</span> <span id="cap26-w4">طيب</span> <span id="cap26-w5">وقرارات</span> <span id="cap26-w6">غلط</span></div>
+    <div id="cap27" class="clip cap" data-start="72.505" data-duration="3.701" data-track-index="1"><span id="cap27-w1">وهذي</span> <span id="cap27-w2">أخطر</span> <span id="cap27-w3">خلطة</span> <span id="cap27-w4">ممكن</span> <span id="cap27-w5">تكون</span> <span id="cap27-w6">في</span> <span id="cap27-w7">شخص</span></div>
+    <div id="cap28" class="clip cap" data-start="77.988" data-duration="2.606" data-track-index="1"><span id="cap28-w1">ولوسيا</span> <span id="cap28-w2">كامينوس</span></div>
+    <div id="cap29" class="clip cap" data-start="80.594" data-duration="1.693" data-track-index="1"><span id="cap29-w1">أبوها</span> <span id="cap29-w2">علّمها</span> <span id="cap29-w3">القتال</span> <span id="cap29-w4">من</span></div>
+    <div id="cap30" class="clip cap" data-start="82.287" data-duration="1.68" data-track-index="1"><span id="cap30-w1">أول</span> <span id="cap30-w2">ما</span> <span id="cap30-w3">بدت</span> <span id="cap30-w4">تمشي</span></div>
+    <div id="cap31" class="clip cap" data-start="83.967" data-duration="4.414" data-track-index="1"><span id="cap31-w1">ومن</span> <span id="cap31-w2">يومها</span> <span id="cap31-w3">والدنيا</span> <span id="cap31-w4">تضاربها</span> <span id="cap31-w5">وهي</span> <span id="cap31-w6">ترد</span> <span id="cap31-w7">الضربة</span></div>
+    <div id="cap32" class="clip cap" data-start="88.381" data-duration="3.372" data-track-index="1"><span id="cap32-w1">دفاعها</span> <span id="cap32-w2">عن</span> <span id="cap32-w3">أهلها</span> <span id="cap32-w4">وداها</span> <span id="cap32-w5">لسجن</span> <span id="cap32-w6">ليونيدا</span></div>
+    <div id="cap33" class="clip cap" data-start="91.753" data-duration="1.758" data-track-index="1"><span id="cap33-w1">وطلعت</span> <span id="cap33-w2">منه</span> <span id="cap33-w3">بحظ</span></div>
+    <div id="cap34" class="clip cap" data-start="93.511" data-duration="1.875" data-track-index="1"><span id="cap34-w1">ومعها</span> <span id="cap34-w2">درس</span> <span id="cap34-w3">واحد</span></div>
+    <div id="cap35" class="clip cap" data-start="95.386" data-duration="3.607" data-track-index="1"><span id="cap35-w1">المرة</span> <span id="cap35-w2">الجاية</span> <span id="cap35-w3">لازم</span> <span id="cap35-w4">تلعبها</span> <span id="cap35-w5">صح</span></div>
+    <div id="cap36" class="clip cap" data-start="98.993" data-duration="2.552" data-track-index="1"><span id="cap36-w1">لوسيا</span> <span id="cap36-w2">ما</span> <span id="cap36-w3">تبي</span> <span id="cap36-w4">ترجع</span> <span id="cap36-w5">للسجن</span></div>
+    <div id="cap37" class="clip cap" data-start="101.545" data-duration="2.773" data-track-index="1"><span id="cap37-w1">وما</span> <span id="cap37-w2">تبي</span> <span id="cap37-w3">ترجع</span> <span id="cap37-w4">للفقر</span></div>
+    <div id="cap38" class="clip cap" data-start="104.318" data-duration="1.693" data-track-index="1"><span id="cap38-w1">تبي</span> <span id="cap38-w2">حياة</span> <span id="cap38-w3">أحسن</span></div>
+    <div id="cap39" class="clip cap" data-start="106.011" data-duration="2.253" data-track-index="1"><span id="cap39-w1">وتبيها</span> <span id="cap39-w2">الحين</span></div>
+    <div id="cap40" class="clip cap" data-start="108.264" data-duration="2.122" data-track-index="1"><span id="cap40-w1">ولما</span> <span id="cap40-w2">تلتقي</span> <span id="cap40-w3">بجايسون</span></div>
+    <div id="cap41" class="clip cap" data-start="110.386" data-duration="2.161" data-track-index="1"><span id="cap41-w1">يصير</span> <span id="cap41-w2">عندها</span> <span id="cap41-w3">شريك</span> <span id="cap41-w4">يقدر</span></div>
+    <div id="cap42" class="clip cap" data-start="112.547" data-duration="2.383" data-track-index="1"><span id="cap42-w1">يمشي</span> <span id="cap42-w2">معها</span> <span id="cap42-w3">لآخر</span> <span id="cap42-w4">الطريق</span></div>
+    <div id="cap43" class="clip cap" data-start="114.93" data-duration="1.917" data-track-index="1"><span id="cap43-w1">أو</span> <span id="cap43-w2">يطيحها</span> <span id="cap43-w3">معه</span></div>
+    <div id="cap44" class="clip cap" data-start="118.624" data-duration="1.107" data-track-index="1"><span id="cap44-w1">كال</span> <span id="cap44-w2">هامبتون</span></div>
+    <div id="cap45" class="clip cap" data-start="119.731" data-duration="3.049" data-track-index="1"><span id="cap45-w1">صديق</span> <span id="cap45-w2">جايسون</span> <span id="cap45-w3">في</span> <span id="cap45-w4">الكيز</span></div>
+    <div id="cap46" class="clip cap" data-start="122.78" data-duration="2.734" data-track-index="1"><span id="cap46-w1">كال</span> <span id="cap46-w2">يحس</span> <span id="cap46-w3">براحته</span> <span id="cap46-w4">في</span> <span id="cap46-w5">زوايا</span> <span id="cap46-w6">الإنترنت</span></div>
+    <div id="cap47" class="clip cap" data-start="125.514" data-duration="2.656" data-track-index="1"><span id="cap47-w1">المظلمة</span> <span id="cap47-w2">أكثر</span> <span id="cap47-w3">من</span> <span id="cap47-w4">أي</span> <span id="cap47-w5">مكان</span> <span id="cap47-w6">ثاني</span></div>
+    <div id="cap48" class="clip cap" data-start="128.17" data-duration="3.803" data-track-index="1"><span id="cap48-w1">ويشوف</span> <span id="cap48-w2">إن</span> <span id="cap48-w3">كل</span> <span id="cap48-w4">شي</span> <span id="cap48-w5">حوله</span> <span id="cap48-w6">مؤامرة</span></div>
+    <div id="cap49" class="clip cap" data-start="131.973" data-duration="3.111" data-track-index="1"><span id="cap49-w1">يتصنت</span> <span id="cap49-w2">على</span> <span id="cap49-w3">اتصالات</span> <span id="cap49-w4">خفر</span> <span id="cap49-w5">السواحل</span></div>
+    <div id="cap50" class="clip cap" data-start="135.084" data-duration="1.823" data-track-index="1"><span id="cap50-w1">ويحلل</span> <span id="cap50-w2">كل</span> <span id="cap50-w3">خبر</span></div>
+    <div id="cap51" class="clip cap" data-start="136.907" data-duration="3.802" data-track-index="1"><span id="cap51-w1">ومقتنع</span> <span id="cap51-w2">إنه</span> <span id="cap51-w3">أذكى</span> <span id="cap51-w4">واحد</span> <span id="cap51-w5">في</span> <span id="cap51-w6">الغرفة</span></div>
+    <div id="cap52" class="clip cap" data-start="140.709" data-duration="2.943" data-track-index="1"><span id="cap52-w1">بس</span> <span id="cap52-w2">لو</span> <span id="cap52-w3">تخيّره</span> <span id="cap52-w4">بين</span> <span id="cap52-w5">مغامرة</span> <span id="cap52-w6">كبيرة</span></div>
+    <div id="cap53" class="clip cap" data-start="143.652" data-duration="2.865" data-track-index="1"><span id="cap53-w1">وقعدة</span> <span id="cap53-w2">في</span> <span id="cap53-w3">البيت</span> <span id="cap53-w4">مع</span> <span id="cap53-w5">مشروب</span> <span id="cap53-w6">بارد</span></div>
+    <div id="cap54" class="clip cap" data-start="146.517" data-duration="2.565" data-track-index="1"><span id="cap54-w1">اختياره</span> <span id="cap54-w2">واضح</span></div>
+    <div id="cap55" class="clip cap" data-start="149.082" data-duration="2.448" data-track-index="1"><span id="cap55-w1">كال</span> <span id="cap55-w2">ممكن</span> <span id="cap55-w3">يكون</span> <span id="cap55-w4">عقل</span> <span id="cap55-w5">الفريق</span></div>
+    <div id="cap56" class="clip cap" data-start="151.53" data-duration="3.011" data-track-index="1"><span id="cap56-w1">أو</span> <span id="cap56-w2">أكبر</span> <span id="cap56-w3">سبب</span> <span id="cap56-w4">إن</span> <span id="cap56-w5">الخطة</span> <span id="cap56-w6">تخرب</span></div>
+    <div id="cap57" class="clip cap" data-start="156.308" data-duration="1.289" data-track-index="1"><span id="cap57-w1">براين</span> <span id="cap57-w2">هيدر</span></div>
+    <div id="cap58" class="clip cap" data-start="157.597" data-duration="3.479" data-track-index="1"><span id="cap58-w1">واحد</span> <span id="cap58-w2">من</span> <span id="cap58-w3">مهربين</span> <span id="cap58-w4">الكيز</span> <span id="cap58-w5">القدامى</span></div>
+    <div id="cap59" class="clip cap" data-start="161.076" data-duration="3.021" data-track-index="1"><span id="cap59-w1">صار</span> <span id="cap59-w2">له</span> <span id="cap59-w3">سنين</span> <span id="cap59-w4">طويلة</span> <span id="cap59-w5">في</span> <span id="cap59-w6">هالشغل</span></div>
+    <div id="cap60" class="clip cap" data-start="164.097" data-duration="3.724" data-track-index="1"><span id="cap60-w1">ويعرف</span> <span id="cap60-w2">الطرق</span> <span id="cap60-w3">والقوارب</span> <span id="cap60-w4">والناس</span></div>
+    <div id="cap61" class="clip cap" data-start="167.821" data-duration="2.812" data-track-index="1"><span id="cap61-w1">يعيش</span> <span id="cap61-w2">مع</span> <span id="cap61-w3">زوجته</span> <span id="cap61-w4">الثالثة</span> <span id="cap61-w5">لوري</span></div>
+    <div id="cap62" class="clip cap" data-start="170.633" data-duration="3.802" data-track-index="1"><span id="cap62-w1">ويحب</span> <span id="cap62-w2">يخلي</span> <span id="cap62-w3">غيره</span> <span id="cap62-w4">يسوي</span> <span id="cap62-w5">الشغل</span> <span id="cap62-w6">الوسخ</span> <span id="cap62-w7">عنه</span></div>
+    <div id="cap63" class="clip cap" data-start="174.435" data-duration="2.669" data-track-index="1"><span id="cap63-w1">وهو</span> <span id="cap63-w2">قاعد</span> <span id="cap63-w3">يتفرج</span></div>
+    <div id="cap64" class="clip cap" data-start="177.104" data-duration="3.789" data-track-index="1"><span id="cap64-w1">وجايسون</span> <span id="cap64-w2">من</span> <span id="cap64-w3">الناس</span> <span id="cap64-w4">اللي</span> <span id="cap64-w5">يشتغلون</span> <span id="cap64-w6">عنده</span></div>
+    <div id="cap65" class="clip cap" data-start="180.893" data-duration="2.787" data-track-index="1"><span id="cap65-w1">براين</span> <span id="cap65-w2">يبان</span> <span id="cap65-w3">طيب</span> <span id="cap65-w4">وكبير</span> <span id="cap65-w5">سن</span></div>
+    <div id="cap66" class="clip cap" data-start="183.68" data-duration="2.109" data-track-index="1"><span id="cap66-w1">بس</span> <span id="cap66-w2">لا</span> <span id="cap66-w3">تنخدع</span></div>
+    <div id="cap67" class="clip cap" data-start="185.789" data-duration="2.761" data-track-index="1"><span id="cap67-w1">اللي</span> <span id="cap67-w2">عاش</span> <span id="cap67-w3">كل</span> <span id="cap67-w4">هالسنين</span> <span id="cap67-w5">في</span> <span id="cap67-w6">التهريب</span></div>
+    <div id="cap68" class="clip cap" data-start="188.55" data-duration="2.151" data-track-index="1"><span id="cap68-w1">ما</span> <span id="cap68-w2">عاشها</span> <span id="cap68-w3">بالصدفة</span></div>
+    <div id="cap69" class="clip cap" data-start="192.48" data-duration="2.904" data-track-index="1"><span id="cap69-w1">ننتقل</span> <span id="cap69-w2">الحين</span> <span id="cap69-w3">لمدينة</span> <span id="cap69-w4">فايس</span> <span id="cap69-w5">سيتي</span></div>
+    <div id="cap70" class="clip cap" data-start="195.384" data-duration="2.606" data-track-index="1"><span id="cap70-w1">ونقابل</span> <span id="cap70-w2">بوبي</span> <span id="cap70-w3">آيْك</span></div>
+    <div id="cap71" class="clip cap" data-start="197.99" data-duration="2.07" data-track-index="1"><span id="cap71-w1">بوبي</span> <span id="cap71-w2">من</span> <span id="cap71-w3">أساطير</span> <span id="cap71-w4">المدينة</span></div>
+    <div id="cap72" class="clip cap" data-start="200.06" data-duration="2.487" data-track-index="1"><span id="cap72-w1">طلع</span> <span id="cap72-w2">من</span> <span id="cap72-w3">الشارع</span> <span id="cap72-w4">وبنى</span> <span id="cap72-w5">إمبراطورية</span></div>
+    <div id="cap73" class="clip cap" data-start="202.547" data-duration="1.081" data-track-index="1"><span id="cap73-w1">عقارات</span></div>
+    <div id="cap74" class="clip cap" data-start="203.628" data-duration="1.302" data-track-index="1"><span id="cap74-w1">ونادي</span> <span id="cap74-w2">ليلي</span></div>
+    <div id="cap75" class="clip cap" data-start="204.93" data-duration="2.344" data-track-index="1"><span id="cap75-w1">واستوديو</span> <span id="cap75-w2">تسجيل</span></div>
+    <div id="cap76" class="clip cap" data-start="207.274" data-duration="2.383" data-track-index="1"><span id="cap76-w1">بالنسبة</span> <span id="cap76-w2">له</span> <span id="cap76-w3">كل</span> <span id="cap76-w4">شي</span> <span id="cap76-w5">بزنس</span></div>
+    <div id="cap77" class="clip cap" data-start="209.657" data-duration="1.627" data-track-index="1"><span id="cap77-w1">والعلاقات</span> <span id="cap77-w2">بزنس</span></div>
+    <div id="cap78" class="clip cap" data-start="211.284" data-duration="3.112" data-track-index="1"><span id="cap78-w1">وحتى</span> <span id="cap78-w2">الصداقة</span> <span id="cap78-w3">لها</span> <span id="cap78-w4">حساب</span></div>
+    <div id="cap79" class="clip cap" data-start="214.396" data-duration="1.862" data-track-index="1"><span id="cap79-w1">ابتسامته</span> <span id="cap79-w2">عريضة</span></div>
+    <div id="cap80" class="clip cap" data-start="216.258" data-duration="2.904" data-track-index="1"><span id="cap80-w1">بس</span> <span id="cap80-w2">عيونه</span> <span id="cap80-w3">دايم</span> <span id="cap80-w4">تحسب</span></div>
+    <div id="cap81" class="clip cap" data-start="219.162" data-duration="3.724" data-track-index="1"><span id="cap81-w1">وإذا</span> <span id="cap81-w2">جايسون</span> <span id="cap81-w3">ولوسيا</span> <span id="cap81-w4">بيلعبون</span> <span id="cap81-w5">في</span> <span id="cap81-w6">فايس</span> <span id="cap81-w7">سيتي</span></div>
+    <div id="cap82" class="clip cap" data-start="222.886" data-duration="3.727" data-track-index="1"><span id="cap82-w1">فأكيد</span> <span id="cap82-w2">بيمرون</span> <span id="cap82-w3">عليه</span> <span id="cap82-w4">في</span> <span id="cap82-w5">يوم</span> <span id="cap82-w6">من</span> <span id="cap82-w7">الأيام</span></div>
+    <div id="cap83" class="clip cap" data-start="228.388" data-duration="1.185" data-track-index="1"><span id="cap83-w1">ومع</span> <span id="cap83-w2">بوبي</span></div>
+    <div id="cap84" class="clip cap" data-start="229.573" data-duration="2.645" data-track-index="1"><span id="cap84-w1">عندنا</span> <span id="cap84-w2">دريكوان</span> <span id="cap84-w3">بريست</span></div>
+    <div id="cap85" class="clip cap" data-start="232.218" data-duration="2.748" data-track-index="1"><span id="cap85-w1">دريكوان</span> <span id="cap85-w2">طول</span> <span id="cap85-w3">عمره</span> <span id="cap85-w4">شاطر</span> <span id="cap85-w5">في</span> <span id="cap85-w6">تدبير</span></div>
+    <div id="cap86" class="clip cap" data-start="234.966" data-duration="2.864" data-track-index="1"><span id="cap86-w1">الفلوس</span> <span id="cap86-w2">أكثر</span> <span id="cap86-w3">من</span> <span id="cap86-w4">إنه</span> <span id="cap86-w5">رجل</span> <span id="cap86-w6">عصابة</span></div>
+    <div id="cap87" class="clip cap" data-start="237.83" data-duration="3.425" data-track-index="1"><span id="cap87-w1">وحلمه</span> <span id="cap87-w2">الحقيقي</span> <span id="cap87-w3">هو</span> <span id="cap87-w4">الموسيقى</span></div>
+    <div id="cap88" class="clip cap" data-start="241.255" data-duration="2.812" data-track-index="1"><span id="cap88-w1">يدير</span> <span id="cap88-w2">شركة</span> <span id="cap88-w3">تسجيلات</span> <span id="cap88-w4">مع</span> <span id="cap88-w5">بوبي</span></div>
+    <div id="cap89" class="clip cap" data-start="244.067" data-duration="4.024" data-track-index="1"><span id="cap89-w1">ويدوّر</span> <span id="cap89-w2">على</span> <span id="cap89-w3">الموهبة</span> <span id="cap89-w4">الجاية</span> <span id="cap89-w5">اللي</span> <span id="cap89-w6">تكسّر</span> <span id="cap89-w7">الدنيا</span></div>
+    <div id="cap90" class="clip cap" data-start="248.091" data-duration="2.968" data-track-index="1"><span id="cap90-w1">ويعتقد</span> <span id="cap90-w2">إنه</span> <span id="cap90-w3">لقاها</span></div>
+    <div id="cap91" class="clip cap" data-start="251.059" data-duration="3.347" data-track-index="1"><span id="cap91-w1">دريكوان</span> <span id="cap91-w2">يمثل</span> <span id="cap91-w3">الوجه</span> <span id="cap91-w4">الجديد</span> <span id="cap91-w5">لفايس</span> <span id="cap91-w6">سيتي</span></div>
+    <div id="cap92" class="clip cap" data-start="254.406" data-duration="3.18" data-track-index="1"><span id="cap92-w1">الشهرة</span> <span id="cap92-w2">والترند</span> <span id="cap92-w3">والفلوس</span> <span id="cap92-w4">السريعة</span></div>
+    <div id="cap93" class="clip cap" data-start="259.352" data-duration="3.438" data-track-index="1"><span id="cap93-w1">والموهبة</span> <span id="cap93-w2">اللي</span> <span id="cap93-w3">لقاها</span> <span id="cap93-w4">دريكوان</span> <span id="cap93-w5">هي</span> <span id="cap93-w6">ريل</span> <span id="cap93-w7">دايمز</span></div>
+    <div id="cap94" class="clip cap" data-start="262.79" data-duration="3.231" data-track-index="1"><span id="cap94-w1">ثنائي</span> <span id="cap94-w2">الراب</span> <span id="cap94-w3">باي</span> <span id="cap94-w4">لوكس</span> <span id="cap94-w5">وروكسي</span></div>
+    <div id="cap95" class="clip cap" data-start="266.021" data-duration="2.396" data-track-index="1"><span id="cap95-w1">صديقات</span> <span id="cap95-w2">من</span> <span id="cap95-w3">أيام</span> <span id="cap95-w4">المدرسة</span></div>
+    <div id="cap96" class="clip cap" data-start="268.417" data-duration="3.398" data-track-index="1"><span id="cap96-w1">انتشر</span> <span id="cap96-w2">لهم</span> <span id="cap96-w3">مقطع</span> <span id="cap96-w4">وصاروا</span> <span id="cap96-w5">حديث</span> <span id="cap96-w6">الناس</span></div>
+    <div id="cap97" class="clip cap" data-start="271.815" data-duration="2.331" data-track-index="1"><span id="cap97-w1">وذاقوا</span> <span id="cap97-w2">طعم</span> <span id="cap97-w3">الشهرة</span></div>
+    <div id="cap98" class="clip cap" data-start="274.146" data-duration="2.174" data-track-index="1"><span id="cap98-w1">بس</span> <span id="cap98-w2">الشهرة</span> <span id="cap98-w3">في</span> <span id="cap98-w4">ليونيدا</span> <span id="cap98-w5">تروح</span></div>
+    <div id="cap99" class="clip cap" data-start="276.32" data-duration="2.839" data-track-index="1"><span id="cap99-w1">بنفس</span> <span id="cap99-w2">السرعة</span> <span id="cap99-w3">اللي</span> <span id="cap99-w4">جات</span> <span id="cap99-w5">فيها</span></div>
+    <div id="cap100" class="clip cap" data-start="279.159" data-duration="2.851" data-track-index="1"><span id="cap100-w1">الحين</span> <span id="cap100-w2">هم</span> <span id="cap100-w3">مع</span> <span id="cap100-w4">شركة</span> <span id="cap100-w5">دريكوان</span> <span id="cap100-w6">وبوبي</span></div>
+    <div id="cap101" class="clip cap" data-start="282.01" data-duration="2.93" data-track-index="1"><span id="cap101-w1">ويبون</span> <span id="cap101-w2">فرصتهم</span> <span id="cap101-w3">الثانية</span></div>
+    <div id="cap102" class="clip cap" data-start="284.94" data-duration="1.107" data-track-index="1"><span id="cap102-w1">والسؤال</span></div>
+    <div id="cap103" class="clip cap" data-start="286.047" data-duration="2.604" data-track-index="1"><span id="cap103-w1">هل</span> <span id="cap103-w2">الشركة</span> <span id="cap103-w3">بتصعدهم</span> <span id="cap103-w4">للقمة</span></div>
+    <div id="cap104" class="clip cap" data-start="288.651" data-duration="2.751" data-track-index="1"><span id="cap104-w1">ولا</span> <span id="cap104-w2">بتستغلهم</span> <span id="cap104-w3">وترميهم؟</span></div>
+    <div id="cap105" class="clip cap" data-start="293.172" data-duration="1.511" data-track-index="1"><span id="cap105-w1">وآخر</span> <span id="cap105-w2">واحد</span></div>
+    <div id="cap106" class="clip cap" data-start="294.683" data-duration="1.757" data-track-index="1"><span id="cap106-w1">وممكن</span> <span id="cap106-w2">أخطرهم</span></div>
+    <div id="cap107" class="clip cap" data-start="296.44" data-duration="2.19" data-track-index="1"><span id="cap107-w1">راؤول</span> <span id="cap107-w2">باوتيستا</span></div>
+    <div id="cap108" class="clip cap" data-start="298.63" data-duration="2.24" data-track-index="1"><span id="cap108-w1">راؤول</span> <span id="cap108-w2">لص</span> <span id="cap108-w3">بنوك</span> <span id="cap108-w4">محترف</span></div>
+    <div id="cap109" class="clip cap" data-start="300.87" data-duration="1.875" data-track-index="1"><span id="cap109-w1">عنده</span> <span id="cap109-w2">خبرة</span> <span id="cap109-w3">سنين</span></div>
+    <div id="cap110" class="clip cap" data-start="302.745" data-duration="4.361" data-track-index="1"><span id="cap110-w1">وكاريزما</span> <span id="cap110-w2">تخليك</span> <span id="cap110-w3">تمشي</span> <span id="cap110-w4">وراه</span> <span id="cap110-w5">بدون</span> <span id="cap110-w6">ما</span> <span id="cap110-w7">تحس</span></div>
+    <div id="cap111" class="clip cap" data-start="307.106" data-duration="3.477" data-track-index="1"><span id="cap111-w1">يدوّر</span> <span id="cap111-w2">على</span> <span id="cap111-w3">ناس</span> <span id="cap111-w4">جدد</span> <span id="cap111-w5">لعمليات</span> <span id="cap111-w6">كبيرة</span></div>
+    <div id="cap112" class="clip cap" data-start="310.583" data-duration="5.117" data-track-index="1"><span id="cap112-w1">ومستعد</span> <span id="cap112-w2">يخاطر</span> <span id="cap112-w3">بأشياء</span> <span id="cap112-w4">غيره</span> <span id="cap112-w5">يخاف</span> <span id="cap112-w6">يقرب</span> <span id="cap112-w7">منها</span></div>
+    <div id="cap113" class="clip cap" data-start="315.7" data-duration="2.526" data-track-index="1"><span id="cap113-w1">وكل</span> <span id="cap113-w2">ما</span> <span id="cap113-w3">كانت</span> <span id="cap113-w4">العملية</span> <span id="cap113-w5">أخطر</span></div>
+    <div id="cap114" class="clip cap" data-start="318.226" data-duration="3.099" data-track-index="1"><span id="cap114-w1">كل</span> <span id="cap114-w2">ما</span> <span id="cap114-w3">صارت</span> <span id="cap114-w4">أحلى</span> <span id="cap114-w5">بالنسبة</span> <span id="cap114-w6">له</span></div>
+    <div id="cap115" class="clip cap" data-start="321.325" data-duration="3.177" data-track-index="1"><span id="cap115-w1">وإذا</span> <span id="cap115-w2">لوسيا</span> <span id="cap115-w3">وجايسون</span> <span id="cap115-w4">يبون</span> <span id="cap115-w5">ضربة</span> <span id="cap115-w6">العمر</span></div>
+    <div id="cap116" class="clip cap" data-start="324.502" data-duration="3.19" data-track-index="1"><span id="cap116-w1">فراؤول</span> <span id="cap116-w2">هو</span> <span id="cap116-w3">الرجال</span> <span id="cap116-w4">اللي</span> <span id="cap116-w5">يعرف</span> <span id="cap116-w6">يسويها</span></div>
+    <div id="cap117" class="clip cap" data-start="327.692" data-duration="3.063" data-track-index="1"><span id="cap117-w1">ويعرف</span> <span id="cap117-w2">كيف</span> <span id="cap117-w3">يطلع</span> <span id="cap117-w4">منها</span> <span id="cap117-w5">لحاله</span></div>
+    <div id="cap118" class="clip cap" data-start="332.536" data-duration="2.227" data-track-index="1"><span id="cap118-w1">هذولا</span> <span id="cap118-w2">هم</span> <span id="cap118-w3">وجيه</span> <span id="cap118-w4">ليونيدا</span></div>
+    <div id="cap119" class="clip cap" data-start="334.763" data-duration="2.304" data-track-index="1"><span id="cap119-w1">صديق</span> <span id="cap119-w2">يحب</span> <span id="cap119-w3">المؤامرات</span></div>
+    <div id="cap120" class="clip cap" data-start="337.067" data-duration="1.667" data-track-index="1"><span id="cap120-w1">ومهرب</span> <span id="cap120-w2">قديم</span></div>
+    <div id="cap121" class="clip cap" data-start="338.734" data-duration="1.536" data-track-index="1"><span id="cap121-w1">وأسطورة</span> <span id="cap121-w2">شارع</span></div>
+    <div id="cap122" class="clip cap" data-start="340.27" data-duration="1.68" data-track-index="1"><span id="cap122-w1">وصاحب</span> <span id="cap122-w2">طموح</span></div>
+    <div id="cap123" class="clip cap" data-start="341.95" data-duration="1.901" data-track-index="1"><span id="cap123-w1">وثنائي</span> <span id="cap123-w2">يبي</span> <span id="cap123-w3">الشهرة</span></div>
+    <div id="cap124" class="clip cap" data-start="343.851" data-duration="2.893" data-track-index="1"><span id="cap124-w1">ولص</span> <span id="cap124-w2">بنوك</span> <span id="cap124-w3">ما</span> <span id="cap124-w4">يخاف</span></div>
+    <div id="cap125" class="clip cap" data-start="346.744" data-duration="2.305" data-track-index="1"><span id="cap125-w1">وفي</span> <span id="cap125-w2">النص</span> <span id="cap125-w3">جايسون</span> <span id="cap125-w4">ولوسيا</span></div>
+    <div id="cap126" class="clip cap" data-start="349.049" data-duration="3.502" data-track-index="1"><span id="cap126-w1">يحاولون</span> <span id="cap126-w2">يطلعون</span> <span id="cap126-w3">من</span> <span id="cap126-w4">هالدنيا</span></div>
+    <div id="cap127" class="clip cap" data-start="352.551" data-duration="1.836" data-track-index="1"><span id="cap127-w1">والحين</span> <span id="cap127-w2">سؤالي</span> <span id="cap127-w3">لك</span></div>
+    <div id="cap128" class="clip cap" data-start="354.387" data-duration="1.953" data-track-index="1"><span id="cap128-w1">مين</span> <span id="cap128-w2">من</span> <span id="cap128-w3">هالشخصيات</span> <span id="cap128-w4">تتوقع</span></div>
+    <div id="cap129" class="clip cap" data-start="356.34" data-duration="3.334" data-track-index="1"><span id="cap129-w1">إنه</span> <span id="cap129-w2">بيخون</span> <span id="cap129-w3">جايسون</span> <span id="cap129-w4">ولوسيا؟</span></div>
+    <div id="cap130" class="clip cap" data-start="359.674" data-duration="2.721" data-track-index="1"><span id="cap130-w1">اكتب</span> <span id="cap130-w2">لي</span> <span id="cap130-w3">في</span> <span id="cap130-w4">التعليقات</span></div>
+    <div id="cap131" class="clip cap" data-start="362.395" data-duration="2.044" data-track-index="1"><span id="cap131-w1">وإذا</span> <span id="cap131-w2">عجبتك</span> <span id="cap131-w3">الحلقة</span></div>
+    <div id="cap132" class="clip cap" data-start="364.439" data-duration="2.005" data-track-index="1"><span id="cap132-w1">اشترك</span> <span id="cap132-w2">وفعّل</span> <span id="cap132-w3">الجرس</span></div>
+    <div id="cap133" class="clip cap" data-start="366.444" data-duration="2.569" data-track-index="1"><span id="cap133-w1">ونشوفك</span> <span id="cap133-w2">في</span> <span id="cap133-w3">الحلقة</span> <span id="cap133-w4">الجاية</span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#cap1-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 4.302);
+    tl.fromTo("#cap1-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 4.419);
+    tl.fromTo("#cap1-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 4.94);
+    tl.fromTo("#cap1-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 5.318);
+    tl.fromTo("#cap1-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 5.734);
+    tl.fromTo("#cap2-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 6.711);
+    tl.fromTo("#cap2-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 7.05);
+    tl.fromTo("#cap2-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 7.557);
+    tl.fromTo("#cap2-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 8.169);
+    tl.fromTo("#cap2-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 8.703);
+    tl.fromTo("#cap2-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 9.289);
+    tl.fromTo("#cap3-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 9.445);
+    tl.fromTo("#cap3-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 9.94);
+    tl.fromTo("#cap3-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 10.279);
+    tl.fromTo("#cap3-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 10.5);
+    tl.fromTo("#cap3-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 10.839);
+    tl.fromTo("#cap4-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 12.507);
+    tl.fromTo("#cap4-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 12.937);
+    tl.fromTo("#cap4-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 13.184);
+    tl.fromTo("#cap4-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 13.822);
+    tl.fromTo("#cap5-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 13.979);
+    tl.fromTo("#cap5-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 14.46);
+    tl.fromTo("#cap5-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 14.708);
+    tl.fromTo("#cap5-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 15.137);
+    tl.fromTo("#cap6-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 16.726);
+    tl.fromTo("#cap6-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 17.273);
+    tl.fromTo("#cap6-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 17.82);
+    tl.fromTo("#cap6-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 18.002);
+    tl.fromTo("#cap6-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 18.536);
+    tl.fromTo("#cap7-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 18.809);
+    tl.fromTo("#cap7-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 19.5);
+    tl.fromTo("#cap7-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 19.981);
+    tl.fromTo("#cap7-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 20.463);
+    tl.fromTo("#cap8-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 21.596);
+    tl.fromTo("#cap8-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 22.143);
+    tl.fromTo("#cap9-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 23.757);
+    tl.fromTo("#cap9-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 24.044);
+    tl.fromTo("#cap10-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 24.942);
+    tl.fromTo("#cap10-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 25.359);
+    tl.fromTo("#cap11-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 26.01);
+    tl.fromTo("#cap11-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 26.518);
+    tl.fromTo("#cap11-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 27.026);
+    tl.fromTo("#cap11-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 27.651);
+    tl.fromTo("#cap11-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 27.807);
+    tl.fromTo("#cap12-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 28.054);
+    tl.fromTo("#cap12-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 28.419);
+    tl.fromTo("#cap12-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 28.887);
+    tl.fromTo("#cap12-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 29.07);
+    tl.fromTo("#cap13-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 30.71);
+    tl.fromTo("#cap13-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 31.231);
+    tl.fromTo("#cap13-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 31.518);
+    tl.fromTo("#cap14-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 32.455);
+    tl.fromTo("#cap14-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 32.872);
+    tl.fromTo("#cap14-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 32.976);
+    tl.fromTo("#cap14-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 33.523);
+    tl.fromTo("#cap14-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 33.861);
+    tl.fromTo("#cap14-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 34.395);
+    tl.fromTo("#cap15-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 37.162);
+    tl.fromTo("#cap15-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 37.709);
+    tl.fromTo("#cap15-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 38.373);
+    tl.fromTo("#cap16-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 39.86);
+    tl.fromTo("#cap16-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 40.458);
+    tl.fromTo("#cap16-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 40.901);
+    tl.fromTo("#cap16-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 41.227);
+    tl.fromTo("#cap17-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 41.591);
+    tl.fromTo("#cap17-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 42.307);
+    tl.fromTo("#cap17-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 42.477);
+    tl.fromTo("#cap17-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 42.998);
+    tl.fromTo("#cap18-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 43.896);
+    tl.fromTo("#cap18-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 44.3);
+    tl.fromTo("#cap18-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 44.794);
+    tl.fromTo("#cap18-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 45.133);
+    tl.fromTo("#cap18-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 45.654);
+    tl.fromTo("#cap18-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 45.81);
+    tl.fromTo("#cap19-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 47.333);
+    tl.fromTo("#cap19-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 47.75);
+    tl.fromTo("#cap19-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 48.232);
+    tl.fromTo("#cap19-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 48.896);
+    tl.fromTo("#cap19-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 49.352);
+    tl.fromTo("#cap19-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 49.638);
+    tl.fromTo("#cap20-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 50.641);
+    tl.fromTo("#cap20-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 50.953);
+    tl.fromTo("#cap20-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 51.435);
+    tl.fromTo("#cap20-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 51.617);
+    tl.fromTo("#cap20-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 52.021);
+    tl.fromTo("#cap20-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 52.255);
+    tl.fromTo("#cap20-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 52.451);
+    tl.fromTo("#cap21-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 54.0);
+    tl.fromTo("#cap21-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 54.521);
+    tl.fromTo("#cap21-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 54.755);
+    tl.fromTo("#cap21-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 54.951);
+    tl.fromTo("#cap21-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 55.302);
+    tl.fromTo("#cap22-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 56.24);
+    tl.fromTo("#cap22-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 56.891);
+    tl.fromTo("#cap22-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 57.477);
+    tl.fromTo("#cap22-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 58.232);
+    tl.fromTo("#cap22-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 59.065);
+    tl.fromTo("#cap23-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 60.224);
+    tl.fromTo("#cap23-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 60.628);
+    tl.fromTo("#cap23-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 60.836);
+    tl.fromTo("#cap23-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 61.318);
+    tl.fromTo("#cap23-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 61.891);
+    tl.fromTo("#cap23-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 62.503);
+    tl.fromTo("#cap24-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 64.039);
+    tl.fromTo("#cap24-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 64.768);
+    tl.fromTo("#cap24-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 64.99);
+    tl.fromTo("#cap24-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 65.484);
+    tl.fromTo("#cap24-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 66.109);
+    tl.fromTo("#cap25-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 66.279);
+    tl.fromTo("#cap25-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 66.878);
+    tl.fromTo("#cap25-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 67.06);
+    tl.fromTo("#cap25-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 67.386);
+    tl.fromTo("#cap26-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 68.987);
+    tl.fromTo("#cap26-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 69.69);
+    tl.fromTo("#cap26-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 70.172);
+    tl.fromTo("#cap26-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 70.628);
+    tl.fromTo("#cap26-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 71.162);
+    tl.fromTo("#cap26-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 71.982);
+    tl.fromTo("#cap27-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 72.555);
+    tl.fromTo("#cap27-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 73.011);
+    tl.fromTo("#cap27-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 73.492);
+    tl.fromTo("#cap27-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 74.013);
+    tl.fromTo("#cap27-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 74.521);
+    tl.fromTo("#cap27-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 74.977);
+    tl.fromTo("#cap27-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 75.159);
+    tl.fromTo("#cap28-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 78.038);
+    tl.fromTo("#cap28-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 78.78);
+    tl.fromTo("#cap29-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 80.644);
+    tl.fromTo("#cap29-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 81.139);
+    tl.fromTo("#cap29-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 81.634);
+    tl.fromTo("#cap29-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 82.194);
+    tl.fromTo("#cap30-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 82.337);
+    tl.fromTo("#cap30-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 82.728);
+    tl.fromTo("#cap30-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 82.897);
+    tl.fromTo("#cap30-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 83.183);
+    tl.fromTo("#cap31-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 84.017);
+    tl.fromTo("#cap31-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 84.355);
+    tl.fromTo("#cap31-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 84.824);
+    tl.fromTo("#cap31-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 85.423);
+    tl.fromTo("#cap31-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 86.23);
+    tl.fromTo("#cap31-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 86.634);
+    tl.fromTo("#cap31-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 86.999);
+    tl.fromTo("#cap32-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 88.431);
+    tl.fromTo("#cap32-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 89.134);
+    tl.fromTo("#cap32-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 89.329);
+    tl.fromTo("#cap32-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 89.811);
+    tl.fromTo("#cap32-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 90.345);
+    tl.fromTo("#cap32-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 90.827);
+    tl.fromTo("#cap33-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 91.803);
+    tl.fromTo("#cap33-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 92.48);
+    tl.fromTo("#cap33-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 92.806);
+    tl.fromTo("#cap34-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 93.561);
+    tl.fromTo("#cap34-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 94.199);
+    tl.fromTo("#cap34-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 94.616);
+    tl.fromTo("#cap35-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 95.436);
+    tl.fromTo("#cap35-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 95.983);
+    tl.fromTo("#cap35-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 96.504);
+    tl.fromTo("#cap35-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 97.012);
+    tl.fromTo("#cap35-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 97.663);
+    tl.fromTo("#cap36-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 99.043);
+    tl.fromTo("#cap36-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 99.694);
+    tl.fromTo("#cap36-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 99.863);
+    tl.fromTo("#cap36-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 100.189);
+    tl.fromTo("#cap36-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 100.67);
+    tl.fromTo("#cap37-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 101.595);
+    tl.fromTo("#cap37-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 101.933);
+    tl.fromTo("#cap37-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 102.246);
+    tl.fromTo("#cap37-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 102.728);
+    tl.fromTo("#cap38-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 104.368);
+    tl.fromTo("#cap38-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 104.668);
+    tl.fromTo("#cap38-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 105.254);
+    tl.fromTo("#cap39-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 106.061);
+    tl.fromTo("#cap39-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 106.699);
+    tl.fromTo("#cap40-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 108.314);
+    tl.fromTo("#cap40-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 108.861);
+    tl.fromTo("#cap40-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 109.394);
+    tl.fromTo("#cap41-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 110.436);
+    tl.fromTo("#cap41-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 110.996);
+    tl.fromTo("#cap41-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 111.517);
+    tl.fromTo("#cap41-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 112.077);
+    tl.fromTo("#cap42-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 112.597);
+    tl.fromTo("#cap42-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 113.079);
+    tl.fromTo("#cap42-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 113.509);
+    tl.fromTo("#cap42-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 113.991);
+    tl.fromTo("#cap43-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 114.98);
+    tl.fromTo("#cap43-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 115.176);
+    tl.fromTo("#cap43-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 115.918);
+    tl.fromTo("#cap44-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 118.674);
+    tl.fromTo("#cap44-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 118.895);
+    tl.fromTo("#cap45-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 119.781);
+    tl.fromTo("#cap45-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 120.458);
+    tl.fromTo("#cap45-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 120.966);
+    tl.fromTo("#cap45-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 121.122);
+    tl.fromTo("#cap46-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 122.83);
+    tl.fromTo("#cap46-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 123.025);
+    tl.fromTo("#cap46-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 123.468);
+    tl.fromTo("#cap46-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 124.262);
+    tl.fromTo("#cap46-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 124.457);
+    tl.fromTo("#cap46-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 124.913);
+    tl.fromTo("#cap47-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 125.564);
+    tl.fromTo("#cap47-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 126.176);
+    tl.fromTo("#cap47-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 126.606);
+    tl.fromTo("#cap47-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 126.736);
+    tl.fromTo("#cap47-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 127.023);
+    tl.fromTo("#cap47-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 127.491);
+    tl.fromTo("#cap48-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 128.22);
+    tl.fromTo("#cap48-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 128.937);
+    tl.fromTo("#cap48-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 129.171);
+    tl.fromTo("#cap48-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 129.47);
+    tl.fromTo("#cap48-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 129.874);
+    tl.fromTo("#cap48-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 130.408);
+    tl.fromTo("#cap49-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 132.023);
+    tl.fromTo("#cap49-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 132.713);
+    tl.fromTo("#cap49-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 132.921);
+    tl.fromTo("#cap49-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 133.663);
+    tl.fromTo("#cap49-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 134.028);
+    tl.fromTo("#cap50-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 135.135);
+    tl.fromTo("#cap50-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 135.877);
+    tl.fromTo("#cap50-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 136.176);
+    tl.fromTo("#cap51-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 136.957);
+    tl.fromTo("#cap51-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 137.817);
+    tl.fromTo("#cap51-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 138.246);
+    tl.fromTo("#cap51-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 138.585);
+    tl.fromTo("#cap51-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 139.145);
+    tl.fromTo("#cap51-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 139.236);
+    tl.fromTo("#cap52-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 140.76);
+    tl.fromTo("#cap52-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 141.202);
+    tl.fromTo("#cap52-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 141.358);
+    tl.fromTo("#cap52-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 142.075);
+    tl.fromTo("#cap52-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 142.361);
+    tl.fromTo("#cap52-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 143.09);
+    tl.fromTo("#cap53-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 143.702);
+    tl.fromTo("#cap53-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 144.392);
+    tl.fromTo("#cap53-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 144.483);
+    tl.fromTo("#cap53-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 144.913);
+    tl.fromTo("#cap53-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 145.187);
+    tl.fromTo("#cap53-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 145.76);
+    tl.fromTo("#cap54-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 146.567);
+    tl.fromTo("#cap54-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 147.426);
+    tl.fromTo("#cap55-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 149.132);
+    tl.fromTo("#cap55-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 149.353);
+    tl.fromTo("#cap55-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 149.822);
+    tl.fromTo("#cap55-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 150.278);
+    tl.fromTo("#cap55-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 150.629);
+    tl.fromTo("#cap56-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 151.58);
+    tl.fromTo("#cap56-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 151.762);
+    tl.fromTo("#cap56-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 152.205);
+    tl.fromTo("#cap56-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 152.648);
+    tl.fromTo("#cap56-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 152.843);
+    tl.fromTo("#cap56-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 153.39);
+    tl.fromTo("#cap57-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 156.358);
+    tl.fromTo("#cap57-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 156.892);
+    tl.fromTo("#cap58-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 157.647);
+    tl.fromTo("#cap58-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 158.246);
+    tl.fromTo("#cap58-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 158.376);
+    tl.fromTo("#cap58-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 159.027);
+    tl.fromTo("#cap58-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 159.496);
+    tl.fromTo("#cap59-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 161.126);
+    tl.fromTo("#cap59-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 161.582);
+    tl.fromTo("#cap59-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 161.868);
+    tl.fromTo("#cap59-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 162.337);
+    tl.fromTo("#cap59-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 162.975);
+    tl.fromTo("#cap59-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 163.17);
+    tl.fromTo("#cap60-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 164.147);
+    tl.fromTo("#cap60-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 164.746);
+    tl.fromTo("#cap60-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 165.227);
+    tl.fromTo("#cap60-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 165.996);
+    tl.fromTo("#cap61-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 167.871);
+    tl.fromTo("#cap61-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 168.404);
+    tl.fromTo("#cap61-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 168.652);
+    tl.fromTo("#cap61-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 169.225);
+    tl.fromTo("#cap61-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 169.915);
+    tl.fromTo("#cap62-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 170.683);
+    tl.fromTo("#cap62-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 171.36);
+    tl.fromTo("#cap62-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 171.868);
+    tl.fromTo("#cap62-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 172.428);
+    tl.fromTo("#cap62-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 172.897);
+    tl.fromTo("#cap62-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 173.3);
+    tl.fromTo("#cap62-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 173.821);
+    tl.fromTo("#cap63-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 174.485);
+    tl.fromTo("#cap63-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 174.915);
+    tl.fromTo("#cap63-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 175.449);
+    tl.fromTo("#cap64-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 177.154);
+    tl.fromTo("#cap64-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 177.884);
+    tl.fromTo("#cap64-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 178.105);
+    tl.fromTo("#cap64-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 178.509);
+    tl.fromTo("#cap64-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 178.756);
+    tl.fromTo("#cap64-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 179.563);
+    tl.fromTo("#cap65-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 180.944);
+    tl.fromTo("#cap65-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 181.477);
+    tl.fromTo("#cap65-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 181.933);
+    tl.fromTo("#cap65-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 182.506);
+    tl.fromTo("#cap65-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 183.053);
+    tl.fromTo("#cap66-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 183.73);
+    tl.fromTo("#cap66-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 184.055);
+    tl.fromTo("#cap66-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 184.251);
+    tl.fromTo("#cap67-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 185.839);
+    tl.fromTo("#cap67-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 186.165);
+    tl.fromTo("#cap67-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 186.529);
+    tl.fromTo("#cap67-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 186.842);
+    tl.fromTo("#cap67-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 187.493);
+    tl.fromTo("#cap67-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 187.584);
+    tl.fromTo("#cap68-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 188.6);
+    tl.fromTo("#cap68-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 188.847);
+    tl.fromTo("#cap68-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 189.446);
+    tl.fromTo("#cap69-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 192.53);
+    tl.fromTo("#cap69-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 193.129);
+    tl.fromTo("#cap69-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 193.533);
+    tl.fromTo("#cap69-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 194.223);
+    tl.fromTo("#cap69-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 194.705);
+    tl.fromTo("#cap70-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 195.434);
+    tl.fromTo("#cap70-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 196.254);
+    tl.fromTo("#cap70-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 196.619);
+    tl.fromTo("#cap71-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 198.04);
+    tl.fromTo("#cap71-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 198.496);
+    tl.fromTo("#cap71-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 198.639);
+    tl.fromTo("#cap71-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 199.199);
+    tl.fromTo("#cap72-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 200.11);
+    tl.fromTo("#cap72-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 200.462);
+    tl.fromTo("#cap72-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 200.631);
+    tl.fromTo("#cap72-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 201.178);
+    tl.fromTo("#cap72-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 201.504);
+    tl.fromTo("#cap73-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 202.597);
+    tl.fromTo("#cap74-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 203.678);
+    tl.fromTo("#cap74-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 204.277);
+    tl.fromTo("#cap75-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 204.98);
+    tl.fromTo("#cap75-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 205.657);
+    tl.fromTo("#cap76-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 207.324);
+    tl.fromTo("#cap76-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 207.988);
+    tl.fromTo("#cap76-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 208.3);
+    tl.fromTo("#cap76-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 208.587);
+    tl.fromTo("#cap76-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 208.86);
+    tl.fromTo("#cap77-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 209.707);
+    tl.fromTo("#cap77-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 210.54);
+    tl.fromTo("#cap78-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 211.334);
+    tl.fromTo("#cap78-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 211.777);
+    tl.fromTo("#cap78-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 212.48);
+    tl.fromTo("#cap78-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 212.78);
+    tl.fromTo("#cap79-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 214.446);
+    tl.fromTo("#cap79-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 215.436);
+    tl.fromTo("#cap80-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 216.308);
+    tl.fromTo("#cap80-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 216.634);
+    tl.fromTo("#cap80-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 217.233);
+    tl.fromTo("#cap80-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 217.61);
+    tl.fromTo("#cap81-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 219.212);
+    tl.fromTo("#cap81-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 219.733);
+    tl.fromTo("#cap81-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 220.201);
+    tl.fromTo("#cap81-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 220.879);
+    tl.fromTo("#cap81-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 221.556);
+    tl.fromTo("#cap81-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 221.738);
+    tl.fromTo("#cap81-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 222.181);
+    tl.fromTo("#cap82-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 222.936);
+    tl.fromTo("#cap82-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 223.535);
+    tl.fromTo("#cap82-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 224.147);
+    tl.fromTo("#cap82-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 224.615);
+    tl.fromTo("#cap82-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 224.759);
+    tl.fromTo("#cap82-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 225.188);
+    tl.fromTo("#cap82-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 225.345);
+    tl.fromTo("#cap83-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 228.438);
+    tl.fromTo("#cap83-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 228.933);
+    tl.fromTo("#cap84-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 229.623);
+    tl.fromTo("#cap84-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 230.144);
+    tl.fromTo("#cap84-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 230.743);
+    tl.fromTo("#cap85-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 232.268);
+    tl.fromTo("#cap85-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 232.971);
+    tl.fromTo("#cap85-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 233.284);
+    tl.fromTo("#cap85-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 233.831);
+    tl.fromTo("#cap85-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 234.378);
+    tl.fromTo("#cap85-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 234.573);
+    tl.fromTo("#cap86-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 235.016);
+    tl.fromTo("#cap86-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 235.511);
+    tl.fromTo("#cap86-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 235.979);
+    tl.fromTo("#cap86-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 236.136);
+    tl.fromTo("#cap86-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 236.578);
+    tl.fromTo("#cap86-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 236.956);
+    tl.fromTo("#cap87-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 237.88);
+    tl.fromTo("#cap87-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 238.492);
+    tl.fromTo("#cap87-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 239.352);
+    tl.fromTo("#cap87-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 239.547);
+    tl.fromTo("#cap88-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 241.305);
+    tl.fromTo("#cap88-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 241.826);
+    tl.fromTo("#cap88-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 242.333);
+    tl.fromTo("#cap88-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 243.102);
+    tl.fromTo("#cap88-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 243.362);
+    tl.fromTo("#cap89-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 244.117);
+    tl.fromTo("#cap89-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 244.664);
+    tl.fromTo("#cap89-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 244.833);
+    tl.fromTo("#cap89-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 245.419);
+    tl.fromTo("#cap89-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 245.966);
+    tl.fromTo("#cap89-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 246.227);
+    tl.fromTo("#cap89-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 246.63);
+    tl.fromTo("#cap90-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 248.141);
+    tl.fromTo("#cap90-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 249.013);
+    tl.fromTo("#cap90-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 249.456);
+    tl.fromTo("#cap91-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 251.109);
+    tl.fromTo("#cap91-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 251.852);
+    tl.fromTo("#cap91-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 252.372);
+    tl.fromTo("#cap91-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 252.75);
+    tl.fromTo("#cap91-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 253.245);
+    tl.fromTo("#cap91-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 253.74);
+    tl.fromTo("#cap92-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 254.456);
+    tl.fromTo("#cap92-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 255.12);
+    tl.fromTo("#cap92-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 255.706);
+    tl.fromTo("#cap92-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 256.305);
+    tl.fromTo("#cap93-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 259.402);
+    tl.fromTo("#cap93-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 260.17);
+    tl.fromTo("#cap93-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 260.47);
+    tl.fromTo("#cap93-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 260.991);
+    tl.fromTo("#cap93-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 261.524);
+    tl.fromTo("#cap93-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 261.785);
+    tl.fromTo("#cap93-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 261.993);
+    tl.fromTo("#cap94-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 262.84);
+    tl.fromTo("#cap94-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 263.426);
+    tl.fromTo("#cap94-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 263.764);
+    tl.fromTo("#cap94-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 264.142);
+    tl.fromTo("#cap94-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 264.48);
+    tl.fromTo("#cap95-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 266.071);
+    tl.fromTo("#cap95-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 266.969);
+    tl.fromTo("#cap95-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 267.126);
+    tl.fromTo("#cap95-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 267.555);
+    tl.fromTo("#cap96-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 268.467);
+    tl.fromTo("#cap96-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 269.079);
+    tl.fromTo("#cap96-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 269.378);
+    tl.fromTo("#cap96-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 269.938);
+    tl.fromTo("#cap96-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 270.407);
+    tl.fromTo("#cap96-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 270.889);
+    tl.fromTo("#cap97-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 271.865);
+    tl.fromTo("#cap97-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 272.412);
+    tl.fromTo("#cap97-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 272.751);
+    tl.fromTo("#cap98-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 274.196);
+    tl.fromTo("#cap98-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 274.521);
+    tl.fromTo("#cap98-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 275.12);
+    tl.fromTo("#cap98-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 275.303);
+    tl.fromTo("#cap98-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 275.889);
+    tl.fromTo("#cap99-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 276.37);
+    tl.fromTo("#cap99-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 276.722);
+    tl.fromTo("#cap99-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 277.295);
+    tl.fromTo("#cap99-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 277.555);
+    tl.fromTo("#cap99-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 277.79);
+    tl.fromTo("#cap100-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 279.209);
+    tl.fromTo("#cap100-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 279.704);
+    tl.fromTo("#cap100-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 279.912);
+    tl.fromTo("#cap100-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 280.146);
+    tl.fromTo("#cap100-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 280.654);
+    tl.fromTo("#cap100-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 281.175);
+    tl.fromTo("#cap101-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 282.06);
+    tl.fromTo("#cap101-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 282.698);
+    tl.fromTo("#cap101-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 283.389);
+    tl.fromTo("#cap102-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 284.99);
+    tl.fromTo("#cap103-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 286.097);
+    tl.fromTo("#cap103-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 286.292);
+    tl.fromTo("#cap103-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 286.917);
+    tl.fromTo("#cap103-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 287.829);
+    tl.fromTo("#cap104-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 288.701);
+    tl.fromTo("#cap104-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 289.04);
+    tl.fromTo("#cap104-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 290.016);
+    tl.fromTo("#cap105-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 293.222);
+    tl.fromTo("#cap105-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 293.899);
+    tl.fromTo("#cap106-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 294.733);
+    tl.fromTo("#cap106-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 295.436);
+    tl.fromTo("#cap107-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 296.49);
+    tl.fromTo("#cap107-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 296.972);
+    tl.fromTo("#cap108-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 298.68);
+    tl.fromTo("#cap108-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 299.149);
+    tl.fromTo("#cap108-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 299.539);
+    tl.fromTo("#cap108-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 300.073);
+    tl.fromTo("#cap109-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 300.92);
+    tl.fromTo("#cap109-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 301.466);
+    tl.fromTo("#cap109-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 301.922);
+    tl.fromTo("#cap110-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 302.795);
+    tl.fromTo("#cap110-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 303.602);
+    tl.fromTo("#cap110-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 304.214);
+    tl.fromTo("#cap110-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 304.643);
+    tl.fromTo("#cap110-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 305.073);
+    tl.fromTo("#cap110-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 305.516);
+    tl.fromTo("#cap110-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 305.685);
+    tl.fromTo("#cap111-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 307.156);
+    tl.fromTo("#cap111-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 307.755);
+    tl.fromTo("#cap111-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 308.029);
+    tl.fromTo("#cap111-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 308.433);
+    tl.fromTo("#cap111-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 308.875);
+    tl.fromTo("#cap111-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 309.8);
+    tl.fromTo("#cap112-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 310.633);
+    tl.fromTo("#cap112-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 311.466);
+    tl.fromTo("#cap112-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 312.104);
+    tl.fromTo("#cap112-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 312.795);
+    tl.fromTo("#cap112-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 313.302);
+    tl.fromTo("#cap112-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 313.836);
+    tl.fromTo("#cap112-w7", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 314.344);
+    tl.fromTo("#cap113-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 315.75);
+    tl.fromTo("#cap113-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 316.232);
+    tl.fromTo("#cap113-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 316.401);
+    tl.fromTo("#cap113-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 316.805);
+    tl.fromTo("#cap113-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 317.495);
+    tl.fromTo("#cap114-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 318.276);
+    tl.fromTo("#cap114-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 318.55);
+    tl.fromTo("#cap114-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 318.706);
+    tl.fromTo("#cap114-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 319.149);
+    tl.fromTo("#cap114-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 319.565);
+    tl.fromTo("#cap114-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 320.164);
+    tl.fromTo("#cap115-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 321.375);
+    tl.fromTo("#cap115-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 321.883);
+    tl.fromTo("#cap115-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 322.378);
+    tl.fromTo("#cap115-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 323.003);
+    tl.fromTo("#cap115-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 323.42);
+    tl.fromTo("#cap115-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 323.797);
+    tl.fromTo("#cap116-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 324.552);
+    tl.fromTo("#cap116-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 325.19);
+    tl.fromTo("#cap116-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 325.36);
+    tl.fromTo("#cap116-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 325.802);
+    tl.fromTo("#cap116-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 326.05);
+    tl.fromTo("#cap116-w6", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 326.531);
+    tl.fromTo("#cap117-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 327.742);
+    tl.fromTo("#cap117-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 328.367);
+    tl.fromTo("#cap117-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 328.745);
+    tl.fromTo("#cap117-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 329.292);
+    tl.fromTo("#cap117-w5", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 329.63);
+    tl.fromTo("#cap118-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 332.586);
+    tl.fromTo("#cap118-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 333.146);
+    tl.fromTo("#cap118-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 333.328);
+    tl.fromTo("#cap118-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 333.862);
+    tl.fromTo("#cap119-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 334.813);
+    tl.fromTo("#cap119-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 335.503);
+    tl.fromTo("#cap119-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 335.945);
+    tl.fromTo("#cap120-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 337.117);
+    tl.fromTo("#cap120-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 337.964);
+    tl.fromTo("#cap121-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 338.784);
+    tl.fromTo("#cap121-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 339.617);
+    tl.fromTo("#cap122-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 340.32);
+    tl.fromTo("#cap122-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 341.05);
+    tl.fromTo("#cap123-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 342.0);
+    tl.fromTo("#cap123-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 342.846);
+    tl.fromTo("#cap123-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 343.068);
+    tl.fromTo("#cap124-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 343.901);
+    tl.fromTo("#cap124-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 344.435);
+    tl.fromTo("#cap124-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 345.008);
+    tl.fromTo("#cap124-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 345.164);
+    tl.fromTo("#cap125-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 346.794);
+    tl.fromTo("#cap125-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 347.159);
+    tl.fromTo("#cap125-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 347.588);
+    tl.fromTo("#cap125-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 348.057);
+    tl.fromTo("#cap126-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 349.099);
+    tl.fromTo("#cap126-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 349.971);
+    tl.fromTo("#cap126-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 350.713);
+    tl.fromTo("#cap126-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 350.869);
+    tl.fromTo("#cap127-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 352.601);
+    tl.fromTo("#cap127-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 353.161);
+    tl.fromTo("#cap127-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 353.76);
+    tl.fromTo("#cap128-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 354.437);
+    tl.fromTo("#cap128-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 354.737);
+    tl.fromTo("#cap128-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 354.88);
+    tl.fromTo("#cap128-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 355.752);
+    tl.fromTo("#cap129-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 356.39);
+    tl.fromTo("#cap129-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 356.807);
+    tl.fromTo("#cap129-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 357.38);
+    tl.fromTo("#cap129-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 357.823);
+    tl.fromTo("#cap130-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 359.724);
+    tl.fromTo("#cap130-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 360.153);
+    tl.fromTo("#cap130-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 360.31);
+    tl.fromTo("#cap130-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 360.401);
+    tl.fromTo("#cap131-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 362.445);
+    tl.fromTo("#cap131-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 362.901);
+    tl.fromTo("#cap131-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 363.526);
+    tl.fromTo("#cap132-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 364.489);
+    tl.fromTo("#cap132-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 365.101);
+    tl.fromTo("#cap132-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 365.661);
+    tl.fromTo("#cap133-w1", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 366.494);
+    tl.fromTo("#cap133-w2", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 367.276);
+    tl.fromTo("#cap133-w3", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 367.367);
+    tl.fromTo("#cap133-w4", { color: "#ffffff" }, { color: "#ffd27a", duration: 0.1, ease: "none" }, 367.914);
+    window.__timelines["captions"] = tl;
+  </script>
+</template>

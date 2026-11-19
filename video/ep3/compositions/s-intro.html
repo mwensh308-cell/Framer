@@ -1,0 +1,43 @@
+<template>
+  <style>
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-latin-700-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-latin-900-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0a0618; }
+    .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
+
+  </style>
+  <div id="root" data-composition-id="s-intro" data-width="1920" data-height="1080">
+    <div id="s-intro-shot1" class="clip shot" data-start="0.0" data-duration="5.293" data-track-index="0" style="z-index:1"><div id="s-intro-shot1-in" class="in"><img id="s-intro-shot1-img" src="assets/img/Vice_City_05.jpg" alt=""></div></div>
+    <div id="s-intro-shot2" class="clip shot" data-start="4.793" data-duration="5.794" data-track-index="0" style="z-index:2"><div id="s-intro-shot2-in" class="in"><img id="s-intro-shot2-img" src="assets/img/Leonida_Keys_02.jpg" alt=""></div></div>
+    <div id="s-intro-shot3" class="clip shot" data-start="10.087" data-duration="5.793" data-track-index="0" style="z-index:3"><div id="s-intro-shot3-in" class="in"><img id="s-intro-shot3-img" src="assets/img/Jason_and_Lucia_17.jpg" alt=""></div></div>
+    <div id="s-intro-shot4" class="clip shot" data-start="15.38" data-duration="5.793" data-track-index="0" style="z-index:4"><div id="s-intro-shot4-in" class="in"><img id="s-intro-shot4-bg" src="assets/img/Jason_and_Lucia_15.jpg" alt=""><img id="s-intro-shot4-fg" src="assets/cut/Jason_and_Lucia_15.webp" alt=""></div></div>
+    <div id="s-intro-shot5" class="clip shot" data-start="20.673" data-duration="5.794" data-track-index="0" style="z-index:5"><div id="s-intro-shot5-in" class="in"><img id="s-intro-shot5-img" src="assets/img/Jason_and_Lucia_19.jpg" alt=""></div></div>
+    <div id="s-intro-shot6" class="clip shot" data-start="25.967" data-duration="5.793" data-track-index="0" style="z-index:6"><div id="s-intro-shot6-in" class="in"><img id="s-intro-shot6-img" src="assets/img/Jason_and_Lucia_14.jpg" alt=""></div></div>
+    <div id="s-intro-shade" class="clip shade" data-start="0" data-duration="31.76" data-track-index="1" style="z-index:40"></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s-intro-shot1-img", { scale: 1.02, x: -24 }, { scale: 1.11, x: 24, duration: 5.293, ease: "none" }, 0.0);
+    tl.fromTo("#s-intro-shot2-in", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 4.793);
+    tl.fromTo("#s-intro-shot2-img", { scale: 1.02, x: 24 }, { scale: 1.11, x: -24, duration: 5.794, ease: "none" }, 4.793);
+    tl.fromTo("#s-intro-shot3-in", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 10.087);
+    tl.fromTo("#s-intro-shot3-img", { scale: 1.02, x: -24 }, { scale: 1.11, x: 24, duration: 5.793, ease: "none" }, 10.087);
+    tl.fromTo("#s-intro-shot4-in", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 15.38);
+    tl.fromTo("#s-intro-shot4-bg", { scale: 1.03, x: 14 }, { scale: 1.07, x: -14, duration: 5.793, ease: "none", transformOrigin: "50% 55%" }, 15.38);
+    tl.fromTo("#s-intro-shot4-fg", { scale: 1.04, x: 30, y: 6 }, { scale: 1.16, x: -34, y: -6, duration: 5.793, ease: "none", transformOrigin: "50% 60%" }, 15.38);
+    tl.fromTo("#s-intro-shot5-in", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 20.673);
+    tl.fromTo("#s-intro-shot5-img", { scale: 1.02, x: -24 }, { scale: 1.11, x: 24, duration: 5.794, ease: "none" }, 20.673);
+    tl.fromTo("#s-intro-shot6-in", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 25.967);
+    tl.fromTo("#s-intro-shot6-img", { scale: 1.02, x: 24 }, { scale: 1.11, x: -24, duration: 5.793, ease: "none" }, 25.967);
+    window.__timelines["s-intro"] = tl;
+  </script>
+</template>

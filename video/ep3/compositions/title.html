@@ -1,0 +1,45 @@
+<template>
+  <style>
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-latin-700-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-latin-900-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0a0618; }
+    .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
+
+    .t-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; direction: rtl; text-align: center; z-index: 60; }
+    #title-series { font: 700 36px/1.3 "Cairo", sans-serif; color: #46e0ff; }
+    #title-main { font: 900 168px/1.15 "Cairo", sans-serif; color: #fff; text-shadow: 0 0 30px rgba(255,61,139,.75), 0 6px 40px rgba(0,0,0,.6); }
+    #title-en { font: 400 42px/1.2 "Archivo Black", sans-serif; color: #ffd27a; letter-spacing: .18em; direction: ltr; }
+    #title-ep { display: inline-block; margin-top: 18px; font: 900 44px/1.3 "Cairo", sans-serif; color: #0a0618; background: #ffd27a; padding: 2px 28px; }
+    #title-dim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,6,24,.55), rgba(10,6,24,.75)); z-index: 50; }
+
+  </style>
+  <div id="root" data-composition-id="title" data-width="1920" data-height="1080">
+    <div id="title-shot" class="clip shot" data-start="0" data-duration="4.6" data-track-index="0"><div id="title-in" class="in"><img id="title-img" src="assets/img/Jason_Lucia_Rooftop_landscape.jpg" alt=""></div></div>
+    <div id="title-dim" class="clip" data-start="0" data-duration="4.6" data-track-index="1"></div>
+    <div id="title-wrap" class="clip t-wrap" data-start="0" data-duration="4.6" data-track-index="2">
+      <div id="title-series">سلسلة GTA 6 بالسعودي</div>
+      <div id="title-main">وجيه ليونيدا</div>
+      <div id="title-en">THE PEOPLE OF LEONIDA</div>
+      <div><span id="title-ep">الحلقة 3</span></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#title-img", { scale: 1.18 }, { scale: 1.04, duration: 4.6, ease: "power2.out" }, 0);
+    tl.fromTo("#title-series", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3);
+    tl.fromTo("#title-main", { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power4.out" }, 0.7);
+    tl.fromTo("#title-en", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.3);
+    tl.fromTo("#title-ep", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 2.0);
+    tl.fromTo("#title-wrap", { scale: 1 }, { scale: 1.06, duration: 0.25, ease: "power2.out", yoyo: true, repeat: 1 }, 3.55);
+    window.__timelines["title"] = tl;
+  </script>
+</template>

@@ -1,0 +1,60 @@
+<template>
+  <style>
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 700; src: url("assets/fonts/cairo-latin-700-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+      unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+    @font-face { font-family: "Cairo"; font-weight: 900; src: url("assets/fonts/cairo-latin-900-normal.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+2000-206F; }
+
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    .shot, .shot .in { position: absolute; inset: 0; overflow: hidden; }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(10,6,24,0) 55%, rgba(10,6,24,.55) 100%); }
+
+    .hud { position: absolute; right: 110px; top: 70px; direction: rtl; text-align: right; z-index: 5; }
+    #hud-badge { font: 700 28px/1.3 "Cairo", sans-serif; color: #fff; background: rgba(10,6,24,.7); padding: 4px 18px; border-right: 6px solid #ff3d8b; display: inline-block; }
+    .chap { position: absolute; right: 110px; top: 128px; font: 900 34px/1.4 "Cairo", sans-serif; color: #ffd27a; direction: rtl; background: rgba(10,6,24,.78); padding: 0 16px; z-index: 5; }
+    .dots { position: absolute; right: 110px; top: 196px; display: flex; gap: 10px; direction: rtl; z-index: 5; }
+    .dot { width: 34px; height: 8px; background: rgba(255,255,255,.28); }
+    .dot i { display: block; width: 100%; height: 100%; background: #ff3d8b; transform-origin: 100% 50%; }
+
+  </style>
+  <div id="root" data-composition-id="hud" data-width="1920" data-height="1080">
+    <div id="hud-top" class="clip hud" data-start="4.6" data-duration="327.184" data-track-index="0"><span id="hud-badge">GTA 6 بالسعودي · الحلقة 3</span></div>
+    <div id="hud-dots" class="clip dots" data-start="4.6" data-duration="327.184" data-track-index="2"><div class="dot"><i id="hud-d1"></i></div><div class="dot"><i id="hud-d2"></i></div><div class="dot"><i id="hud-d3"></i></div><div class="dot"><i id="hud-d4"></i></div><div class="dot"><i id="hud-d5"></i></div><div class="dot"><i id="hud-d6"></i></div><div class="dot"><i id="hud-d7"></i></div><div class="dot"><i id="hud-d8"></i></div></div>
+    <div id="hud-ch-intro" class="clip chap" data-start="5.0" data-duration="31.36" data-track-index="1">المقدمة</div>
+    <div id="hud-ch-jason" class="clip chap" data-start="36.76" data-duration="40.476" data-track-index="1">جايسون دوفال</div>
+    <div id="hud-ch-lucia" class="clip chap" data-start="77.636" data-duration="40.236" data-track-index="1">لوسيا كامينوس</div>
+    <div id="hud-ch-cal" class="clip chap" data-start="118.272" data-duration="37.284" data-track-index="1">كال هامبتون</div>
+    <div id="hud-ch-brian" class="clip chap" data-start="155.956" data-duration="35.772" data-track-index="1">براين هيدر</div>
+    <div id="hud-ch-boobie" class="clip chap" data-start="192.128" data-duration="35.508" data-track-index="1">بوبي آيك</div>
+    <div id="hud-ch-drequan" class="clip chap" data-start="228.036" data-duration="30.564" data-track-index="1">دريكوان بريست</div>
+    <div id="hud-ch-dimez" class="clip chap" data-start="259.0" data-duration="33.42" data-track-index="1">ريل دايمز</div>
+    <div id="hud-ch-raul" class="clip chap" data-start="292.82" data-duration="38.964" data-track-index="1">راؤول باوتيستا</div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#hud-badge", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 4.8);
+    tl.fromTo("#hud-d1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 37.06);
+    tl.fromTo("#hud-d2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 77.936);
+    tl.fromTo("#hud-d3", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 118.572);
+    tl.fromTo("#hud-d4", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 156.256);
+    tl.fromTo("#hud-d5", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 192.428);
+    tl.fromTo("#hud-d6", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 228.336);
+    tl.fromTo("#hud-d7", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 259.3);
+    tl.fromTo("#hud-d8", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 293.12);
+    tl.fromTo("#hud-ch-intro", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 5.0);
+    tl.fromTo("#hud-ch-jason", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 36.76);
+    tl.fromTo("#hud-ch-lucia", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 77.636);
+    tl.fromTo("#hud-ch-cal", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 118.272);
+    tl.fromTo("#hud-ch-brian", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 155.956);
+    tl.fromTo("#hud-ch-boobie", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 192.128);
+    tl.fromTo("#hud-ch-drequan", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 228.036);
+    tl.fromTo("#hud-ch-dimez", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 259.0);
+    tl.fromTo("#hud-ch-raul", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, 292.82);
+    window.__timelines["hud"] = tl;
+  </script>
+</template>
