@@ -1,0 +1,62 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Archivo Black", sans-serif; }
+    #coast-sky { position: absolute; inset: 0; background: linear-gradient(180deg, #2a0b4a 0%, #7a1f6b 38%, #ff5e7e 62%, #ffb347 78%, #ffd27a 100%); }
+    #coast-sun { position: absolute; left: 760px; top: 300px; width: 400px; height: 400px; border-radius: 50%;
+      background: repeating-linear-gradient(180deg, #ffe08a 0 26px, transparent 26px 34px), linear-gradient(180deg, #fff1a8, #ff7a59);
+      -webkit-mask: linear-gradient(180deg, #000 0 55%, transparent 55%), repeating-linear-gradient(180deg, #000 0 24px, transparent 24px 34px);
+      -webkit-mask-composite: source-over; }
+    #coast-sea { position: absolute; left: 0; right: 0; top: 640px; bottom: 0; background: linear-gradient(180deg, #3b1259, #130726); }
+    .coast-glint { position: absolute; left: 50%; height: 4px; border-radius: 4px; background: #ffb38a; opacity: .7; }
+    #coast-palms { position: absolute; inset: 0; }
+    #coast-kicker { position: absolute; left: 0; right: 0; top: 150px; text-align: center; color: #fff; font-size: 34px; letter-spacing: .5em; }
+    #coast-line { position: absolute; left: 0; right: 0; top: 760px; text-align: center; color: #fff; font-size: 120px; letter-spacing: -.02em; text-shadow: 0 8px 40px rgba(0,0,0,.45); }
+  </style>
+  <div id="root" data-composition-id="coast" data-width="1920" data-height="1080">
+    <div id="coast-sky" class="clip" data-start="0" data-duration="5.2"></div>
+    <div id="coast-sun" class="clip" data-start="0" data-duration="5.2"></div>
+    <div id="coast-sea" class="clip" data-start="0" data-duration="5.2">
+      <div class="coast-glint" style="top:30px;width:420px;margin-left:-210px"></div>
+      <div class="coast-glint" style="top:70px;width:320px;margin-left:-160px"></div>
+      <div class="coast-glint" style="top:115px;width:220px;margin-left:-110px"></div>
+      <div class="coast-glint" style="top:170px;width:140px;margin-left:-70px"></div>
+    </div>
+    <svg id="coast-palms" class="clip" data-layout-allow-overflow data-start="0" data-duration="5.2" viewBox="0 0 1920 1080">
+      <g id="coast-palm-l" fill="#12051f">
+        <path d="M250 1080 C 262 900 280 720 330 540 L 346 544 C 300 720 286 900 284 1080 Z"/>
+        <path d="M338 540 C 250 470 140 480 60 540 C 160 500 250 505 338 552 Z"/>
+        <path d="M338 540 C 300 430 210 380 120 390 C 220 410 290 460 330 552 Z"/>
+        <path d="M338 540 C 400 440 500 420 590 450 C 490 450 410 490 346 552 Z"/>
+        <path d="M338 540 C 430 500 540 520 610 590 C 530 545 430 540 346 552 Z"/>
+        <path d="M338 540 C 340 440 380 370 440 330 C 400 390 370 450 350 548 Z"/>
+      </g>
+      <g id="coast-palm-r" fill="#12051f">
+        <path d="M1690 1080 C 1680 920 1660 780 1610 640 L 1596 646 C 1640 780 1656 920 1660 1080 Z"/>
+        <path d="M1602 640 C 1690 580 1800 590 1880 650 C 1780 610 1690 615 1602 652 Z"/>
+        <path d="M1602 640 C 1640 540 1730 500 1820 510 C 1720 530 1650 570 1610 652 Z"/>
+        <path d="M1602 640 C 1540 550 1440 530 1350 560 C 1450 560 1530 600 1594 652 Z"/>
+        <path d="M1602 640 C 1510 610 1400 630 1330 700 C 1410 655 1510 650 1594 652 Z"/>
+      </g>
+    </svg>
+    <div id="coast-kicker" class="clip" data-start="0.3" data-duration="4.9">LEONIDA · USA</div>
+    <div id="coast-line" class="clip" data-start="1.4" data-duration="3.8">
+      <span id="coast-w1" style="display:inline-block">SUN.</span>
+      <span id="coast-w2" style="display:inline-block;color:#ffe08a">SAND.</span>
+      <span id="coast-w3" style="display:inline-block;color:#ff3d8b">CHAOS.</span>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#coast-sun", { y: 160 }, { y: 20, duration: 5.2, ease: "power1.out" }, 0);
+    tl.fromTo("#coast-sky", { scale: 1.12 }, { scale: 1, duration: 5.2, ease: "power1.out" }, 0);
+    tl.fromTo("#coast-palm-l", { x: -260 }, { x: 0, duration: 1.4, ease: "power3.out" }, 0);
+    tl.fromTo("#coast-palm-r", { x: 260 }, { x: 0, duration: 1.4, ease: "power3.out" }, 0.1);
+    tl.fromTo("#coast-palms", { scale: 1 }, { scale: 1.06, duration: 5.2, ease: "none", transformOrigin: "50% 100%" }, 0);
+    tl.fromTo("#coast-kicker", { opacity: 0, scaleX: 1.6 }, { opacity: 1, scaleX: 1, duration: 1, ease: "power3.out" }, 0.3);
+    tl.fromTo("#coast-w1", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(2)" }, 1.4);
+    tl.fromTo("#coast-w2", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(2)" }, 2.0);
+    tl.fromTo("#coast-w3", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power4.out" }, 2.7);
+    tl.fromTo("#coast-line", { scale: 1 }, { scale: 1.08, duration: 2.4, ease: "none" }, 2.8);
+    window.__timelines["coast"] = tl;
+  </script>
+</template>
