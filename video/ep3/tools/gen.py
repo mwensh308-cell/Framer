@@ -176,8 +176,8 @@ def find_word(words, prefixes, after=0.0):
 def outro_scene(i, s, cid, L):
     off = s["start"] - B[i]
     words = s["words"]
-    tiles = [("cal", "Cal_Hampton_01", ["صديق"]), ("brian", "Brian_Heder_02", ["ومهرب", "مهرب"]),
-             ("boobie", "Boobie_Ike_03", ["وأسطورة", "واسطورة", "أسطورة"]), ("drequan", "DreQuan_Priest_03", ["وصاحب"]),
+    tiles = [("cal", "Cal_Hampton_01", ["خوي", "صديق"]), ("brian", "Brian_Heder_02", ["ومهرب", "مهرب"]),
+             ("boobie", "Boobie_Ike_03", ["وأسطورة", "واسطورة", "أسطورة"]), ("drequan", "DreQuan_Priest_03", ["وواحد", "وصاحب"]),
              ("dimez", "Real_Dimez_04", ["وثنائي"]), ("raul", "Raul_Bautista_03", ["ولص"])]
     names = {x["id"]: x["name"] for x in SECS}
     grid_end = find_word(words, ["والحين"]) or 14.0
@@ -254,7 +254,7 @@ def endcard_scene():
     body = f"""    <div id="end-shot" class="clip shot" data-start="0" data-duration="{L}" data-track-index="0"><div id="end-in" class="in"><img id="end-img" src="assets/img/Jason_and_Lucia_16.jpg" alt=""></div></div>
     <div id="end-dim" class="clip" data-start="0" data-duration="{L}" data-track-index="1"></div>
     <div id="end-wrap" class="clip e-wrap" data-start="0" data-duration="{L}" data-track-index="2">
-      <div id="end-q">مين بيخون جايسون ولوسيا؟</div>
+      <div id="end-q">مين بيخون جيسون ولوسيا؟</div>
       <div id="end-btn-wrap"><span id="end-btn">{bell}<span>اشترك وفعّل الجرس</span></span></div>
       <div id="end-next">الحلقة الجاية قريباً</div>
     </div>
