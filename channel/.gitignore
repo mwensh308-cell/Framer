@@ -2,3 +2,6 @@ build/
 *.log
 *.mp4
 img_old/
+*.wav
+*.npy
+audio/lines/
