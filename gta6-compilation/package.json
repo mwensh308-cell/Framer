@@ -1,0 +1,24 @@
+{
+  "name": "gta6-compilation",
+  "private": true,
+  "version": "1.0.0",
+  "description": "تجميعة الاستريمرز العرب في GTA VI - قناة مستكشف العاب",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render Compilation out/compilation.mp4",
+    "thumbnail": "remotion still Thumbnail out/thumbnail.png",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.545",
+    "@remotion/google-fonts": "4.0.545",
+    "@remotion/transitions": "4.0.545",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.545"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}
