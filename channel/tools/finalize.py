@@ -47,7 +47,7 @@ Style: Bar,Cairo,10,&H003C4CE7,&H003C4CE7,&H00000000,&H00000000,0,0,0,0,100,100,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-    ev = []
+    ev, subs = [], []
     cx, cy = W // 2, H // 2
 
     def bar(t0, t1, y, width):
@@ -102,9 +102,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                               f"\\fad(400,450)}}{ln['quote']}")
                     continue
                 for s0, s1, txt in ln["subs"]:
-                    txt = txt.rstrip(".،")
-                    ev.append(f"Dialogue: 0,{at(s0)},{at(s1+0.15)},Sub,,0,0,0,,{{\\fad(90,60)\\fscx94\\fscy94"
-                              f"\\t(0,140,\\fscx100\\fscy100)}}{txt}")
+                    subs.append([s0, s1 + 0.15, txt.rstrip(".،")])
+    # subtitles strictly one at a time: no overlaps, each at least 0.5 s
+    subs.sort(key=lambda x: x[0])
+    for k, (s0, s1, txt) in enumerate(subs):
+        if k:
+            s0 = max(s0, subs[k - 1][1])
+        nxt = subs[k + 1][0] if k + 1 < len(subs) else s1
+        s1 = max(s0 + 0.5, min(s1, max(nxt, s0 + 0.5)))
+        subs[k] = [s0, s1, txt]
+        ev.append(f"Dialogue: 0,{at(s0)},{at(s1)},Sub,,0,0,0,,{{\\fad(90,60)\\fscx94\\fscy94"
+                  f"\\t(0,140,\\fscx100\\fscy100)}}{txt}")
     open(path, "w", encoding="utf-8").write(head + "\n".join(ev) + "\n")
 
 
@@ -198,7 +206,7 @@ def main(ep, out):
     build_sfx(tl, f"{b}/sfx.wav")
     build_music(total + 3, f"{b}/music_raw.wav")
     vf = (f"eq=contrast=1.07:saturation=0.9:gamma=0.97,colorbalance=rm=0.05:gm=0.01:bm=-0.05,"
-          f"vignette=PI/4.2,noise=alls=5:allf=t,"
+          f"vignette=PI/4.2,noise=alls=3:allf=t,"
           f"ass={b}/text.ass:fontsdir={FONTS}:shaping=complex,"
           f"fade=t=in:d=0.8,fade=t=out:st={total-1.8:.2f}:d=1.8")
     af = ("[2:a]aecho=0.8:0.75:180|420:0.3|0.2,lowpass=f=1400,volume=0.55,afade=t=in:d=4,"
@@ -210,7 +218,7 @@ def main(ep, out):
     subprocess.run(["ffmpeg", "-v", "error", "-stats", "-y", "-i", f"{b}/picture.mp4", "-i", f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/narration.wav",
                     "-i", f"{b}/music_raw.wav", "-i", f"{b}/sfx.wav",
                     "-filter_complex", f"[0:v]{vf}[v];{af}", "-map", "[v]", "-map", "[a]", "-t", f"{total:.3f}",
-                    "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-tune", "grain", "-pix_fmt", "yuv420p",
+                    "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p",
                     "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", out], check=True)
     print("final:", out)
 
