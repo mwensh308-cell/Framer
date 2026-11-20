@@ -1,0 +1,16 @@
+{
+  "voice": "voice_shakir.mp3",
+  "srt": "shakir.srt",
+  "title": ["سيكولوجية", "الحرية"],
+  "out": "pilot_diogenes.mp4",
+  "scenes": [
+    {"image": "img/01.png", "from": "تخيل"},
+    {"image": "img/02.png", "from": "مش فقير"},
+    {"image": "img/03.png", "from": "الناس كانت"},
+    {"image": "img/04.png", "from": "وهو كان شايل"},
+    {"image": "img/05.png", "from": "في يوم"},
+    {"image": "img/06.png", "from": "وقف قدامه"},
+    {"image": "img/07.png", "from": "الإسكندر مشي"},
+    {"image": "img/08.png", "from": "وهنا السؤال"}
+  ]
+}
