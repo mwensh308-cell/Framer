@@ -11,6 +11,7 @@ import {
 import { Clip, Streamer } from "../data";
 import { colors, fonts, sec } from "../theme";
 import { Placeholder } from "./Placeholder";
+import { LiveLink } from "./LiveLink";
 
 // مقطع واحد: الفيديو + عنوان اللحظة + شريط اسم الاستريمر
 export const ClipSegment: React.FC<{ clip: Clip; streamer: Streamer }> = ({ clip, streamer }) => {
@@ -46,6 +47,8 @@ export const ClipSegment: React.FC<{ clip: Clip; streamer: Streamer }> = ({ clip
           <Placeholder streamer={streamer.name} title={clip.title} color={streamer.color} />
         )}
       </AbsoluteFill>
+
+      {streamer.kick && <LiveLink handle={streamer.kick} color={streamer.color} />}
 
       {/* عنوان اللحظة */}
       <div
