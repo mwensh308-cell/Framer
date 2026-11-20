@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, staticFile, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { channel, streamers } from "../data";
 import { colors, fonts, gradient, neonText } from "../theme";
 import { Logo } from "./Logo";
@@ -19,6 +19,7 @@ export const Intro: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ direction: "rtl" }}>
+      <Audio src={staticFile("audio/intro.mp3")} volume={0.8} />
       <NeonBackground dim={0.35} />
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 60, opacity: out }}>
         <Logo size={300} style={{ transform: `scale(${logoIn}) rotate(${(1 - logoIn) * -90}deg)` }} />

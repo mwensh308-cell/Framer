@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, staticFile, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { Streamer } from "../data";
 import { colors, fonts, neonText } from "../theme";
 import { NeonBackground } from "./NeonBackground";
@@ -18,6 +18,7 @@ export const StreamerCard: React.FC<{ streamer: Streamer; index: number; total: 
 
   return (
     <AbsoluteFill style={{ direction: "rtl" }}>
+      <Audio src={staticFile("audio/whoosh.mp3")} volume={0.7} />
       <NeonBackground dim={0.55} />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
         <div

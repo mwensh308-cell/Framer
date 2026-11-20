@@ -3,7 +3,6 @@ import { AbsoluteFill, Img, staticFile } from "remotion";
 import { streamers } from "./data";
 import { colors, fonts, gradient, neonText } from "./theme";
 import { Logo } from "./components/Logo";
-import { NeonBackground } from "./components/NeonBackground";
 
 // صورة مصغرة 1280x720
 const Face: React.FC<{ name: string; color: string; thumb?: string; tilt: number }> = ({ name, color, thumb, tilt }) => (
@@ -53,8 +52,10 @@ export const Thumbnail: React.FC = () => {
   const tilts = [-5, 3, -3, 5];
   return (
     <AbsoluteFill style={{ direction: "rtl" }}>
-      <NeonBackground dim={0.25} />
-      <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(10,2,20,0.85) 100%)" }} />
+      <Img src={staticFile("thumb/bg.jpg")} style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover" }} />
+      {/* تلوين بألوان فايس سيتي + تعتيم للقراءة */}
+      <AbsoluteFill style={{ background: `linear-gradient(180deg, rgba(18,5,31,0.85) 0%, rgba(18,5,31,0.35) 38%, rgba(214,26,255,0.25) 62%, rgba(18,5,31,0.9) 100%)` }} />
+      <AbsoluteFill style={{ background: `linear-gradient(90deg, ${colors.pink}33, transparent 40%, transparent 60%, ${colors.purple}44)`, mixBlendMode: "screen" }} />
 
       {/* العنوان */}
       <div style={{ position: "absolute", top: 18, right: 40, left: 220, textAlign: "center" }}>

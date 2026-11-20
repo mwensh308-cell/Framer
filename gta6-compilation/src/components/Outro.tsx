@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, staticFile, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { channel, streamers } from "../data";
 import { colors, fonts, gradient, neonText } from "../theme";
 import { Logo } from "./Logo";
@@ -15,6 +15,10 @@ export const Outro: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ direction: "rtl", opacity: fadeOut }}>
+      <Audio
+        src={staticFile("audio/outro.mp3")}
+        volume={(f) => interpolate(f, [0, 15, durationInFrames - 30, durationInFrames], [0, 0.7, 0.7, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+      />
       <NeonBackground dim={0.5} />
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 70 }}>
         <div style={{ fontFamily: fonts.display, fontSize: 90, color: colors.white, textShadow: neonText() }}>

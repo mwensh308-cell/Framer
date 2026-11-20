@@ -34,6 +34,12 @@ export const ClipSegment: React.FC<{ clip: Clip; streamer: Streamer }> = ({ clip
           <OffthreadVideo
             src={staticFile(`clips/${clip.src}`)}
             startFrom={sec(clip.startFrom ?? 0)}
+            volume={(f) =>
+              interpolate(f, [0, 12, durationInFrames - 12, durationInFrames], [0, 1, 1, 0], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              })
+            }
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         ) : (
