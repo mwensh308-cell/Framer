@@ -47,7 +47,18 @@ def get(title, out, seconds=None):
     d = api(action="query", titles=title, prop="imageinfo", iiprop="url|extmetadata")
     ii = next(iter(d["query"]["pages"].values()))["imageinfo"][0]
     raw = out + ".src"
-    open(raw, "wb").write(fetch(ii["url"]))
+    data = None
+    if title.lower().endswith((".webm", ".ogv", ".mpg", ".mpeg")):  # prefer Wikimedia's transcodes (lighter)
+        v = api(action="query", titles=title, prop="videoinfo", viprop="derivatives")
+        ders = next(iter(v["query"]["pages"].values()))["videoinfo"][0].get("derivatives", [])
+        ders = sorted([d for d in ders if "webm" in d.get("type", "") and d.get("width", 0) <= 1920],
+                      key=lambda d: -d.get("width", 0))
+        for d in ders:
+            try:
+                data = fetch(d["src"], tries=2); break
+            except urllib.error.HTTPError:
+                pass
+    open(raw, "wb").write(data or fetch(ii["url"]))
     vf = "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,fps=30"
     cmd = ["ffmpeg", "-v", "error", "-y", "-i", raw, "-an", "-vf", vf, "-c:v", "libx264", "-crf", "17",
            "-preset", "veryfast", "-pix_fmt", "yuv420p"]
