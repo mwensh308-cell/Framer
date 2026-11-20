@@ -6,3 +6,5 @@ img_old/
 *.npy
 audio/lines/
 *.f32
+*.src
+broll/*.mp4

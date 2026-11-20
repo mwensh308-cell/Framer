@@ -46,7 +46,8 @@ def segments(tl):
 # ---------------------------------------------------------------- assets
 class Assets:
     def __init__(self, imgdir):
-        self.imgdir, self.cache = imgdir, {}
+        self.imgdir, self.cache, self.clips = imgdir, {}, {}
+        self.brolldir = os.path.join(os.path.dirname(imgdir.rstrip("/")), "broll")
         rng = np.random.default_rng(7)
         gy, gx = np.mgrid[0:H, 0:W].astype(np.float32)
         self.gx, self.gy = gx - W / 2, gy - H / 2
@@ -69,6 +70,12 @@ class Assets:
         blob += 0.6 * np.exp(-(((gx - W * 1.4) / (W * 0.25)) ** 2 + ((gy - H * 0.8) / (H * 0.5)) ** 2))
         col = np.stack([blob * 40, blob * 120, blob * 255], -1)  # orange
         return np.clip(col, 0, 255).astype(np.uint8)
+
+    def clip(self, sid):
+        if sid not in self.clips:
+            p = f"{self.brolldir}/{sid}.mp4"
+            self.clips[sid] = Clip(p) if os.path.exists(p) else None
+        return self.clips[sid]
 
     def scene(self, sid, card=False):
         key = (sid, card)
@@ -93,8 +100,48 @@ class Assets:
         return img, d
 
 
+class Clip:
+    """Sequential reader for a b-roll clip (frames requested in increasing order per worker)."""
+    def __init__(self, path):
+        self.path = path
+        self.cap = cv2.VideoCapture(path)
+        self.n = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT)) or 1
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS) or FPS
+        self.i, self.last = -1, None
+
+    def frame(self, idx):
+        idx = max(0, min(self.n - 1, idx))
+        if idx < self.i:
+            self.cap.release(); self.cap = cv2.VideoCapture(self.path); self.i, self.last = -1, None
+        while self.i < idx:
+            ok, f = self.cap.read()
+            if not ok:
+                break
+            self.i += 1; self.last = f
+        return self.last
+
+
+def clip_shot(A, seg, t, clip):
+    """Real footage: slowed to fit the scene, gentle push-in, desaturated/warmed to sit with the paintings."""
+    span = seg["end"] - seg["start"] + FADE
+    local = max(0.0, t - (seg["start"] - FADE / 2))
+    speed = min(1.0, (clip.n / clip.fps) / span)
+    f = clip.frame(int(local * clip.fps * speed))
+    f = cv2.resize(f, (W, H))
+    Z = 1.02 + 0.08 * ease(local / span)
+    M = cv2.getRotationMatrix2D((W / 2, H / 2), 0, Z)
+    f = cv2.warpAffine(f, M, (W, H), borderMode=cv2.BORDER_REFLECT)
+    g = cv2.cvtColor(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR)
+    f = cv2.addWeighted(f, 0.65, g, 0.35, 0)
+    f = cv2.transform(f, np.array([[0.85, 0, 0], [0, 0.95, 0], [0, 0, 1.08]], np.float32))  # warm (BGR)
+    return f
+
+
 # ---------------------------------------------------------------- one frame of one segment
 def shot(A, seg, t):
+    clip = A.clip(seg["id"]) if seg["kind"] == "scene" else None
+    if clip:
+        return clip_shot(A, seg, t, clip)
     span = seg["end"] - seg["start"] + FADE
     u = ease((t - (seg["start"] - FADE / 2)) / span)
     img, d = A.scene(seg["id"], seg["kind"] == "card")
@@ -175,7 +222,7 @@ def work(args):
     ep, k, f0, f1 = args
     tl = json.load(open(f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/timeline.json", encoding="utf-8"))
     segs, quotes = segments(tl)
-    A = Assets(f"{ep}/img")
+    A = Assets(f"{ep}/{os.environ.get('IMG_DIR', 'img')}")
     out = f"{ep}/build/picture_{k}.mp4"
     p = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}",
                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
