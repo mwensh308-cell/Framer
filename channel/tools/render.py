@@ -173,7 +173,7 @@ def compose(A, segs, quotes, t):
 # ---------------------------------------------------------------- workers
 def work(args):
     ep, k, f0, f1 = args
-    tl = json.load(open(f"{ep}/audio/timeline.json", encoding="utf-8"))
+    tl = json.load(open(f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/timeline.json", encoding="utf-8"))
     segs, quotes = segments(tl)
     A = Assets(f"{ep}/img")
     out = f"{ep}/build/picture_{k}.mp4"
@@ -191,7 +191,7 @@ def work(args):
 def main(ep, workers=4):
     cv2.setNumThreads(1)
     os.makedirs(f"{ep}/build", exist_ok=True)
-    tl = json.load(open(f"{ep}/audio/timeline.json", encoding="utf-8"))
+    tl = json.load(open(f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/timeline.json", encoding="utf-8"))
     total = int(math.ceil(tl["duration"] * FPS))
     step = math.ceil(total / workers)
     jobs = [(ep, k, k * step, min(total, (k + 1) * step)) for k in range(workers)]

@@ -5,3 +5,4 @@ img_old/
 *.wav
 *.npy
 audio/lines/
+*.f32

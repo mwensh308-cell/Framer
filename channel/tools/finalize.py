@@ -191,7 +191,7 @@ def build_music(seconds, path):
 
 # ---------------------------------------------------------------- final mux
 def main(ep, out):
-    tl = json.load(open(f"{ep}/audio/timeline.json", encoding="utf-8"))
+    tl = json.load(open(f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/timeline.json", encoding="utf-8"))
     b = f"{ep}/build"
     total = tl["duration"]
     build_ass(tl, f"{b}/text.ass")
@@ -207,7 +207,7 @@ def main(ep, out):
           "[mus][key]sidechaincompress=threshold=0.015:ratio=5:attack=30:release=600[duck];"
           "[nar][duck][3:a]amix=inputs=3:duration=first:normalize=0:weights=1 0.6 0.9,"
           "loudnorm=I=-14:TP=-1.5:LRA=9[a]")
-    subprocess.run(["ffmpeg", "-v", "error", "-stats", "-y", "-i", f"{b}/picture.mp4", "-i", f"{ep}/audio/narration.wav",
+    subprocess.run(["ffmpeg", "-v", "error", "-stats", "-y", "-i", f"{b}/picture.mp4", "-i", f"{ep}/{os.environ.get("AUDIO_DIR", "audio")}/narration.wav",
                     "-i", f"{b}/music_raw.wav", "-i", f"{b}/sfx.wav",
                     "-filter_complex", f"[0:v]{vf}[v];{af}", "-map", "[v]", "-map", "[a]", "-t", f"{total:.3f}",
                     "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-tune", "grain", "-pix_fmt", "yuv420p",
