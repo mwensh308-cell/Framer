@@ -56,14 +56,15 @@ WrapStyle: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,Cairo,62,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,1,0,0,0,100,100,0,0,1,3.5,2,2,160,160,70,1
-Style: Title,Cairo ExtraBold,190,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,0,6,5,100,100,0,1
+Style: Sub,Cairo,100,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,1,0,0,0,100,100,0,0,1,3.5,2,2,160,160,70,1
+Style: Title,Cairo Black,200,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,0,6,5,100,100,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     ev = []
     for a, b, text in cues:
+        text = text.rstrip(".،")
         ev.append(f"Dialogue: 0,{ass_time(a)},{ass_time(b)},Sub,,0,0,0,,{{\\fad(120,120)}}{text}")
     if title:
         t1, t2 = title
@@ -142,12 +143,12 @@ def main(cfg_path):
     music_bed(total, music)
 
     vf = (f"eq=contrast=1.06:saturation=0.88:gamma=0.97,colorbalance=rm=0.04:bm=-0.04,"
-          f"vignette=PI/4.5,noise=alls=7:allf=t,"
-          f"subtitles={ass}:fontsdir={FONTS},fade=t=in:d=1,fade=t=out:st={total-1.5:.2f}:d=1.5")
-    af = "[1:a]volume=1.0[v];[2:a]volume=0.35[m];[v][m]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5[a]"
+          f"vignette=PI/4.5,noise=alls=5:allf=t,"
+          f"ass={ass}:fontsdir={FONTS}:shaping=complex,fade=t=in:d=1,fade=t=out:st={total-1.5:.2f}:d=1.5")
+    af = "[1:a]volume=1.0[nar];[2:a]volume=0.35[m];[nar][m]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5[a]"
     run(["ffmpeg", "-y", "-v", "error", "-i", slideshow, "-i", cfg["voice"], "-i", music,
          "-filter_complex", f"[0:v]{vf}[v];{af}", "-map", "[v]", "-map", "[a]",
-         "-t", f"{total:.3f}", "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+         "-t", f"{total:.3f}", "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-tune", "grain",
          "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", cfg["out"]])
     print("done:", os.path.join(base, cfg["out"]))
 
